@@ -1,4 +1,3 @@
-import argparse
 import glob
 import os
 import re
@@ -6,60 +5,9 @@ import sys
 import ipywidgets as widgets
 from ipywidgets import interact
 import plotly.express as px
-import xlsxwriter
 import pandas as pd
 from numpy import nan
 
-#
-# This script is a collection of functions to extract data from log
-# files created with Gurobi.
-#
-# A new log is identified by the header line
-# "Gurobi (X.Y.Z (platform) logging started [timestamp]"
-# If the file contains multiple logs only the last one is taken.
-#
-# API Usage:
-#
-# 1) Read the log file into a list of lines (loglines)
-#
-# 2) (Optional) Use get_log_status(loglines) to determine the log status
-#
-#    logstatus.FINISHED:   A complete log has been found
-#    logstatus.INCOMPLETE: The log seems is considered incomplete
-#                          (e.g. missing starting/termination message)
-#    logstatus.FAILED:     The log finishes with an error message
-#
-# 3) Use get_log_info(loglines) to retrieve a dictionary with the extracted data
-#
-# Fields
-# ------
-#
-# Status:    Termination status (OPTIMAL, TIME_LIMIT, ITERATION_LIMIT,
-#            INF_OR_UNBD, UNBOUNDED, INFEASIBLE, SOLUTION_LIMIT, NODE_LIMIT,
-# 			 NUMERIC, SUBOPTIMAL, CUTOFF, INTERRUPTED, USER_OBJ_LIMIT)
-#
-# Parameters are returned with key "Name (Parameter)" (e.g. "Method (Parameter)")
-# Attributes are returned with the same name (e.g. "MIPGap")
-#
-# Additional fields: PresolveTime, ReadTime, OrderingTime, Threads, RelaxObj,
-#                    RelaxIterCount, RelaxTime, PushPhasePInf, PushPhaseDInf,
-#                    PushPhaseEndTime, ModelFilePath, ErrorCode, ErrorMessage,
-#                    PresolvedNumConstrs, PresolvedNumVars, PresolvedNumNZs,
-#                    PresolvedNumSOS, PresolvedNumQNZs, Version, Timestamp,
-#                    LogFilePath, MIPStart
-#
-# Estimated fields: ModelType
-#
-# List/Dictionary fields: ResultFiles, CutsCount, SimplexLog, BarrierLog,
-#                         TreeSearchLog, Warnings
-#
-# Values are converted to float or int whenever possible
-#
-# This script can be called from the command line with a list of log files to
-# create an Excel file with a single worksheet that contains a line for every
-# log file. Each column contains a field value. List or dictionary values
-# (e.g. simplex log) are discarded.
-#
 
 # Log Status Codes
 class logstatus:
@@ -77,7 +25,6 @@ class logstatus:
 
 
 class logpattern:
-
     # Fields are ordered by this key (smaller values come first), then alphabetically
     sort_keys = {
         "ModelFilePath": 1,
@@ -767,12 +714,12 @@ def _write_lines(wb, sheet_title, lines, priorities):
             ws.write(index + 1, i, line.get(columns[i]))
 
 
-def _write_logs(args, wb):
+def write_excel_logs(logs, wb):
 
     glob_logfiles = []
 
     # Expand wildcards, skip non-existing elements
-    for logfile in args.logfiles:
+    for logfile in logs:
         logfile_expanded = glob.glob(logfile)
         if not logfile_expanded:
             print("Info: Log file not found: '%s'" % logfile)
@@ -927,7 +874,7 @@ def dataframe_from_logs(logfiles, timelines=False, verbose=False, merged_logs=Fa
                     pd.to_numeric, errors="coerce"
                 )
                 key = os.path.basename(log_info.get("LogFilePath"))
-                barrier_["Log"] = key
+                barrier_["Log"] = os.path.splitext(key)[0]
                 barrier_["Type"] = "barrier"
                 rootlp = rootlp.append(barrier_, ignore_index=True)
                 crossover = True
@@ -937,7 +884,7 @@ def dataframe_from_logs(logfiles, timelines=False, verbose=False, merged_logs=Fa
                     pd.to_numeric, errors="coerce"
                 )
                 key = os.path.basename(log_info.get("LogFilePath"))
-                simplex_["Log"] = key
+                simplex_["Log"] = os.path.splitext(key)[0]
                 simplex_["Type"] = "crossover" if crossover else "simplex"
                 rootlp = rootlp.append(simplex_, ignore_index=True)
 
@@ -963,7 +910,7 @@ def dataframe_from_logs(logfiles, timelines=False, verbose=False, merged_logs=Fa
                     )
                 )
                 # tl_ = tl_[tl_.columns].apply(pd.to_numeric, errors='coerce')
-                tl_["Log"] = os.path.basename(log)
+                tl_["Log"] = os.path.splitext(os.path.basename(log))[0]
                 tl = tl.append(tl_, ignore_index=True)
 
         return summary, tl, rootlp
@@ -1014,10 +961,16 @@ def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
 
     options = list(df.columns) + [None]
 
-    # read custom axis data or use common defaults
-    x_default = kwargs.pop("x", "Settings")
-    y_default = kwargs.pop("y", "Runtime")
-    color_default = kwargs.pop("color", "Seed")
+    if "Timestamp" in options:
+        # read custom axis data or use common defaults for summary DataFrame
+        x_default = kwargs.pop("x", "Timestamp")
+        y_default = kwargs.pop("y", "Incumbent")
+        color_default = kwargs.pop("color", "Log")
+    else:
+        # read custom axis data or use common defaults for summary DataFrame
+        x_default = kwargs.pop("x", "Settings")
+        y_default = kwargs.pop("y", "Runtime")
+        color_default = kwargs.pop("color", "Seed")
 
     # set type to None to disable plotting until a type is selected
     type_default = kwargs.pop("type", None)
@@ -1087,23 +1040,3 @@ def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
                 log_y=log_y,
                 **kwargs,
             )
-
-
-def main():
-
-    parser = argparse.ArgumentParser(
-        description="Gurobi Log File Information Extractor."
-    )
-    parser.add_argument("outfile", help="Output file name (.xlsx)", metavar="XLSXFILE")
-    parser.add_argument(
-        "logfiles", help="Gurobi Optimizer log files", nargs="+", metavar="LOGFILE"
-    )
-    args = parser.parse_args()
-
-    wb = xlsxwriter.Workbook(args.outfile, {"constant_memory": True})
-    _write_logs(args, wb)
-    wb.close()
-
-
-if __name__ == "__main__":
-    main()
