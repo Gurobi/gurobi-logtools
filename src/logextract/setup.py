@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="logextract",
-    version="0.0.1",
+    version="0.1.0",
     author = "Gurobi Optimization, LLC",
     description="Gurobi log file extractor",
     long_description=long_description,

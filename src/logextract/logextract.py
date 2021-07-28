@@ -761,7 +761,7 @@ def _write_timelines(wb, log_info):
         _write_lines(wb, "Tree Search", lines, logpattern.tree_log_sort_keys)
 
 
-def dataframe_from_logs(logfiles, timelines=False, verbose=False, merged_logs=False):
+def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
     """Create a dataframe with all stats of the logs
 
     - timelines=True: also create dictionary of timelines of all logs
@@ -918,41 +918,6 @@ def dataframe_from_logs(logfiles, timelines=False, verbose=False, merged_logs=Fa
         return summary
 
 
-def plot_timelines(
-    d,
-    xkey="Timestamp",
-    ykey="Incumbent",
-    xlog=False,
-    ylog=False,
-    showlegend=True,
-    legend_orientation="v",
-    html_file=None,
-):
-    import plotly.graph_objects as go
-
-    fig = go.Figure()
-
-    for setting in d:
-        d_ = d[setting]
-        fig.add_trace(
-            go.Scatter(x=d_[xkey], y=d_[ykey], mode="lines+markers", name=setting)
-        )
-
-    if xlog:
-        fig.update_xaxes(type="log")
-    if ylog:
-        fig.update_yaxes(type="log")
-
-    fig.update_xaxes(title=xkey)
-    fig.update_yaxes(title=ykey)
-    fig.update_layout(showlegend=showlegend, legend_orientation=legend_orientation)
-
-    if html_file:
-        fig.write_html(html_file)
-
-    return fig
-
-
 def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
     """plot different chart types to compare performance and see performance variability across random seeds
 
@@ -1032,6 +997,16 @@ def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
             )
         elif type == "line":
             return px.line(
+                df,
+                x=x,
+                y=y,
+                color=color,
+                log_x=log_x,
+                log_y=log_y,
+                **kwargs,
+            )
+        elif type == "area":
+            return px.area(
                 df,
                 x=x,
                 y=y,
