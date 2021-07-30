@@ -689,7 +689,7 @@ def _sort_keys(keys, priorities=None):
 
     sorted_keys = sorted(keys)
     if priorities is None:
-        priorities = logpattern._sort_keys
+        priorities = logpattern.sort_keys
     return sorted(
         sorted_keys, key=lambda k: priorities.get(k, max(priorities.values()) + 1)
     )
@@ -750,7 +750,7 @@ def write_excel_logs(logs, wb):
         }
         lines.append(items)
 
-    _write_lines(wb, "Logs", lines, logpattern._sort_keys)
+    _write_lines(wb, "Logs", lines, logpattern.sort_keys)
 
 
 def _write_timelines(wb, log_info):
