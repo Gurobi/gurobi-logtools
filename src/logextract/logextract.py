@@ -301,7 +301,7 @@ def get_log_status(loglines):
     if result is not None:
         loglines_before_termination = loglines_before_termination[pre_termination_line:]
 
-    line, result = _regex_first_match(
+    _, result = _regex_first_match(
         loglines_before_termination, logpattern.termination_message, reverse=True
     )
     if not result:
@@ -311,7 +311,7 @@ def get_log_status(loglines):
             return logstatus.FAILED
 
     # Check termination status
-    line, result = _regex_first_match(
+    _, result = _regex_first_match(
         loglines, logpattern.termination_status, reverse=True
     )
     if not result:
@@ -319,7 +319,7 @@ def get_log_status(loglines):
 
     # Simple pattern
     for regex in logpattern.various:
-        line, result = _regex_first_match(loglines, regex, reverse=True)
+        _, result = _regex_first_match(loglines, regex, reverse=True)
 
     return logstatus.FINISHED
 
@@ -926,7 +926,7 @@ def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
 
     options = list(df.columns) + [None]
 
-    if "Timestamp" in options:
+    if "Incumbent" in options:
         # read custom axis data or use common defaults for summary DataFrame
         x_default = kwargs.pop("x", "Timestamp")
         y_default = kwargs.pop("y", "Incumbent")
@@ -939,6 +939,11 @@ def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
 
     # set type to None to disable plotting until a type is selected
     type_default = kwargs.pop("type", None)
+
+    # pop values for remaining widgets to avoid double inputs
+    symbol_default = kwargs.pop("symbol", None)
+    log_x_default = kwargs.pop("log_x", False)
+    log_y_default = kwargs.pop("log_y", False)
 
     # check wether selected keys are available in DataFrame
     if x_default not in options:
@@ -955,13 +960,13 @@ def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
         type=widgets.Dropdown(
             options=["box", "bar", "scatter", "line"], value=type_default
         ),
-        symbol=widgets.Dropdown(options=options, value=None),
-        log_x=widgets.Checkbox(value=False),
-        log_y=widgets.Checkbox(value=False),
+        symbol=widgets.Dropdown(options=options, value=symbol_default),
+        log_x=widgets.Checkbox(value=log_x_default),
+        log_y=widgets.Checkbox(value=log_y_default),
     )
 
     @interact(**switches)
-    def _plot(x, y, color, type, symbol, log_x, log_y):
+    def _(x, y, color, type, symbol, log_x, log_y):
         if type == "box":
             return px.box(
                 df,

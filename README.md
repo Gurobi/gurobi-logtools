@@ -15,7 +15,7 @@ First, you need a set of Gurobi log files to compare, e.g.,
     ```
     import logextract as lx
 
-    summary, timelines, rootlp = lx.dataframe_from_logs(["run1/*.log", "run2/*.log"], timelines=True)
+    summary, timelines, rootlp = lx.get_dataframe(["run1/*.log", "run2/*.log"], timelines=True)
     ```
     Depending on your requirements, you may need to filter or modify the resulting DataFrames.
 
