@@ -835,25 +835,12 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
         summary["Settings"] = summary[["LogFilePath", "ModelName"]].apply(
             lambda x: extract_settings(*x), axis=1
         )
-        summary["ModelName"] = summary["ModelName"].apply(
-            lambda x: re.sub("_case[0-9]*", "", x)
-        )
-        summary["ModelName"] = summary["ModelName"].apply(
-            lambda x: re.sub("_ticket[0-9]*", "", x)
-        )
-        summary["ModelName"] = summary["ModelName"].apply(
-            lambda x: re.sub("_t[0-9]*", "", x)
-        )
     else:
         summary["Settings"] = summary["LogFilePath"].apply(
             lambda x: os.path.splitext(os.path.basename(x))[0]
         )
 
     if "Seed (Parameter)" in summary.keys():
-        if "seed (Parameter)" in summary.keys():
-            summary["seed (Parameter)"] = summary["seed (Parameter)"].fillna(0)
-            summary["Seed (Parameter)"] = summary["Seed (Parameter)"].fillna(0)
-            summary["Seed (Parameter)"] += summary["seed (Parameter)"]
         summary["Seed"] = summary["Seed (Parameter)"].fillna(0).astype(int).astype(str)
         summary = summary.drop(labels="Seed (Parameter)", axis=1)
 
