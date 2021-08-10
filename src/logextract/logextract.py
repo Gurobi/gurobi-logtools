@@ -958,7 +958,7 @@ def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
         y=widgets.Dropdown(options=options, value=y_default),
         color=widgets.Dropdown(options=options, value=color_default),
         type=widgets.Dropdown(
-            options=["box", "bar", "scatter", "line"], value=type_default
+            options=["box", "bar", "scatter", "line", "area"], value=type_default
         ),
         symbol=widgets.Dropdown(options=options, value=symbol_default),
         log_x=widgets.Checkbox(value=log_x_default),

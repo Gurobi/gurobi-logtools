@@ -1,6 +1,6 @@
 # logextract
 
-Extract information from Gurobi log files and generate Pandas DataFrames or Excel worksheets for further processing. Also includes a wrapper for out-of-the-box interactive visualizations using the plotting library Plot.ly.
+Extract information from Gurobi log files and generate Pandas DataFrames or Excel worksheets for further processing. Also includes a wrapper for out-of-the-box interactive visualizations using the plotting library plotly.
 
 # Usage
 
