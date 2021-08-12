@@ -2,6 +2,9 @@
 
 Extract information from Gurobi log files and generate [pandas DataFrames](https://pandas.pydata.org/) or Excel worksheets for further processing. Also includes a wrapper for out-of-the-box interactive visualizations using the plotting library [Plotly](https://plotly.com/python/).
 
+![interactive widget](assets/interactive-selector.png)
+![performance plot](assets/performance-plot.png)
+
 # Usage
 
 First, you need a set of Gurobi log files to compare, e.g.,
