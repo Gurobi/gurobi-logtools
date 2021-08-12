@@ -1,6 +1,6 @@
 # GRBlogtools
 
-Extract information from Gurobi log files and generate Pandas DataFrames or Excel worksheets for further processing. Also includes a wrapper for out-of-the-box interactive visualizations using the plotting library plotly.
+Extract information from Gurobi log files and generate [pandas DataFrames](https://pandas.pydata.org/) or Excel worksheets for further processing. Also includes a wrapper for out-of-the-box interactive visualizations using the plotting library [Plotly](https://plotly.com/python/).
 
 # Usage
 
