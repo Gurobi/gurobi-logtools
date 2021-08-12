@@ -4,14 +4,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="logextract",
+    name="grblogtools",
     version="0.1.0",
     author="Gurobi Optimization, LLC",
-    description="Gurobi log file extractor",
+    description="Gurobi log file tools for parsing and data exploration",
     long_description=long_description,
     long_description_content_type="text/markdown",
     platforms=["Windows", "Linux", "macOS"],
-    url="https://github.com/Gurobi/logextract",
+    url="https://github.com/Gurobi/grblogtools",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     classifiers=[
