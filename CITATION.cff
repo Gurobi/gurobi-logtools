@@ -1,0 +1,16 @@
+# YAML 1.2
+---
+cff-version: "1.1.0"
+message: "If you use this software, please cite it using these metadata."
+title: grblogtools
+abstract: "Tools to extract and explore information from Gurobi log files."
+authors: 
+  - affiliation: "Gurobi Optimization"
+    family-names: Miltenberger
+    given-names: Matthias
+    orcid: "https://orcid.org/0000-0002-0784-0964"
+  - affiliation: "Gurobi Optimization"
+    family-names: Siefen
+    given-names: Kostja
+license: MIT
+repository-code: "https://github.com/Gurobi/grblogtools"
