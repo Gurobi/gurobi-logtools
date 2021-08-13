@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="grblogtools",
-    version="0.1.0",
+    version="0.1.1",
     author="Gurobi Optimization, LLC",
     description="Gurobi log file tools for parsing and data exploration",
     long_description=long_description,
