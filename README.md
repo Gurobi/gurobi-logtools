@@ -22,7 +22,7 @@ First, you need a set of Gurobi log files to compare, e.g.,
     ```
     Depending on your requirements, you may need to filter or modify the resulting DataFrames.
 
-2. draw interactive charts, preferably in a Jupyter Notebook:
+2. draw interactive charts, preferably in a [Jupyter Notebook](https://jupyter.org/):
     
     - final results from the individual runs:
     ```
