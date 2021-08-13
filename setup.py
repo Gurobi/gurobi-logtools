@@ -1,11 +1,15 @@
 from setuptools import setup, find_packages
+import os, re
+
+with open(os.path.join("src","grblogtools","__init__.py")) as initfile:
+    version ,= re.findall('__version__ = "(.*)"', initfile.read())
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
     name="grblogtools",
-    version="0.1.1",
+    version=version,
     author="Gurobi Optimization, LLC",
     description="Gurobi log file tools for parsing and data exploration",
     long_description=long_description,

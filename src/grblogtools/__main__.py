@@ -2,10 +2,10 @@ import argparse
 import xlsxwriter
 import grblogtools as glt
 
-parser = argparse.ArgumentParser(description="Gurobi Log File Information Extractor.", prog="logextract")
+parser = argparse.ArgumentParser(description="grblogtools "+glt.__version__, prog="grblogtools")
 parser.add_argument("outfile", help="Output file name (.xlsx)", metavar="XLSXFILE")
 parser.add_argument(
-    "logfiles", help="Gurobi Optimizer log files", nargs="+", metavar="LOGFILE"
+    "logfiles", help="Gurobi log files", nargs="+", metavar="LOGFILE"
 )
 args = parser.parse_args()
 
