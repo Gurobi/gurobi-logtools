@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 import os, re
 
-with open(os.path.join("src","grblogtools","__init__.py")) as initfile:
-    version ,= re.findall('__version__ = "(.*)"', initfile.read())
+with open(os.path.join("src", "grblogtools", "__init__.py")) as initfile:
+    (version,) = re.findall('__version__ = "(.*)"', initfile.read())
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()

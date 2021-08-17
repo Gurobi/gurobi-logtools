@@ -10,6 +10,10 @@ authors:
     given-names: Matthias
     orcid: "https://orcid.org/0000-0002-0784-0964"
   - affiliation: "Gurobi Optimization"
+    family-names: Oberdieck
+    given-names: Richard
+    -orcid: https://orcid.org/0000-0002-8685-8694
+  - affiliation: "Gurobi Optimization"
     family-names: Siefen
     given-names: Kostja
 license: MIT

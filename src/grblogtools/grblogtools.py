@@ -59,15 +59,15 @@ class logpattern:
         "BestBd": 8,
         "Gap": 9,
         "ItPerNode": 10,
-        "Timestamp": 11,
+        "Time": 11,
     }
 
     # Log start indicator (all lines before last occcurence are discarded)
     headers = [
         re.compile(
-            "Gurobi (?P<Version>\d{1,2}\.[^\s]+) \((?P<Platform>[^\)]+)\) logging started (?P<Timestamp>.*)$"
+            "Gurobi (?P<Version>\d{1,2}\.[^\s]+) \((?P<Platform>[^\)]+)\) logging started (?P<Time>.*)$"
         ),
-        re.compile("Logging started (?P<Timestamp>.*)$"),
+        re.compile("Logging started (?P<Time>.*)$"),
     ]
 
     # Parameter settings
@@ -206,10 +206,6 @@ class logpattern:
         "Presolved: (?P<PresolvedNumConstrs>\d+) (R|r)ows, (?P<PresolvedNumVars>\d+) (C|c)olumns, (?P<PresolvedNumNZs>\d+) (N|n)on(Z|z)ero(e?)s"
     )
     presolve_complete = re.compile("Presolve: All rows and columns removed")
-
-
-def print_stderr(*objs):
-    print(*objs, file=sys.stderr)
 
 
 def _regex_group_to_field_name(groupname):
@@ -383,7 +379,7 @@ def get_log_info(loglines, verbose=False):
     # Step 1: Find last header line
     first_line, result = _regex_first_match(loglines, logpattern.headers, reverse=True)
     if not result:
-        print_stderr("Error: Could not find initial log message in logfile")
+        print("Error: Could not find initial log message in logfile")
         return None
     else:
         values.update(result)
@@ -404,9 +400,7 @@ def get_log_info(loglines, verbose=False):
     )
 
     if not result:
-        print_stderr(
-            "Error: Could not find termination log message. Logfile incomplete?"
-        )
+        print("Error: Could not find termination log message. Logfile incomplete?")
         return None
     else:
         values.update(result)
@@ -417,9 +411,7 @@ def get_log_info(loglines, verbose=False):
     )
 
     if not result:
-        print_stderr(
-            "Error: Could not determine termination status. Logfile incomplete?"
-        )
+        print("Error: Could not determine termination status. Logfile incomplete?")
         return None
     else:
         # Status Status and additional information (a bit hacky: identify status by CAPITAL_AND_UNDERSCORE_ONLY group name)
@@ -546,27 +538,27 @@ def get_log_info(loglines, verbose=False):
 
     # Regular expressions for different log line types
     tree_search_full_log_line_regex = re.compile(
-        r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>{0})\s+(?P<Depth>\d+)\s+(?P<IntInf>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Timestamp>\d+)s".format(
+        r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>{0})\s+(?P<Depth>\d+)\s+(?P<IntInf>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
             float_pattern
         )
     )
     tree_search_nodepruned_line_regex = re.compile(
-        r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>(cutoff|infeasible|postponed))\s+(?P<Depth>\d+)\s+(?P<Incumbent>(-|{0}))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Timestamp>\d+)s".format(
+        r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>(cutoff|infeasible|postponed))\s+(?P<Depth>\d+)\s+(?P<Incumbent>(-|{0}))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
             float_pattern
         )
     )
     tree_search_new_solution_heuristic_log_line_regex = re.compile(
-        r"(?P<NewSolution>H)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>{0}%)\s+(?P<ItPerNode>(-|{0}))\s+(?P<Timestamp>\d+)s".format(
+        r"(?P<NewSolution>H)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>{0}%)\s+(?P<ItPerNode>(-|{0}))\s+(?P<Time>\d+)s".format(
             float_pattern
         )
     )
     tree_search_new_solution_branching_log_line_regex = re.compile(
-        r"(?P<NewSolution>\*)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Depth>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>{0}%)\s+(?P<ItPerNode>({0}|-))\s+(?P<Timestamp>\d+)s".format(
+        r"(?P<NewSolution>\*)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Depth>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>{0}%)\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
             float_pattern
         )
     )
     tree_search_status_line_regex = re.compile(
-        r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>-)\s+(?P<Depth>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Timestamp>\d+)s".format(
+        r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>-)\s+(?P<Depth>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
             float_pattern
         )
     )
@@ -761,6 +753,25 @@ def _write_timelines(wb, log_info):
         _write_lines(wb, "Tree Search", lines, logpattern.tree_log_sort_keys)
 
 
+def _extract_settings(logname, modelname):
+    """small helper function to extract the settings name from the log name"""
+    logname = os.path.basename(logname)
+    startmodel = logname.find(modelname)
+    if startmodel == -1:
+        return os.path.splitext(logname)[0]
+    else:
+        return logname[: startmodel - 1]
+
+
+def _copy_keys(source, target):
+    """copy some more info from one DataFrame to another to better distinguish runs/logs"""
+    # tl_ = tl_[tl_.columns].apply(pd.to_numeric, errors='coerce')
+    keys = ["Settings", "LogFilePath", "Seed", "ModelName", "Version"]
+    for key in keys:
+        if source.get(key) is not None:
+            target[key] = source[key].iloc[0]
+
+
 def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
     """Create a dataframe with all stats of the logs
 
@@ -799,46 +810,33 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
                 if log_info is None:
                     print(f"error processing {logfile}")
                     continue
+                # add some more information to better distinguish the individual runs/logs
                 log_info["LogFilePath"] = os.path.abspath(logfile)
-                if log_info is not None:
-                    log_infos.append(log_info)
-                else:
-                    print("ERROR: Log file incomplete - ignored: '%s'" % logfile)
 
-    lines = []
+                if log_info.get("ModelFilePath"):
+                    log_info["ModelName"] = os.path.basename(
+                        log_info["ModelFilePath"]
+                    ).split(os.path.extsep)[0]
+                    log_info["Settings"] = _extract_settings(
+                        log_info["LogFilePath"], log_info["ModelName"]
+                    )
+                else:
+                    log_info["Settings"] = os.path.splitext(
+                        os.path.basename(log_info["LogFilePath"])
+                    )[0]
+
+                log_infos.append(log_info)
+
+    allresults = []
     for log_info in log_infos:
         items = {
             key: value
             for (key, value) in log_info.items()
             if not isinstance(value, list) and not isinstance(value, dict)
         }
-        lines.append(items)
+        allresults.append(items)
 
-    summary = pd.DataFrame(lines)
-
-    # small helper function to extract the settings name from the log name
-    def extract_settings(logname, modelname):
-        logname = os.path.basename(logname)
-        startmodel = logname.find(modelname)
-        if startmodel == -1:
-            return os.path.splitext(logname)[0]
-        else:
-            return logname[: startmodel - 1]
-
-    if summary.get("ModelFilePath") is not None:
-        summary["ModelName"] = (
-            summary["ModelFilePath"]
-            .apply(lambda x: os.path.basename(x).split(os.path.extsep)[0])
-            .astype("str")
-        )
-        # clean up some columns
-        summary["Settings"] = summary[["LogFilePath", "ModelName"]].apply(
-            lambda x: extract_settings(*x), axis=1
-        )
-    else:
-        summary["Settings"] = summary["LogFilePath"].apply(
-            lambda x: os.path.splitext(os.path.basename(x))[0]
-        )
+    summary = pd.DataFrame(allresults)
 
     if "Seed (Parameter)" in summary.keys():
         summary["Seed"] = summary["Seed (Parameter)"].fillna(0).astype(int).astype(str)
@@ -850,6 +848,8 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
         # collect root LP log
         rootlp = pd.DataFrame()
         for log_info in log_infos:
+            log = log_info.get("LogFilePath")
+            final = summary[summary["LogFilePath"] == log]
             slines = log_info.get("SimplexLog")
             blines = log_info.get("BarrierLog")
             simplex_ = pd.DataFrame(slines)
@@ -860,8 +860,7 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
                 barrier_ = barrier_[barrier_.columns].apply(
                     pd.to_numeric, errors="coerce"
                 )
-                key = os.path.basename(log_info.get("LogFilePath"))
-                barrier_["Log"] = os.path.splitext(key)[0]
+                _copy_keys(final, barrier_)
                 barrier_["Type"] = "barrier"
                 rootlp = rootlp.append(barrier_, ignore_index=True)
                 crossover = True
@@ -870,8 +869,7 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
                 simplex_ = simplex_[simplex_.columns].apply(
                     pd.to_numeric, errors="coerce"
                 )
-                key = os.path.basename(log_info.get("LogFilePath"))
-                simplex_["Log"] = os.path.splitext(key)[0]
+                _copy_keys(final, simplex_)
                 simplex_["Type"] = "crossover" if crossover else "simplex"
                 rootlp = rootlp.append(simplex_, ignore_index=True)
 
@@ -881,7 +879,7 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
             lines = log_info.get("TreeSearchLog")
             tl_ = pd.DataFrame(lines)
             # filter out empty dictionaries and convert all values to numerics
-            if tl_.get("Timestamp") is not None:
+            if tl_.get("Time") is not None:
                 log = log_info.get("LogFilePath")
                 final = summary[summary["LogFilePath"] == log]
                 # append one last row containing the final data
@@ -892,12 +890,13 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
                             "Incumbent": final["ObjVal"],
                             "BestBd": final["ObjBound"],
                             "Gap": final["MIPGap"],
-                            "Timestamp": final["Runtime"],
+                            "Time": final["Runtime"],
                         }
                     )
                 )
-                # tl_ = tl_[tl_.columns].apply(pd.to_numeric, errors='coerce')
-                tl_["Log"] = os.path.splitext(os.path.basename(log))[0]
+                tl_ = tl_[tl_.columns].apply(pd.to_numeric, errors='coerce')
+                _copy_keys(final, tl_)
+
                 tl = tl.append(tl_, ignore_index=True)
 
         return summary, tl, rootlp
@@ -915,9 +914,9 @@ def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
 
     if "Incumbent" in options:
         # read custom axis data or use common defaults for summary DataFrame
-        x_default = kwargs.pop("x", "Timestamp")
+        x_default = kwargs.pop("x", "Time")
         y_default = kwargs.pop("y", "Incumbent")
-        color_default = kwargs.pop("color", "Log")
+        color_default = kwargs.pop("color", "Settings")
     else:
         # read custom axis data or use common defaults for summary DataFrame
         x_default = kwargs.pop("x", "Settings")
@@ -945,7 +944,7 @@ def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
         y=widgets.Dropdown(options=options, value=y_default),
         color=widgets.Dropdown(options=options, value=color_default),
         type=widgets.Dropdown(
-            options=["box", "bar", "scatter", "line", "area"], value=type_default
+            options=["box", "bar", "scatter", "line"], value=type_default
         ),
         symbol=widgets.Dropdown(options=options, value=symbol_default),
         log_x=widgets.Checkbox(value=log_x_default),
@@ -993,16 +992,7 @@ def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
                 x=x,
                 y=y,
                 color=color,
-                log_x=log_x,
-                log_y=log_y,
-                **kwargs,
-            )
-        elif type == "area":
-            return px.area(
-                df,
-                x=x,
-                y=y,
-                color=color,
+                symbol=symbol,
                 log_x=log_x,
                 log_y=log_y,
                 **kwargs,
