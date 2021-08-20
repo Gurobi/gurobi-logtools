@@ -2,7 +2,6 @@
 
 Extract information from Gurobi log files and generate [pandas DataFrames](https://pandas.pydata.org/) or Excel worksheets for further processing. Also includes a wrapper for out-of-the-box interactive visualizations using the plotting library [Plotly](https://plotly.com/python/).
 
-![interactive widget](assets/interactive-selector.png)
 ![performance plot](assets/performance-plot.png)
 
 # Usage
@@ -15,7 +14,7 @@ First, you need a set of Gurobi log files to compare, e.g.,
 
 ## Pandas/Plotly
 1. parse log files:
-    ```
+    ```Python
     import grblogtools as glt
 
     summary, timelines, rootlp = glt.get_dataframe(["run1/*.log", "run2/*.log"], timelines=True)
@@ -25,12 +24,12 @@ First, you need a set of Gurobi log files to compare, e.g.,
 2. draw interactive charts, preferably in a [Jupyter Notebook](https://jupyter.org/):
     
     - final results from the individual runs:
-    ```
+    ```Python
     glt.plot(summary, type="box")
     ```
     
     - progress charts for the individual runs:
-    ```
+    ```Python
     glt.plot(timelines, y="Gap", color="Log", type="line")
     ```
 
