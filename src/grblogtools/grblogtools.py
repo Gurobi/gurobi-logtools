@@ -1,7 +1,6 @@
 import glob
 import os
 import re
-import sys
 import ipywidgets as widgets
 from ipywidgets import interact
 import plotly.express as px
@@ -25,42 +24,6 @@ class logstatus:
 
 
 class logpattern:
-    # Fields are ordered by this key (smaller values come first), then alphabetically
-    sort_keys = {
-        "ModelFilePath": 1,
-        "Version": 2,
-        "Runtime": 3,
-        "Status": 4,
-        "MIPGap": 5,
-        "ObjVal": 6,
-        "ObjBound": 7,
-        "NumVars": 8,
-        "NumConstrs": 9,
-        "NumNZs": 10,
-        "MinCoeff": 11,
-        "MaxCoeff": 12,
-        "MinBound": 13,
-        "MaxBound": 14,
-        "MinObjCoeff": 15,
-        "MaxObjCoeff": 16,
-        "MinRHS": 17,
-        "MaxRHS": 18,
-    }
-
-    # Tree search log line fields are ordered by this key (smaller values come first)
-    tree_log_sort_keys = {
-        "NewSolution": 1,
-        "CurrentNode": 2,
-        "RemainingNodes": 3,
-        "Obj": 4,
-        "Depth": 5,
-        "IntInf": 6,
-        "Incumbent": 7,
-        "BestBd": 8,
-        "Gap": 9,
-        "ItPerNode": 10,
-        "Time": 11,
-    }
 
     # Log start indicator (all lines before last occcurence are discarded)
     headers = [
@@ -91,9 +54,7 @@ class logpattern:
     # Termination status
     termination_status = [
         re.compile("(?P<TIME_LIMIT>Time limit reached)"),
-        re.compile(
-            "(?P<OPTIMAL>Optimal solution found)(?: \(tolerance (?P<_MIPGap>[^\)]+)\))"
-        ),
+        re.compile("(?P<OPTIMAL>Optimal solution found)(?: \(tolerance .*\))"),
         re.compile("(?P<OPTIMAL>Optimal objective\s+(?P<ObjVal>.*))$"),
         re.compile("(?P<ITERATION_LIMIT>Iteration limit reached)"),
         re.compile("(?P<INF_OR_UNBD>Infeasible or unbounded model)"),
@@ -181,7 +142,7 @@ class logpattern:
         ),
         re.compile("Read (MPS|LP) format model from file (?P<ModelFilePath>.*)$"),
         re.compile(
-            "(?!Presolved)(?P<ModelName>.*): \d+ (R|r)ows, \d+ (C|c)olumns, \d+ (N|n)on(Z|z)ero(e?)s"
+            "(?!Presolved)(?P<Model>.*): \d+ (R|r)ows, \d+ (C|c)olumns, \d+ (N|n)on(Z|z)ero(e?)s"
         ),
         re.compile("Presolved model has (?P<PresolvedNumSOS>\d+) SOS constraint(s)\n"),
         re.compile(
@@ -677,84 +638,8 @@ def get_log_info(loglines, verbose=False):
     return values
 
 
-def _sort_keys(keys, priorities=None):
-
-    sorted_keys = sorted(keys)
-    if priorities is None:
-        priorities = logpattern.sort_keys
-    return sorted(
-        sorted_keys, key=lambda k: priorities.get(k, max(priorities.values()) + 1)
-    )
-
-
-def _write_lines(wb, sheet_title, lines, priorities):
-
-    columns = _sort_keys(
-        (list(set([key for line in lines for key in line.keys()]))), priorities
-    )
-
-    # create worksheet and add header row
-    ws = wb.add_worksheet(sheet_title)
-
-    # Add bold headers
-    bold = wb.add_format({"bold": True})
-    for i in range(0, len(columns)):
-        ws.write(0, i, columns[i], bold)
-
-    for index, line in enumerate(lines):
-        for i in range(0, len(columns)):
-            ws.write(index + 1, i, line.get(columns[i]))
-
-
-def write_excel_logs(logs, wb):
-
-    glob_logfiles = []
-
-    # Expand wildcards, skip non-existing elements
-    for logfile in logs:
-        logfile_expanded = glob.glob(logfile)
-        if not logfile_expanded:
-            print("Info: Log file not found: '%s'" % logfile)
-        else:
-            glob_logfiles.extend(logfile_expanded)
-
-    log_infos = []
-    for logfile in glob_logfiles:
-        with open(logfile) as f:
-            print("Reading %s..." % logfile)
-            log_info = get_log_info(f.readlines())
-            log_info["LogFilePath"] = os.path.abspath(logfile)
-            if log_info is not None:
-                log_infos.append(log_info)
-            else:
-                print("ERROR: Log file incomplete - ignored")
-
-    # Write worksheets for timelines if there is only one log file
-    if len(log_infos) == 1:
-        _write_timelines(wb, log_infos[0])
-
-    lines = []
-    for log_info in log_infos:
-        items = {
-            key: value
-            for (key, value) in log_info.items()
-            if not isinstance(value, list) and not isinstance(value, dict)
-        }
-        lines.append(items)
-
-    _write_lines(wb, "Logs", lines, logpattern.sort_keys)
-
-
-def _write_timelines(wb, log_info):
-
-    # Tree Search Log
-    lines = log_info.get("TreeSearchLog")
-    if lines is not None:
-        _write_lines(wb, "Tree Search", lines, logpattern.tree_log_sort_keys)
-
-
-def _extract_settings(logname, modelname):
-    """small helper function to extract the settings name from the log name"""
+def _strip_modelname(logname, modelname):
+    """small helper function to strip the model name from the log name"""
     logname = os.path.basename(logname)
     startmodel = logname.find(modelname)
     if startmodel == -1:
@@ -766,7 +651,7 @@ def _extract_settings(logname, modelname):
 def _copy_keys(source, target):
     """copy some more info from one DataFrame to another to better distinguish runs/logs"""
     # tl_ = tl_[tl_.columns].apply(pd.to_numeric, errors='coerce')
-    keys = ["Settings", "LogFilePath", "Seed", "ModelName", "Version"]
+    keys = ["Log", "LogFilePath", "Seed", "Model", "ModelFile", "Version"]
     for key in keys:
         if source.get(key) is not None:
             target[key] = source[key].iloc[0]
@@ -812,16 +697,17 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
                     continue
                 # add some more information to better distinguish the individual runs/logs
                 log_info["LogFilePath"] = os.path.abspath(logfile)
+                log_info["Log"] = os.path.splitext(os.path.basename(logfile))[0]
 
                 if log_info.get("ModelFilePath"):
-                    log_info["ModelName"] = os.path.basename(
+                    log_info["ModelFile"] = os.path.basename(
                         log_info["ModelFilePath"]
                     ).split(os.path.extsep)[0]
-                    log_info["Settings"] = _extract_settings(
-                        log_info["LogFilePath"], log_info["ModelName"]
+                    log_info["Log"] = _strip_modelname(
+                        log_info["LogFilePath"], log_info["ModelFile"]
                     )
                 else:
-                    log_info["Settings"] = os.path.splitext(
+                    log_info["Log"] = os.path.splitext(
                         os.path.basename(log_info["LogFilePath"])
                     )[0]
 
@@ -894,7 +780,7 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
                         }
                     )
                 )
-                tl_ = tl_[tl_.columns].apply(pd.to_numeric, errors='coerce')
+                tl_ = tl_[tl_.columns].apply(pd.to_numeric, errors="coerce")
                 _copy_keys(final, tl_)
 
                 tl = tl.append(tl_, ignore_index=True)
@@ -916,10 +802,10 @@ def plot(df: pd.DataFrame, points="all", barmode="group", **kwargs):
         # read custom axis data or use common defaults for summary DataFrame
         x_default = kwargs.pop("x", "Time")
         y_default = kwargs.pop("y", "Incumbent")
-        color_default = kwargs.pop("color", "Settings")
+        color_default = kwargs.pop("color", "Log")
     else:
         # read custom axis data or use common defaults for summary DataFrame
-        x_default = kwargs.pop("x", "Settings")
+        x_default = kwargs.pop("x", "Log")
         y_default = kwargs.pop("y", "Runtime")
         color_default = kwargs.pop("color", "Seed")
 
