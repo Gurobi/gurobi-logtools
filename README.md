@@ -26,12 +26,12 @@ First, you need a set of Gurobi log files to compare, e.g.,
     
     - final results from the individual runs:
     ```
-    glt.plot(summary, x="Settings", y="Runtime", color="Seed", type="box")
+    glt.plot(summary, type="box")
     ```
     
     - progress charts for the individual runs:
     ```
-    glt.plot(timelines, x="Timestamp", y="Gap", color="Log", type="line")
+    glt.plot(timelines, y="Gap", color="Log", type="line")
     ```
 
     These are just examples using the [Plotly Python library](https://plotly.com/python/) - of course, any other plotting library of your choice can be used to work with these DataFrames.
