@@ -20,7 +20,7 @@ setup(
     packages=find_packages(where="src"),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
     install_requires=["ipywidgets", "numpy", "pandas", "plotly", "xlsxwriter"],
