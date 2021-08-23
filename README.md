@@ -2,7 +2,7 @@
 
 Extract information from Gurobi log files and generate [pandas DataFrames](https://pandas.pydata.org/) or Excel worksheets for further processing. Also includes a wrapper for out-of-the-box interactive visualizations using the plotting library [Plotly](https://plotly.com/python/).
 
-![performance plot](assets/performance-plot.png)
+![performance plot](https://github.com/Gurobi/grblogtools/raw/master/assets/performance-plot.png)
 
 # Usage
 
@@ -36,13 +36,13 @@ First, you need a set of Gurobi log files to compare, e.g.,
     These are just examples using the [Plotly Python library](https://plotly.com/python/) - of course, any other plotting library of your choice can be used to work with these DataFrames.
 
 ## Excel
-Converting your log files to Excel worksheets works on the command-line:
+Convert your log files to Excel worksheets right on the command-line:
 
 ```
 python -m grblogtools myrun.xlsx data/*.log
 ```
 
-This will show the available options and how to use the library:
+List all available options and how to use the command-line tool:
 
 ```
 python -m grblogtools --help
