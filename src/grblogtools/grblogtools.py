@@ -31,6 +31,10 @@ class logpattern:
             "Gurobi (?P<Version>\d{1,2}\.[^\s]+) \((?P<Platform>[^\)]+)\) logging started (?P<Time>.*)$"
         ),
         re.compile("Logging started (?P<Time>.*)$"),
+        re.compile(
+            "Gurobi Compute Server Worker version (?P<Version>\d{1,2}\.[^\s]+) build (.*) \((?P<Platform>[^\)]+)\)$"
+        ),
+        re.compile("Compute Server job ID: (?P<JobID>.*)$")
     ]
 
     # Parameter settings
@@ -343,7 +347,9 @@ def get_log_info(loglines, verbose=False):
         print("Error: Could not find initial log message in logfile")
         return None
     else:
-        values.update(result)
+        # get all header information
+        for _,result in _regex_matches(loglines[:first_line+1], logpattern.headers):
+            values.update(result)
 
     # Discard previous lines
     loglines = loglines[first_line:]
