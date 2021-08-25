@@ -12,6 +12,8 @@ Extract information from Gurobi log files and generate [pandas DataFrames](https
 pip install grblogtools
 ```
 
+See CHANGELOG.md for added, removed or fixed functionality.
+
 # Usage
 
 First, you need a set of Gurobi log files to compare, e.g.,
