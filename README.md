@@ -1,6 +1,6 @@
 # GRBlogtools
 
-![PyPI](https://img.shields.io/pypi/v/grblogtools?color=blue&label=PyPI)
+[![PyPI](https://img.shields.io/pypi/v/grblogtools?color=blue&label=PyPI)](https://pypi.python.org/pypi/grblogtools)
 
 Extract information from Gurobi log files and generate [pandas DataFrames](https://pandas.pydata.org/) or Excel worksheets for further processing. Also includes a wrapper for out-of-the-box interactive visualizations using the plotting library [Plotly](https://plotly.com/python/).
 
@@ -12,7 +12,7 @@ Extract information from Gurobi log files and generate [pandas DataFrames](https
 pip install grblogtools
 ```
 
-See CHANGELOG.md for added, removed or fixed functionality.
+See [CHANGELOG](CHANGELOG.md) for added, removed or fixed functionality.
 
 # Usage
 

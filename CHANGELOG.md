@@ -11,4 +11,4 @@
 - add Cores count
 
 ## 0.3.1 - 2021-Aug-23
-- public release
+- initial public release
