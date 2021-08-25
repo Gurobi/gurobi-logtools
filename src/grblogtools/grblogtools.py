@@ -114,7 +114,7 @@ class logpattern:
             "Optimize a model with (?P<NumConstrs>\d+) (R|r)ows, (?P<NumVars>\d+) (C|c)olumns and (?P<NumNZs>\d+) (N|n)on(Z|z)ero(e?)s"
         ),
         re.compile("Presolve time: (?P<PresolveTime>[\d\.]+)s"),
-        re.compile("Thread count was (?P<Threads>\d+)"),
+        re.compile("Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"),
         re.compile("Distributed MIP job count: (?P<DistributedMIPJobs>\d+)"),
         re.compile("Concurrent MIP job count: (?P<ConcurrentJobs>\d+)"),
         re.compile("Reading time = (?P<ReadTime>[\d\.]+) seconds"),
