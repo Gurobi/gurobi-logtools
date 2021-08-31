@@ -22,7 +22,7 @@ First, you need a set of Gurobi log files to compare, e.g.,
   - performance variability experiments involving multiple random seed runs
   - ...
 
-You may also use the provided [grblogtools.ipynb notebook](https://github.com/Gurobi/grblogtools/blob/master/grblogtools.ipynb) and the provided [example data set](https://github.com/Gurobi/grblogtools/tree/master/data) to get started.
+You may also use the provided [grblogtools.ipynb notebook](https://github.com/Gurobi/grblogtools/blob/master/grblogtools.ipynb) with the [example data set](https://github.com/Gurobi/grblogtools/tree/master/data) to get started.
 
 ## Pandas/Plotly
 1. parse log files:
