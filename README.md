@@ -12,7 +12,7 @@ Extract information from Gurobi log files and generate [pandas DataFrames](https
 pip install grblogtools
 ```
 
-See [CHANGELOG](CHANGELOG.md) for added, removed or fixed functionality.
+See [CHANGELOG](https://github.com/Gurobi/grblogtools/blob/master/CHANGELOG.md) for added, removed or fixed functionality.
 
 # Usage
 
@@ -21,6 +21,8 @@ First, you need a set of Gurobi log files to compare, e.g.,
   - comparisons of different parameter settings
   - performance variability experiments involving multiple random seed runs
   - ...
+
+You may also use the provided [grblogtools.ipynb notebook](https://github.com/Gurobi/grblogtools/blob/master/grblogtools.ipynb) and the provided [example data set](https://github.com/Gurobi/grblogtools/tree/master/data) to get started.
 
 ## Pandas/Plotly
 1. parse log files:
