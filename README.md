@@ -23,6 +23,7 @@ First, you need a set of Gurobi log files to compare, e.g.,
   - ...
 
 You may also use the provided [grblogtools.ipynb notebook](https://github.com/Gurobi/grblogtools/blob/master/grblogtools.ipynb) with the [example data set](https://github.com/Gurobi/grblogtools/tree/master/data) to get started.
+Additionally, there is a [Gurobi TechTalk demonstrating how to use grblogtools (YouTube)](https://youtu.be/wbg4Zr_A1s8).
 
 ## Pandas/Plotly
 1. parse log files:
