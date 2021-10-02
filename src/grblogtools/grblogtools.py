@@ -7,6 +7,7 @@ import plotly.express as px
 import pandas as pd
 from numpy import nan
 
+from grblogtools.helpers import fill_default_parameters
 
 # Log Status Codes
 class logstatus:
@@ -766,7 +767,7 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
         summary["Seed"] = summary["Seed (Parameter)"].fillna(0).astype(int).astype(str)
         summary = summary.drop(labels="Seed (Parameter)", axis=1)
 
-    summary = summary.replace("-", nan)
+    summary = fill_default_parameters(summary.replace("-", nan))
 
     if timelines:
 
