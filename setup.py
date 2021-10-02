@@ -25,4 +25,5 @@ setup(
     ],
     install_requires=["ipywidgets", "numpy", "pandas", "plotly", "xlsxwriter"],
     python_requires=">=3.6",
+    include_package_data=True,
 )
