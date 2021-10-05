@@ -1,3 +1,4 @@
+from datetime import time
 import grblogtools as glt
 
 
@@ -8,4 +9,24 @@ def test_get_dataframe():
 
 def test_read_with_timelines():
     """Check timelines argument."""
-    summary, timelines, rootlp = glt.get_dataframe(["data/*.log"], timelines=True)
+    summary, timelines = glt.get_dataframe(["data/*.log"], timelines=True)
+    assert set(timelines.keys()) == {"norel", "rootlp", "nodelog"}
+
+
+def test_norel_timeline():
+    """ Check norel logs before the root node. Note that this reports norel's
+    clock, so read + presolve time would need to be added for 'real' time. """
+    summary, timelines = glt.get_dataframe(
+        ["data/912-NoRelHeurWork60-glass4-0.log"], timelines=True,
+    )
+    norel = timelines['norel']
+    assert norel.shape[0] == 15
+    assert norel["Log"].unique()[0] == "912-NoRelHeurWork60"
+    assert norel["NoRelTime"].min() == 5.0
+    assert norel["NoRelTime"].max() == 93.0
+    assert (norel["Incumbent"].max() - 1.450014e+09) <= 1e+05
+    assert (norel["Incumbent"].min() - 1.2000e+09) <= 1e+05
+    assert (norel["BestBd"].max() - 8.00002e+08) <= 1e+05
+    assert (norel["BestBd"].min() - 8.00002e+08) <= 1e+05
+    # Sometimes a bound isn't reported.
+    assert norel["BestBd"].isnull().sum() == 1
