@@ -22,8 +22,8 @@ def test_norel_timeline():
     norel = timelines['norel']
     assert norel.shape[0] == 15
     assert norel["Log"].unique()[0] == "912-NoRelHeurWork60"
-    assert norel["NoRelTime"].min() == 5.0
-    assert norel["NoRelTime"].max() == 93.0
+    assert norel["Time"].min() == 5.0
+    assert norel["Time"].max() == 93.0
     assert (norel["Incumbent"].max() - 1.450014e+09) <= 1e+05
     assert (norel["Incumbent"].min() - 1.2000e+09) <= 1e+05
     assert (norel["BestBd"].max() - 8.00002e+08) <= 1e+05

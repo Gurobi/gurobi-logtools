@@ -46,9 +46,9 @@ Additionally, there is a [Gurobi TechTalk demonstrating how to use grblogtools (
     glt.plot(timelines['nodelog'], y="Gap", color="Log", type="line")
     ```
 
-    - progress of the norel heuristic:
+    - progress of the norel heuristic (note, the time recorded here is since the start of norel, and does not include presolve + read time):
     ```Python
-    glt.plot(timelines['norel'], x="NoRelTime", y="Incumbent", color="Log", type="line")
+    glt.plot(timelines['norel'], x="Time", y="Incumbent", color="Log", type="line")
     ```
 
     These are just examples using the [Plotly Python library](https://plotly.com/python/) - of course, any other plotting library of your choice can be used to work with these DataFrames.

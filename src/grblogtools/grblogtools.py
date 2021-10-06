@@ -461,10 +461,10 @@ def get_log_info(loglines, verbose=False):
             "Found heuristic solution:\sobjective\s(?P<Incumbent>[^\s]+)"
         )
         norel_elapsed_time = re.compile(
-            "Elapsed time for NoRel heuristic:\s(?P<NoRelTime>\d+)s"
+            "Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s"
         )
         norel_elapsed_bound = re.compile(
-            "Elapsed time for NoRel heuristic:\s(?P<NoRelTime>\d+)s\s\(best\sbound\s(?P<BestBd>[^\s]+)\)"
+            "Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s\s\(best\sbound\s(?P<BestBd>[^\s]+)\)"
         )
         norel_log = []
         norel_incumbent = {}
