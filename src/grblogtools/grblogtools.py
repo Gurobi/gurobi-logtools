@@ -450,6 +450,41 @@ def get_log_info(loglines, verbose=False):
             if result:
                 values["Cuts: " + result["Name"].strip()] = int(result["Count"])
 
+    # NoRel log
+    norel_log_start = re.compile("Starting NoRel heuristic")
+    norel_first_line, result = _regex_first_match(
+        loglines, [norel_log_start], reverse=False
+    )
+    if norel_first_line and norel_first_line < len(loglines) - 1:
+        norel_last_line = _get_last_nonempty_line(loglines, norel_first_line + 1)
+        norel_primal_regex = re.compile(
+            "Found heuristic solution:\sobjective\s(?P<Incumbent>[^\s]+)"
+        )
+        norel_elapsed_time = re.compile(
+            "Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s"
+        )
+        norel_elapsed_bound = re.compile(
+            "Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s\s\(best\sbound\s(?P<BestBd>[^\s]+)\)"
+        )
+        norel_log = []
+        norel_incumbent = {}
+        for norel_log_line in loglines[
+            norel_first_line + 1 : norel_last_line + 1
+        ]:
+            # NoRel shows the solutions and timings/bounds on different lines, so
+            # when we see a timing line, we store the most recent incumbent there,
+            # instead of recording the primal when the log line is found.
+            result = norel_primal_regex.match(norel_log_line)
+            if result:
+                norel_incumbent = result.groupdict()
+            result = norel_elapsed_bound.match(norel_log_line) or norel_elapsed_time.match(norel_log_line)
+            if result:
+                tmp = result.groupdict()
+                tmp.update(norel_incumbent)
+                norel_log.append(tmp)
+        if len(norel_log) > 0:
+            values["NoRelLog"] = norel_log
+
     # Simplex Log (can be regular LP, root node or crossover)
     simplex_log_start = re.compile(
         "Iteration(\s+)Objective(\s+)Primal Inf.(\s+)Dual Inf.(\s+)Time"
@@ -737,6 +772,20 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
     summary = summary.replace("-", nan)
 
     if timelines:
+
+        # collect norel log
+        norel = pd.DataFrame()
+        for log_info in log_infos:
+            log = log_info.get("LogFilePath")
+            final = summary[summary["LogFilePath"] == log]
+            nrlines = log_info.get("NoRelLog")
+            if nrlines is not None:
+                norel_ = pd.DataFrame(nrlines).apply(
+                    pd.to_numeric, errors="coerce"
+                )
+                _copy_keys(final, norel_)
+                norel = norel.append(norel_, ignore_index=True)
+
         # collect root LP log
         rootlp = pd.DataFrame()
         for log_info in log_infos:
@@ -791,7 +840,7 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
 
                 tl = tl.append(tl_, ignore_index=True)
 
-        return summary, tl, rootlp
+        return summary, dict(nodelog=tl, rootlp=rootlp, norel=norel)
     else:
         return summary
 
