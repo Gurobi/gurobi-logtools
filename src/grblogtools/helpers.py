@@ -11,7 +11,12 @@ defaults_dir = pathlib.Path(__file__).parent.joinpath("defaults")
 
 @lru_cache()
 def load_defaults(version):
-    return json.loads(defaults_dir.joinpath(f"{version}.json").read_text())
+    version_file = defaults_dir.joinpath(f"{version}.json")
+    if not version_file.exists():
+        # Fall back to 912 defaults.
+        version_file = defaults_dir.joinpath("912.json")
+    with version_file.open() as infile:
+        return json.load(infile)
 
 
 def fill_for_version(group, parameter_columns):
