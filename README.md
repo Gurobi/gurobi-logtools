@@ -1,6 +1,8 @@
 # GRBlogtools
 
-[![PyPI](https://img.shields.io/pypi/v/grblogtools?color=blue&label=PyPI)](https://pypi.python.org/pypi/grblogtools)
+[![PyPI](https://img.shields.io/pypi/v/grblogtools?label=PyPI)](https://pypi.python.org/pypi/grblogtools)
+[![License](https://img.shields.io/github/license/Gurobi/grblogtools?color=blue&label=License)](https://github.com/Gurobi/grblogtools/blob/master/LICENSE)
+[![Test Python Package](https://github.com/Gurobi/grblogtools/actions/workflows/python-tox.yml/badge.svg?branch=master)](https://github.com/Gurobi/grblogtools/actions/workflows/python-tox.yml)
 
 Extract information from Gurobi log files and generate [pandas DataFrames](https://pandas.pydata.org/) or Excel worksheets for further processing. Also includes a wrapper for out-of-the-box interactive visualizations using the plotting library [Plotly](https://plotly.com/python/).
 
