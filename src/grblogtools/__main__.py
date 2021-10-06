@@ -11,7 +11,7 @@ parser.add_argument(
     "-t",
     "--timelines",
     action="store_true",
-    help="also store root LP and node log in separate sheets",
+    help="also store timelines (root LP, node log, and NoRel log) in separate sheets",
 )
 parser.add_argument(
     "-m",
@@ -22,13 +22,13 @@ parser.add_argument(
 args = parser.parse_args()
 
 if args.timelines:
-    summary, timelines, rootlp = glt.get_dataframe(
+    summary, timelines = glt.get_dataframe(
         args.logfiles, timelines=True, merged_logs=args.mergedlogs
     )
     with pd.ExcelWriter(args.outfile) as writer:
         summary.to_excel(writer, sheet_name="Summary")
-        timelines.to_excel(writer, sheet_name="Node Log")
-        rootlp.to_excel(writer, sheet_name="Root LP")
+        for tl in timelines:
+            timelines[tl].to_excel(writer, sheet_name=tl)
 else:
     summary = glt.get_dataframe(args.logfiles, merged_logs=args.mergedlogs)
     with pd.ExcelWriter(args.outfile) as writer:
