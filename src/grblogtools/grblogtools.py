@@ -564,9 +564,6 @@ def get_log_info(loglines, verbose=False):
             float_pattern
         )
     )
-    tree_search_dev_heuristic = re.compile(
-        r"New incumbent \({0}s\): (?P<Heuristic>.*?) heuristic.*".format(float_pattern)
-    )
 
     tree_search_log = []
     ignored_lines = 0
@@ -606,10 +603,6 @@ def get_log_info(loglines, verbose=False):
                 if lastheur and result.get("NewSolution") == "H":
                     result["NewSolution"] = lastheur
                 tree_search_log.append(result)
-            elif tree_search_dev_heuristic.match(tree_search_log_line):
-                lastheur = tree_search_dev_heuristic.match(tree_search_log_line).group(
-                    "Heuristic"
-                )
             else:
                 ignored_lines += 1
 
