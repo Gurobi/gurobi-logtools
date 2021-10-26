@@ -5,6 +5,10 @@
 ### Changed
 ### Removed
 
+## 1.1.0 - 2021-Oct-26
+### Added
+- add missing range attributes for quadratic constraints
+
 ## 1.0.0 - 2021-Oct-06
 ### Added
 - parse output from NoRel heuristic into separate DataFrame (included in `timelines` dictionary)
