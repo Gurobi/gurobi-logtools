@@ -62,6 +62,19 @@ PARAMETER_DESCRIPTIONS = {
         1: "1: Conservative",
         2: "2: Aggressive",
     },
+    "Cuts (Parameter)": {
+        -1: "-1: Automatic",
+        0: "0: Off",
+        1: "1: Moderate",
+        2: "2: Aggressive",
+        3: "3: Very aggressive",
+    },
+    "MIPFocus (Parameter)": {
+        0: "0: Balanced",
+        1: "1: Feasibility",
+        2: "2: Optimality",
+        3: "3: Bound",
+    },
 }
 
 
