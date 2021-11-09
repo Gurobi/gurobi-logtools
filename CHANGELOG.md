@@ -5,6 +5,12 @@
 ### Changed
 ### Removed
 
+## 1.2.0 - 2021-Nov-09
+### Added
+- new parameter `prettynames=True` to replace parameter values with meaningful descriptions
+### Fixed
+- fix parsing of MIP Start information
+
 ## 1.1.0 - 2021-Oct-26
 ### Added
 - add missing range attributes for quadratic constraints
