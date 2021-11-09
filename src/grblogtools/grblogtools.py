@@ -130,7 +130,7 @@ class logpattern:
             "Model has (?P<NumPWLObjVars>\d+) piecewise-linear objective terms?"
         ),
         re.compile("Model has (?P<NumGenConstrs>\d+) general constraints?"),
-        re.compile("Loaded MIP start with objective (?P<MIPStart>.*)$"),
+        re.compile("Loaded user MIP start with objective (?P<MIPStart>.*)$"),
         re.compile("Pool objective bound (?P<PoolObjBound>.*)$"),
         re.compile("Solution count (?P<SolCount>\d+)"),
         re.compile(
