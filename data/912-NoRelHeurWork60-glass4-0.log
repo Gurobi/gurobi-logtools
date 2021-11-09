@@ -1,4 +1,4 @@
-Gurobi 9.1.2 (mac64, gurobi_cl) logging started Tue Oct  5 09:11:51 2021
+Gurobi 9.2.2 (mac64, gurobi_cl) logging started Tue Oct  5 09:11:51 2021
 
 Set parameter NoRelHeurWork to value 60
 Set parameter LogFile to value 912-NoRelHeurWork60-glass4-0.log

@@ -7,6 +7,8 @@ import plotly.express as px
 import pandas as pd
 from numpy import nan
 
+from grblogtools.helpers import fill_default_parameters
+from grblogtools.helpers import add_categorical_descriptions
 
 # Log Status Codes
 class logstatus:
@@ -695,7 +697,7 @@ def _copy_keys(source, target):
             target[key] = source[key].iloc[0]
 
 
-def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
+def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False, prettyparams=False):
     """Create a dataframe with all stats of the logs
 
     - timelines=True: also create dictionary of timelines of all logs
@@ -766,7 +768,9 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False):
         summary["Seed"] = summary["Seed (Parameter)"].fillna(0).astype(int).astype(str)
         summary = summary.drop(labels="Seed (Parameter)", axis=1)
 
-    summary = summary.replace("-", nan)
+    summary = fill_default_parameters(summary.replace("-", nan))
+    if prettyparams:
+        summary = add_categorical_descriptions(summary)
 
     if timelines:
 
