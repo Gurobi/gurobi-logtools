@@ -14,7 +14,9 @@ Extract information from Gurobi log files and generate [pandas DataFrames](https
 python -m pip install grblogtools
 ```
 
-It is recommended to prepend the `pip install` command with `python -m` to ensure that the package is installed using the correct Python version currently active in your environment. See [CHANGELOG](https://github.com/Gurobi/grblogtools/blob/master/CHANGELOG.md) for added, removed or fixed functionality.
+It is recommended to prepend the `pip install` command with `python -m` to ensure that the package is installed using the correct Python version currently active in your environment.
+
+See [CHANGELOG](https://github.com/Gurobi/grblogtools/blob/master/CHANGELOG.md) for added, removed or fixed functionality.
 
 # Usage
 
