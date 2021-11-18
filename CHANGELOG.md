@@ -5,6 +5,10 @@
 ### Changed
 ### Removed
 
+## 1.2.1 - 2021-Nov-18
+### Added
+- add counter to LogFilePath to better distinguish merged logs
+
 ## 1.2.0 - 2021-Nov-09
 ### Added
 - new parameter `prettynames=True` to replace parameter values with meaningful descriptions
