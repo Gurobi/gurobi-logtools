@@ -730,7 +730,7 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False, p
                 header.append(len(loglines))
             else:
                 header = [0, len(loglines)]
-            for h in range(len(header) - 1):
+            for i,h in enumerate(range(len(header) - 1)):
                 log_info = get_log_info(loglines[header[h] : header[h + 1]], verbose)
                 if log_info is None:
                     print(f"error processing {logfile}")
@@ -738,6 +738,9 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False, p
                 # add some more information to better distinguish the individual runs/logs
                 log_info["LogFilePath"] = os.path.abspath(logfile)
                 log_info["Log"] = os.path.splitext(os.path.basename(logfile))[0]
+
+                # add counter if using merged_logs:
+                log_info["LogFilePath"] += f"({i+1})"
 
                 if log_info.get("ModelFilePath"):
                     log_info["ModelFile"] = os.path.basename(
