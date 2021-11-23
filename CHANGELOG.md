@@ -5,6 +5,10 @@
 ### Changed
 ### Removed
 
+## 1.2.2 - 2021-Nov-23
+### Added
+- update default parameter list for v9.5.0
+
 ## 1.2.1 - 2021-Nov-18
 ### Added
 - add counter to LogFilePath to better distinguish merged logs
