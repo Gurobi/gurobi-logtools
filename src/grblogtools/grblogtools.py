@@ -839,7 +839,15 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False, p
                         }
                     )
                 )
-                tl_ = tl_[tl_.columns].apply(pd.to_numeric, errors="coerce")
+                non_numeric_cols = set(tl_.columns).intersection({"NewSolution"})
+                numeric_cols = set(tl_.columns).difference(non_numeric_cols)
+                tl_ = pd.concat(
+                    [
+                        tl_[numeric_cols].apply(pd.to_numeric, errors="coerce"),
+                        tl_[non_numeric_cols],
+                    ],
+                    axis="columns",
+                )
                 _copy_keys(final, tl_)
 
                 tl = tl.append(tl_, ignore_index=True)

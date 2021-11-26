@@ -30,3 +30,9 @@ def test_norel_timeline():
     assert (norel["BestBd"].min() - 8.00002e08) <= 1e05
     # Sometimes a bound isn't reported.
     assert norel["BestBd"].isnull().sum() == 1
+
+
+def test_newsolution_markers():
+    _, timelines = glt.get_dataframe(["data/912-glass4-1.log"], timelines=True)
+    new_solutions = timelines["nodelog"]["NewSolution"]
+    assert new_solutions.value_counts().to_dict() == {"H": 19, "*": 4}
