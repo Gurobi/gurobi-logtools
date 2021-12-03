@@ -5,6 +5,12 @@
 ### Changed
 ### Removed
 
+## 1.3.0 - 2021-Dec-03
+### Changed
+- refactor to make code more modular
+### Fixed
+- avoid coercing NewSolution to numeric type
+
 ## 1.2.2 - 2021-Nov-23
 ### Added
 - update default parameter list for v9.5.0
