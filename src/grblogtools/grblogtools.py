@@ -336,16 +336,78 @@ def _get_typed_values(values):
     return typed_values
 
 
-def get_log_info(loglines, verbose=False):
+# Used to match and parse floating point numbers of any format
+float_pattern = "[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
+
+# Regular expressions for different log line types
+tree_search_full_log_line_regex = re.compile(
+    r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>{0})\s+(?P<Depth>\d+)\s+(?P<IntInf>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
+        float_pattern
+    )
+)
+tree_search_nodepruned_line_regex = re.compile(
+    r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>(cutoff|infeasible|postponed))\s+(?P<Depth>\d+)\s+(?P<Incumbent>(-|{0}))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
+        float_pattern
+    )
+)
+tree_search_new_solution_heuristic_log_line_regex = re.compile(
+    r"(?P<NewSolution>H)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>{0}%)\s+(?P<ItPerNode>(-|{0}))\s+(?P<Time>\d+)s".format(
+        float_pattern
+    )
+)
+tree_search_new_solution_branching_log_line_regex = re.compile(
+    r"(?P<NewSolution>\*)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Depth>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>{0}%)\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
+        float_pattern
+    )
+)
+tree_search_status_line_regex = re.compile(
+    r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>-)\s+(?P<Depth>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
+        float_pattern
+    )
+)
+
+def populate_tree_search_log(tree_search_log_lines):
+
+    tree_search_log = []
+    ignored_lines = 0
+    lastheur = None
+
+    for tree_search_log_line in tree_search_log_lines:
+
+        result = tree_search_full_log_line_regex.match(
+            tree_search_log_line.rstrip()
+        )
+
+        line, result = _regex_first_match(
+            [tree_search_log_line.rstrip()],
+            [
+                tree_search_full_log_line_regex,
+                tree_search_nodepruned_line_regex,
+                tree_search_status_line_regex,
+                tree_search_new_solution_branching_log_line_regex,
+                tree_search_new_solution_heuristic_log_line_regex,
+            ],
+        )
+
+        if line is not None:
+            result.update(_get_typed_values(result))
+            if lastheur and result.get("NewSolution") == "H":
+                print(lastheur)
+                result["NewSolution"] = lastheur
+            tree_search_log.append(result)
+        else:
+            ignored_lines += 1
+
+    return tree_search_log, ignored_lines
+
+
+def get_log_info(values, loglines, verbose=False, populate_tree_search_log=populate_tree_search_log):
 
     if not isinstance(loglines, list):
         raise TypeError("Wrong log format")
 
     # Default values
-    values = {"ObjVal": "-", "ObjBound": "-", "MIPGap": "-"}
-
-    # Used to match and parse floating point numbers of any format
-    float_pattern = "[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
+    values.update({"ObjVal": "-", "ObjBound": "-", "MIPGap": "-"})
 
     # Step 1: Find last header line
     first_line, result = _regex_first_match(loglines, logpattern.headers, reverse=True)
@@ -544,36 +606,6 @@ def get_log_info(loglines, verbose=False):
     # Tree Search Log
     tree_search_log_start = re.compile(r" Expl Unexpl(.*)It/Node Time$")
 
-    # Regular expressions for different log line types
-    tree_search_full_log_line_regex = re.compile(
-        r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>{0})\s+(?P<Depth>\d+)\s+(?P<IntInf>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
-            float_pattern
-        )
-    )
-    tree_search_nodepruned_line_regex = re.compile(
-        r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>(cutoff|infeasible|postponed))\s+(?P<Depth>\d+)\s+(?P<Incumbent>(-|{0}))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
-            float_pattern
-        )
-    )
-    tree_search_new_solution_heuristic_log_line_regex = re.compile(
-        r"(?P<NewSolution>H)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>{0}%)\s+(?P<ItPerNode>(-|{0}))\s+(?P<Time>\d+)s".format(
-            float_pattern
-        )
-    )
-    tree_search_new_solution_branching_log_line_regex = re.compile(
-        r"(?P<NewSolution>\*)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Depth>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>{0}%)\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
-            float_pattern
-        )
-    )
-    tree_search_status_line_regex = re.compile(
-        r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>-)\s+(?P<Depth>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
-            float_pattern
-        )
-    )
-
-    tree_search_log = []
-    ignored_lines = 0
-
     tree_search_first_line, result = _regex_first_match(
         loglines, [tree_search_log_start], reverse=False
     )
@@ -583,34 +615,10 @@ def get_log_info(loglines, verbose=False):
         tree_search_last_line = _get_last_tree_line(
             loglines, tree_search_first_line + 2
         )
-        lastheur = None
 
-        for tree_search_log_line in loglines[
-            tree_search_first_line + 2 : tree_search_last_line + 1
-        ]:
-
-            result = tree_search_full_log_line_regex.match(
-                tree_search_log_line.rstrip()
-            )
-
-            line, result = _regex_first_match(
-                [tree_search_log_line.rstrip()],
-                [
-                    tree_search_full_log_line_regex,
-                    tree_search_nodepruned_line_regex,
-                    tree_search_status_line_regex,
-                    tree_search_new_solution_branching_log_line_regex,
-                    tree_search_new_solution_heuristic_log_line_regex,
-                ],
-            )
-
-            if line is not None:
-                result.update(_get_typed_values(result))
-                if lastheur and result.get("NewSolution") == "H":
-                    result["NewSolution"] = lastheur
-                tree_search_log.append(result)
-            else:
-                ignored_lines += 1
+        tree_search_log, ignored_lines = populate_tree_search_log(
+            loglines[tree_search_first_line + 2 : tree_search_last_line + 1],
+        )
 
     if len(tree_search_log) > 0:
         values["TreeSearchLog"] = tree_search_log
@@ -697,7 +705,14 @@ def _copy_keys(source, target):
             target[key] = source[key].iloc[0]
 
 
-def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False, prettyparams=False):
+def get_dataframe(
+    logfiles,
+    timelines=False,
+    verbose=False,
+    merged_logs=False,
+    prettyparams=False,
+    get_log_info=get_log_info,
+):
     """Create a dataframe with all stats of the logs
 
     - timelines=True: also create dictionary of timelines of all logs
@@ -731,7 +746,7 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False, p
             else:
                 header = [0, len(loglines)]
             for i,h in enumerate(range(len(header) - 1)):
-                log_info = get_log_info(loglines[header[h] : header[h + 1]], verbose)
+                log_info = get_log_info(dict(), loglines[header[h] : header[h + 1]], verbose)
                 if log_info is None:
                     print(f"error processing {logfile}")
                     continue
@@ -849,6 +864,7 @@ def get_dataframe(logfiles, timelines=False, verbose=False, merged_logs=False, p
                     axis="columns",
                 )
                 _copy_keys(final, tl_)
+                # NB: losing all the heuristic info here!!
 
                 tl = tl.append(tl_, ignore_index=True)
 
