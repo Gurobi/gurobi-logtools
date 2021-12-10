@@ -2,6 +2,7 @@
 ## Unreleased
 ### Added
 ### Fixed
+- fix error when log does not have a tree section
 ### Changed
 ### Removed
 
