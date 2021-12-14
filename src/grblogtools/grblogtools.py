@@ -9,6 +9,8 @@ from numpy import nan
 
 from grblogtools.helpers import fill_default_parameters
 from grblogtools.helpers import add_categorical_descriptions
+from grblogtools.nodelog import NodeLogParser
+from grblogtools.norel import NoRelParser
 
 # Log Status Codes
 class logstatus:
@@ -303,18 +305,6 @@ def _get_last_nonempty_line(loglines, start_line):
     return last_line
 
 
-def _get_last_tree_line(loglines, start_line):
-    """Check loglines starting at index start_line and return the number of the 'Explored ... nodes' line"""
-
-    last_line = len(loglines)
-    explored = re.compile(r"Explored \d+ nodes")
-    for i in range(start_line, len(loglines)):
-        if explored.match(loglines[i]):
-            break
-
-    return last_line - 1
-
-
 def _get_typed_values(values):
 
     typed_values = {}
@@ -366,42 +356,8 @@ tree_search_status_line_regex = re.compile(
     )
 )
 
-def populate_tree_search_log(tree_search_log_lines):
 
-    tree_search_log = []
-    ignored_lines = 0
-    lastheur = None
-
-    for tree_search_log_line in tree_search_log_lines:
-
-        result = tree_search_full_log_line_regex.match(
-            tree_search_log_line.rstrip()
-        )
-
-        line, result = _regex_first_match(
-            [tree_search_log_line.rstrip()],
-            [
-                tree_search_full_log_line_regex,
-                tree_search_nodepruned_line_regex,
-                tree_search_status_line_regex,
-                tree_search_new_solution_branching_log_line_regex,
-                tree_search_new_solution_heuristic_log_line_regex,
-            ],
-        )
-
-        if line is not None:
-            result.update(_get_typed_values(result))
-            if lastheur and result.get("NewSolution") == "H":
-                print(lastheur)
-                result["NewSolution"] = lastheur
-            tree_search_log.append(result)
-        else:
-            ignored_lines += 1
-
-    return tree_search_log, ignored_lines
-
-
-def get_log_info(values, loglines, verbose=False, populate_tree_search_log=populate_tree_search_log):
+def get_log_info(values, loglines, verbose=False):
 
     if not isinstance(loglines, list):
         raise TypeError("Wrong log format")
@@ -519,39 +475,11 @@ def get_log_info(values, loglines, verbose=False, populate_tree_search_log=popul
                 values["Cuts: " + result["Name"].strip()] = int(result["Count"])
 
     # NoRel log
-    norel_log_start = re.compile("Starting NoRel heuristic")
-    norel_first_line, result = _regex_first_match(
-        loglines, [norel_log_start], reverse=False
-    )
-    if norel_first_line and norel_first_line < len(loglines) - 1:
-        norel_last_line = _get_last_nonempty_line(loglines, norel_first_line + 1)
-        norel_primal_regex = re.compile(
-            "Found heuristic solution:\sobjective\s(?P<Incumbent>[^\s]+)"
-        )
-        norel_elapsed_time = re.compile(
-            "Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s"
-        )
-        norel_elapsed_bound = re.compile(
-            "Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s\s\(best\sbound\s(?P<BestBd>[^\s]+)\)"
-        )
-        norel_log = []
-        norel_incumbent = {}
-        for norel_log_line in loglines[
-            norel_first_line + 1 : norel_last_line + 1
-        ]:
-            # NoRel shows the solutions and timings/bounds on different lines, so
-            # when we see a timing line, we store the most recent incumbent there,
-            # instead of recording the primal when the log line is found.
-            result = norel_primal_regex.match(norel_log_line)
-            if result:
-                norel_incumbent = result.groupdict()
-            result = norel_elapsed_bound.match(norel_log_line) or norel_elapsed_time.match(norel_log_line)
-            if result:
-                tmp = result.groupdict()
-                tmp.update(norel_incumbent)
-                norel_log.append(tmp)
-        if len(norel_log) > 0:
-            values["NoRelLog"] = norel_log
+    norel_parser = NoRelParser()
+    norel_parser.parse_lines(loglines)
+    norel_log = norel_parser.timeline
+    if len(norel_log) > 0:
+        values["NoRelLog"] = norel_log
 
     # Simplex Log (can be regular LP, root node or crossover)
     simplex_log_start = re.compile(
@@ -604,26 +532,13 @@ def get_log_info(values, loglines, verbose=False, populate_tree_search_log=popul
             values["BarrierLog"] = barrier_log
 
     # Tree Search Log
-    tree_search_log_start = re.compile(r" Expl Unexpl(.*)It/Node Time$")
-
-    tree_search_first_line, result = _regex_first_match(
-        loglines, [tree_search_log_start], reverse=False
-    )
-    if tree_search_first_line and tree_search_first_line < len(loglines) - 2:
-
-        # Slice out tree search log lines
-        tree_search_last_line = _get_last_tree_line(
-            loglines, tree_search_first_line + 2
-        )
-
-        tree_search_log, ignored_lines = populate_tree_search_log(
-            loglines[tree_search_first_line + 2 : tree_search_last_line + 1],
-        )
-
+    nodelog_parser = NodeLogParser()
+    nodelog_parser.parse_lines(loglines)
+    tree_search_log = nodelog_parser.timeline
     if len(tree_search_log) > 0:
         values["TreeSearchLog"] = tree_search_log
-        if ignored_lines > 0 and verbose:
-            print("Info: Ignored", ignored_lines, "tree search lines")
+        if nodelog_parser.ignored_lines > 0 and verbose:
+            print("Info: Ignored", nodelog_parser.ignored_lines, "tree search lines")
 
     # Warnings
     # e.g.
@@ -838,6 +753,8 @@ def get_dataframe(
         for log_info in log_infos:
             lines = log_info.get("TreeSearchLog")
             tl_ = pd.DataFrame(lines)
+            if "Pruned" in tl_:
+                tl_ = tl_.drop(columns=["Pruned"])
             # filter out empty dictionaries and convert all values to numerics
             if tl_.get("Time") is not None:
                 log = log_info.get("LogFilePath")
