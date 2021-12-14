@@ -620,10 +620,10 @@ def get_log_info(values, loglines, verbose=False, populate_tree_search_log=popul
             loglines[tree_search_first_line + 2 : tree_search_last_line + 1],
         )
 
-    if len(tree_search_log) > 0:
-        values["TreeSearchLog"] = tree_search_log
-        if ignored_lines > 0 and verbose:
-            print("Info: Ignored", ignored_lines, "tree search lines")
+        if len(tree_search_log) > 0:
+            values["TreeSearchLog"] = tree_search_log
+            if ignored_lines > 0 and verbose:
+                print("Info: Ignored", ignored_lines, "tree search lines")
 
     # Warnings
     # e.g.
