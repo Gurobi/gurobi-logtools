@@ -2,9 +2,12 @@
 ## Unreleased
 ### Added
 ### Fixed
-- fix error when log does not have a tree section
 ### Changed
 ### Removed
+
+## 1.3.1 - 2021-Dec-14
+### Fixed
+- fix error when log does not have a tree section
 
 ## 1.3.0 - 2021-Dec-03
 ### Changed
