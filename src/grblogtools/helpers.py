@@ -1,6 +1,7 @@
 import json
 import pathlib
 import re
+from enum import Enum
 from functools import lru_cache
 from functools import partial
 
@@ -89,3 +90,12 @@ def add_categorical_descriptions(summary):
             summary[column].map(PARAMETER_DESCRIPTIONS[column]).astype("category")
         )
     return summary
+
+
+class ParserFlag(Enum):
+    """Enumeration class representing various parsing stages."""
+
+    UNKNOWN = 0
+    START = 1
+    CONTINUE = 2
+    END = 3
