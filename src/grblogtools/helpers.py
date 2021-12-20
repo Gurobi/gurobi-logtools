@@ -10,6 +10,15 @@ re_parameter_column = re.compile(r"(.*) \(Parameter\)")
 defaults_dir = pathlib.Path(__file__).parent.joinpath("defaults")
 
 
+class ParserFlag(Enum):
+    """Enumeration class representing different status of a parser."""
+
+    UNKNOWN = 0
+    START = 1
+    CONTINUE = 2
+    END = 3
+
+
 @lru_cache()
 def load_defaults(version):
     version_file = defaults_dir.joinpath(f"{version}.json")
@@ -90,12 +99,3 @@ def add_categorical_descriptions(summary):
             summary[column].map(PARAMETER_DESCRIPTIONS[column]).astype("category")
         )
     return summary
-
-
-class ParserFlag(Enum):
-    """Enumeration class representing various parsing stages."""
-
-    UNKNOWN = 0
-    START = 1
-    CONTINUE = 2
-    END = 3
