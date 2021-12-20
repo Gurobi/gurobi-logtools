@@ -38,7 +38,7 @@ class TestHeaderLog(TestCase):
             self.assertEqual(ParserFlag.UNKNOWN.name, flag)
 
     def test_parse(self):
-        # TODO: Remove the regression part associated with the get_dataframe() method
+        # TODO: Later remove the regression part associated with the get_dataframe() method
         expected_log = {
             "Version": "9.1.2",
             "Platform": "linux64, gurobi_cl",
@@ -47,17 +47,21 @@ class TestHeaderLog(TestCase):
         # Reset the flag status
         self._header_parser.set_flag(ParserFlag.UNKNOWN.name)
 
+        # Parse the header using the current get_dataframe() method
         df = get_dataframe([self._path_to_log])
-        with open(self._path_to_log, "r") as f:
-            lines = f.readlines()
 
         current_parser = None
-        for line in lines:
-            if current_parser:
-                flag = current_parser.parse(line)
+        with open(self._path_to_log, "r") as f:
+            while True:
+                try:
+                    line = next(f)
+                    if current_parser:
+                        flag = current_parser.parse(line)
 
-            if self._header_parser.get_flag(line) == ParserFlag.START.name:
-                current_parser = self._header_parser
+                    if self._header_parser.get_flag(line) == ParserFlag.START.name:
+                        current_parser = self._header_parser
+                except StopIteration:
+                    break
 
         self.assertEqual(flag, ParserFlag.END.name)
         header_log = self._header_parser.get_log()
