@@ -23,7 +23,7 @@ class HeaderLogParser:
         Note: All header log is captured in one line.
         """
         # The integer value representing the current parser status
-        self.flag = ParserFlag.UNKNOWN.value
+        self._flag = ParserFlag.UNKNOWN.value
         self._log = {}
 
     def get_flag(self, line: str) -> str:
@@ -35,7 +35,7 @@ class HeaderLogParser:
         Returns:
             str: The current parsing status.
         """
-        if self.flag == 0:
+        if self._flag == 0:
             for possible_start in HeaderLogParser.header_log_starts:
                 if match := possible_start.match(line):
                     # Populate the log as the header log is captured on the start line
@@ -44,19 +44,19 @@ class HeaderLogParser:
                         for sub_match, value in match.groupdict().items()
                     }
                     # Change the status to START
-                    self.flag = 1
+                    self._flag = 1
                     break
-        return ParserFlag(self.flag).name
+        return ParserFlag(self._flag).name
 
     def set_flag(self, status: str):
         """Set the current parsing status to the given status name."""
-        self.flag = ParserFlag[status].value
+        self._flag = ParserFlag[status].value
 
     def parse(self, line: str) -> str:
         """Return the current parsing status after parsing the given line."""
         # Set the flag to END
-        self.flag = 3
-        return ParserFlag(self.flag).name
+        self._flag = 3
+        return ParserFlag(self._flag).name
 
     def get_log(self) -> dict:
         """Return the current parsed log."""
