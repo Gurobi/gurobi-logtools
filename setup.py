@@ -1,5 +1,7 @@
-from setuptools import setup, find_packages
-import os, re
+import os
+import re
+
+from setuptools import find_packages, setup
 
 with open(os.path.join("src", "grblogtools", "__init__.py")) as initfile:
     (version,) = re.findall('__version__ = "(.*)"', initfile.read())
@@ -23,7 +25,14 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    install_requires=["ipywidgets", "numpy", "pandas", "plotly", "xlsxwriter"],
+    install_requires=[
+        "ipywidgets",
+        "numpy",
+        "pandas",
+        "plotly",
+        "xlsxwriter",
+        "pre-commit",
+    ],
     python_requires=">=3.6",
     include_package_data=True,
 )
