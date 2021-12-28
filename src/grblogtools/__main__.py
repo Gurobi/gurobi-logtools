@@ -1,5 +1,5 @@
+from . import __version__, get_dataframe
 from .cli import cli
-from . import get_dataframe, __version__
 
 cli(
     get_dataframe=get_dataframe,

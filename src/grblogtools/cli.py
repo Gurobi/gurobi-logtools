@@ -1,4 +1,5 @@
 import argparse
+
 import pandas as pd
 
 
@@ -6,7 +7,9 @@ def cli(get_dataframe, argparse_kwargs):
 
     parser = argparse.ArgumentParser(**argparse_kwargs)
     parser.add_argument("outfile", help="Output file name (.xlsx)", metavar="XLSXFILE")
-    parser.add_argument("logfiles", help="Gurobi log files", nargs="+", metavar="LOGFILE")
+    parser.add_argument(
+        "logfiles", help="Gurobi log files", nargs="+", metavar="LOGFILE"
+    )
     parser.add_argument(
         "-t",
         "--timelines",

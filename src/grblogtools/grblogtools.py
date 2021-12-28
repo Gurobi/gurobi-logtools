@@ -1,14 +1,15 @@
 import glob
 import os
 import re
+
 import ipywidgets as widgets
-from ipywidgets import interact
-import plotly.express as px
 import pandas as pd
+import plotly.express as px
+from ipywidgets import interact
 from numpy import nan
 
-from grblogtools.helpers import fill_default_parameters
-from grblogtools.helpers import add_categorical_descriptions
+from grblogtools.helpers import add_categorical_descriptions, fill_default_parameters
+
 
 # Log Status Codes
 class logstatus:
@@ -36,7 +37,7 @@ class logpattern:
         re.compile(
             "Gurobi Compute Server Worker version (?P<Version>\d{1,2}\.[^\s]+) build (.*) \((?P<Platform>[^\)]+)\)$"
         ),
-        re.compile("Compute Server job ID: (?P<JobID>.*)$")
+        re.compile("Compute Server job ID: (?P<JobID>.*)$"),
     ]
 
     # Parameter settings
@@ -120,7 +121,9 @@ class logpattern:
             "Optimize a model with (?P<NumConstrs>\d+) (R|r)ows, (?P<NumVars>\d+) (C|c)olumns and (?P<NumNZs>\d+) (N|n)on(Z|z)ero(e?)s"
         ),
         re.compile("Presolve time: (?P<PresolveTime>[\d\.]+)s"),
-        re.compile("Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"),
+        re.compile(
+            "Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
+        ),
         re.compile("Distributed MIP job count: (?P<DistributedMIPJobs>\d+)"),
         re.compile("Concurrent MIP job count: (?P<ConcurrentJobs>\d+)"),
         re.compile("Reading time = (?P<ReadTime>[\d\.]+) seconds"),
@@ -366,6 +369,7 @@ tree_search_status_line_regex = re.compile(
     )
 )
 
+
 def populate_tree_search_log(tree_search_log_lines):
 
     tree_search_log = []
@@ -374,9 +378,7 @@ def populate_tree_search_log(tree_search_log_lines):
 
     for tree_search_log_line in tree_search_log_lines:
 
-        result = tree_search_full_log_line_regex.match(
-            tree_search_log_line.rstrip()
-        )
+        result = tree_search_full_log_line_regex.match(tree_search_log_line.rstrip())
 
         line, result = _regex_first_match(
             [tree_search_log_line.rstrip()],
@@ -401,7 +403,9 @@ def populate_tree_search_log(tree_search_log_lines):
     return tree_search_log, ignored_lines
 
 
-def get_log_info(values, loglines, verbose=False, populate_tree_search_log=populate_tree_search_log):
+def get_log_info(
+    values, loglines, verbose=False, populate_tree_search_log=populate_tree_search_log
+):
 
     if not isinstance(loglines, list):
         raise TypeError("Wrong log format")
@@ -416,7 +420,7 @@ def get_log_info(values, loglines, verbose=False, populate_tree_search_log=popul
         return None
     else:
         # get all header information
-        for _,result in _regex_matches(loglines[:first_line+1], logpattern.headers):
+        for _, result in _regex_matches(loglines[: first_line + 1], logpattern.headers):
             values.update(result)
 
     # Discard previous lines
@@ -536,16 +540,16 @@ def get_log_info(values, loglines, verbose=False, populate_tree_search_log=popul
         )
         norel_log = []
         norel_incumbent = {}
-        for norel_log_line in loglines[
-            norel_first_line + 1 : norel_last_line + 1
-        ]:
+        for norel_log_line in loglines[norel_first_line + 1 : norel_last_line + 1]:
             # NoRel shows the solutions and timings/bounds on different lines, so
             # when we see a timing line, we store the most recent incumbent there,
             # instead of recording the primal when the log line is found.
             result = norel_primal_regex.match(norel_log_line)
             if result:
                 norel_incumbent = result.groupdict()
-            result = norel_elapsed_bound.match(norel_log_line) or norel_elapsed_time.match(norel_log_line)
+            result = norel_elapsed_bound.match(
+                norel_log_line
+            ) or norel_elapsed_time.match(norel_log_line)
             if result:
                 tmp = result.groupdict()
                 tmp.update(norel_incumbent)
@@ -745,8 +749,10 @@ def get_dataframe(
                 header.append(len(loglines))
             else:
                 header = [0, len(loglines)]
-            for i,h in enumerate(range(len(header) - 1)):
-                log_info = get_log_info(dict(), loglines[header[h] : header[h + 1]], verbose)
+            for i, h in enumerate(range(len(header) - 1)):
+                log_info = get_log_info(
+                    dict(), loglines[header[h] : header[h + 1]], verbose
+                )
                 if log_info is None:
                     print(f"error processing {logfile}")
                     continue
@@ -799,9 +805,7 @@ def get_dataframe(
             final = summary[summary["LogFilePath"] == log]
             nrlines = log_info.get("NoRelLog")
             if nrlines is not None:
-                norel_ = pd.DataFrame(nrlines).apply(
-                    pd.to_numeric, errors="coerce"
-                )
+                norel_ = pd.DataFrame(nrlines).apply(pd.to_numeric, errors="coerce")
                 _copy_keys(final, norel_)
                 norel = norel.append(norel_, ignore_index=True)
 
