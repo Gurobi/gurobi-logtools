@@ -1,0 +1,20 @@
+repos:
+    - repo: https://github.com/myint/autoflake
+      rev: v1.4
+      hooks:
+        - id: autoflake
+          files: (^(src|tests)/)|(^[^/]*$)
+          exclude: conftest|setup
+          args: [--in-place, --remove-all-unused-imports, --recursive, --ignore-init-module-imports]
+
+    - repo: https://github.com/psf/black
+      rev: 21.12b0
+      hooks:
+        - id: black
+          language_version: python3
+
+    - repo: https://github.com/pycqa/isort
+      rev: 5.10.1
+      hooks:
+        - id: isort
+          args: ["--profile", "black", "--filter-files"]
