@@ -1,6 +1,7 @@
 from unittest import TestCase, main
 
-from grblogtools.header_parser import HeaderLogParser
+from grblogtools.header_parser import HeaderParser
+from grblogtools.helpers import parse_lines
 import datetime
 
 
@@ -25,12 +26,12 @@ class TestHeaderLog(TestCase):
     def test_start_parsing(self):
         for line in self._correct_start_lines:
             with self.subTest(line=line):
-                header_parser = HeaderLogParser()
+                header_parser = HeaderParser()
                 self.assertTrue(header_parser.start_parsing(line))
 
         for line in self._wrong_start_lines:
             with self.subTest(line=line):
-                header_parser = HeaderLogParser()
+                header_parser = HeaderParser()
                 self.assertFalse(header_parser.start_parsing(line))
 
     def test_get_log(self):
@@ -53,15 +54,15 @@ class TestHeaderLog(TestCase):
 
         for i, line in enumerate(self._correct_start_lines):
             with self.subTest(line=line):
-                header_parser = HeaderLogParser()
-                header_parser.start_parsing(line)
+                header_parser = HeaderParser()
+                parse_lines(header_parser, [line])
                 returned_log = header_parser.get_log()
                 self.assertEqual(returned_log, expected_logs[i])
 
         for line in self._wrong_start_lines:
             with self.subTest(line=line):
-                header_parser = HeaderLogParser()
-                header_parser.start_parsing(line)
+                header_parser = HeaderParser()
+                parse_lines(header_parser, [line])
                 returned_log = header_parser.get_log()
                 self.assertEqual(returned_log, {})
 
