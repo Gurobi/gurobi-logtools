@@ -72,8 +72,8 @@ Variable types: 6 continuous, 0 integer (0 binary)
 """
 
 expected_log_1 = {
-    "Presolve": 0,
-    "NonConvex": 2,
+    "ParamPresolve": 0,
+    "ParamNonConvex": 2,
     "Version": "9.5.0",
     "NumConstrs": 1,
     "NumVars": 3,
@@ -123,9 +123,9 @@ Variable types: 7267 continuous, 0 integer (0 binary)
 """
 
 expected_log_2 = {
-    "ConcurrentMIP": 2,
-    "FuncPieces": 1,
-    "FuncPieceLength": 0.001,
+    "ParamConcurrentMIP": 2,
+    "ParamFuncPieces": 1,
+    "ParamFuncPieceLength": 0.001,
     "Version": "9.5.0",
     "NumConstrs": 1,
     "NumVars": 4,

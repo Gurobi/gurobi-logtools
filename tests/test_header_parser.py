@@ -56,15 +56,13 @@ class TestHeaderLog(TestCase):
             with self.subTest(line=line):
                 header_parser = HeaderParser()
                 parse_lines(header_parser, [line])
-                returned_log = header_parser.get_log()
-                self.assertEqual(returned_log, expected_logs[i])
+                self.assertEqual(header_parser.get_log(), expected_logs[i])
 
         for line in self._wrong_start_lines:
             with self.subTest(line=line):
                 header_parser = HeaderParser()
                 parse_lines(header_parser, [line])
-                returned_log = header_parser.get_log()
-                self.assertEqual(returned_log, {})
+                self.assertEqual(header_parser.get_log(), {})
 
 
 if __name__ == "__main__":

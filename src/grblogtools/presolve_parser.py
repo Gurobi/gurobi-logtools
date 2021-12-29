@@ -94,10 +94,10 @@ class PresolveParser:
                 }
             )
         elif "ParamName" in dict_:
-            # Add the keyword "Param" at the end of the ParamName to make
+            # Add the keyword "Param" at the beginning of the ParamName to make
             # it clear it is a parameter
             self._log.update(
-                {dict_["ParamName"] + "_Param": convert_data_types(dict_["ParamValue"])}
+                {"Param" + dict_["ParamName"]: convert_data_types(dict_["ParamValue"])}
             )
         else:
             self._log.update(
