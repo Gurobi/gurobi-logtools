@@ -94,8 +94,10 @@ class PresolveParser:
                 }
             )
         elif "ParamName" in dict_:
+            # Add the keyword "Param" at the end of the ParamName to make
+            # it clear it is a parameter
             self._log.update(
-                {dict_["ParamName"]: convert_data_types(dict_["ParamValue"])}
+                {dict_["ParamName"] + "_Param": convert_data_types(dict_["ParamValue"])}
             )
         else:
             self._log.update(
@@ -113,11 +115,12 @@ class PresolveParser:
 
         Returns:
             bool: Return True if the given line matches one of the parser's start
-                pattern.
+                patterns.
         """
         for possible_start in PresolveParser.presolve_start_patterns:
             match = possible_start.match(line)
             if match:
+                # The start line encodes information that should to be stored
                 self._update_log(match)
                 return True
         return False

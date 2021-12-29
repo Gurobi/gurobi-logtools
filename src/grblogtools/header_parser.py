@@ -36,7 +36,7 @@ class HeaderParser:
         for possible_start in HeaderParser.header_start_patterns:
             match = possible_start.match(line)
             if match:
-                # The start line encodes information that needs to be stored
+                # The start line encodes information that should to be stored
                 self._log.update(
                     {
                         sub_match: convert_data_types(value)
