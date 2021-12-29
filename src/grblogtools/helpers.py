@@ -1,6 +1,8 @@
 import json
 import pathlib
 import re
+import datetime
+from typing import Iterable
 from functools import lru_cache, partial
 
 re_parameter_column = re.compile(r"(.*) \(Parameter\)")
@@ -87,3 +89,38 @@ def add_categorical_descriptions(summary):
             summary[column].map(PARAMETER_DESCRIPTIONS[column]).astype("category")
         )
     return summary
+
+
+def convert_data_types(value):
+    """Convert the given value string to the type it matches."""
+    int_regex = re.compile("[-+]?\d+$")
+    float_regex = re.compile("[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?$")
+    percentage_regex = re.compile("[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?%$")
+    date_time_regex = re.compile("\D+\s\D+\s\d+\s\d+:\d+:\d+\s\d{4}")
+
+    if int_regex.match(value):
+        return int(value)
+    elif float_regex.match(value):
+        return float(value)
+    elif percentage_regex.match(value):
+        return float(value) / 100
+    elif date_time_regex.match(value):
+        return datetime.datetime.strptime(value, "%a %b %d %H:%M:%S %Y")
+    else:
+        return value
+
+
+def parse_lines(parser, loglines: Iterable[str]):
+    """Parse the given lines using the given parser object.
+
+    This function is mainly used in the tests.
+    """
+    it = iter(loglines)
+    for line in it:
+        if parser.start_parsing(line):
+            # Once the parser indicates start, pass to main method
+            # until signalled to stop.
+            for line in it:
+                continue_ = parser.continue_parsing(line)
+                if not continue_:
+                    return
