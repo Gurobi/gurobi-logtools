@@ -11,7 +11,7 @@ first add the bug report or feature request to the grblogtools' [GitHub issue
 tracker](https://github.com/Gurobi/grblogtools/issues).
 
 It would be great if you add a minimal reproducible example when reporting a bug, or
-include a reasoning on how the new requested feature improves the grblogtools.
+include reasoning on how the new requested feature improves the grblogtools.
 
 ## Submitting changes
 We welcome your contribution in directly tackling some of the issues.
@@ -33,12 +33,13 @@ will appear on the pull request page. If the tests failed, there is a link which
 used to debug the failed tests.
 
 ## Code reviews
-The pull request author should respond to all comments made by the reviewer. If the
+The pull request author should respond to all comments received. If the
 comment has been accepted and appropriate changes applied, the author should respond by
 a short message such as "Done" and then resolve the comment. If more discussion is
-needed on a comment, it should remain open until a consensus can be reached out.
+needed on a comment, it should remain open until a solution can be figured out.
 
 ## Merging changes
 
 Explicit approval and passing tests are required before merging. The pull request author
-should always merge via "Squash and Merge" and the remote PR branch should be deleted.
+should always merge via "Squash and Merge" and the remote pull request branch should be
+deleted.
