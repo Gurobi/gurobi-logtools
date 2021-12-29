@@ -4,7 +4,7 @@ cff-version: "1.1.0"
 message: "If you use this software, please cite it using these metadata."
 title: grblogtools
 abstract: "Tools to extract and explore information from Gurobi log files."
-authors: 
+authors:
   - affiliation: "Gurobi Optimization"
     family-names: Miltenberger
     given-names: Matthias
