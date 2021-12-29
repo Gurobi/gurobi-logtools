@@ -115,12 +115,12 @@ def parse_lines(parser, loglines: Iterable[str]):
 
     This function is mainly used in the tests.
     """
-    it = iter(loglines)
-    for line in it:
+    lines = iter(loglines)
+    for line in lines:
         if parser.start_parsing(line):
-            # Once the parser indicates start, pass to main method
-            # until signalled to stop.
-            for line in it:
+            # Once the parser indicates start, use the parser to parse the remaining
+            # lines until signalled to stop.
+            for line in lines:
                 continue_ = parser.continue_parsing(line)
                 if not continue_:
                     return
