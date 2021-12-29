@@ -1,9 +1,9 @@
+import datetime
 import json
 import pathlib
 import re
-import datetime
-from typing import Iterable
 from functools import lru_cache, partial
+from typing import Iterable
 
 re_parameter_column = re.compile(r"(.*) \(Parameter\)")
 defaults_dir = pathlib.Path(__file__).parent.joinpath("defaults")

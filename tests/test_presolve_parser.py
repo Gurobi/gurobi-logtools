@@ -1,7 +1,7 @@
 from unittest import TestCase, main
 
-from grblogtools.presolve_parser import PresolveParser
 from grblogtools.helpers import parse_lines
+from grblogtools.presolve_parser import PresolveParser
 
 example_log_0 = """
 Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])

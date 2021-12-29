@@ -1,8 +1,8 @@
+import datetime
 from unittest import TestCase, main
 
 from grblogtools.header_parser import HeaderParser
 from grblogtools.helpers import parse_lines
-import datetime
 
 
 class TestHeaderLog(TestCase):
