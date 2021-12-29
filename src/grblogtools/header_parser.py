@@ -1,11 +1,10 @@
 import re
-import datetime
+from grblogtools.helpers import convert_data_types
 
 
-class HeaderLogParser:
-    # Each might represent the start of the header parser depending on how Gurobi
-    # is run
-    header_log_starts = [
+class HeaderParser:
+    # Possible patterns indicating the initialization of the parser
+    header_start_patterns = [
         re.compile(
             "Gurobi (?P<Version>\d{1,2}\.[^\s]+) \((?P<Platform>[^\)]+)\) logging started (?P<Time>.*)$"
         ),
@@ -16,13 +15,14 @@ class HeaderLogParser:
         re.compile("Compute Server job ID: (?P<JobID>.*)$"),
     ]
 
-    def __init__(self):
-        """Initialize the log parser for the header.
+    header_intermediary_patterns = header_start_patterns
 
-        Note: All header log is captured in one line.
+    def __init__(self):
+        """Initialize the Header parser.
+
+        The HeaderParser only includes one line.
         """
         self._log = {}
-        self._date_time_format = "%a %b %d %H:%M:%S %Y"
 
     def start_parsing(self, line: str) -> bool:
         """Return True if the parser should start parsing the log lines.
@@ -31,35 +31,35 @@ class HeaderLogParser:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the parser should call the continue_parsing() method
-                on future log lines until it hits its termination.
+            bool: Return True if the given line matches one of the parser's start
+                pattern.
         """
-        for possible_start in HeaderLogParser.header_log_starts:
+        for possible_start in HeaderParser.header_start_patterns:
             match = possible_start.match(line)
             if match:
-                self._log = match.groupdict()
+                self._log.update(
+                    {
+                        sub_match: convert_data_types(value)
+                        for sub_match, value in match.groupdict().items()
+                    }
+                )
                 return True
         return False
 
     def continue_parsing(self, line: str) -> bool:
-        """Return False as the header only includes one (start) line.
+        """Parse the given line.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return False as the header comprises of the start line only.
+            bool: Return True.
         """
-        return False
+        return True
 
     def get_log(self) -> dict:
         """Return the current parsed log.
 
         It returns an empty dictionary if the parser is not initialized yet.
         """
-        # If the key Time exists and its value is not an empty string
-        if "Time" in self._log and self._log["Time"] != "":
-            self._log["Time"] = datetime.datetime.strptime(
-                self._log["Time"], self._date_time_format
-            )
         return self._log
