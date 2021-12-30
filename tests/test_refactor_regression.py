@@ -17,9 +17,9 @@ import pathlib
 
 import pandas as pd
 import pytest
-import grblogtools as glt
-
 from pandas.testing import assert_frame_equal
+
+import grblogtools as glt
 
 HERE = pathlib.Path(__file__).parent
 

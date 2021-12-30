@@ -8,10 +8,10 @@ import plotly.express as px
 from ipywidgets import interact
 from numpy import nan
 
-from grblogtools.helpers import fill_default_parameters
-from grblogtools.helpers import add_categorical_descriptions
+from grblogtools.helpers import add_categorical_descriptions, fill_default_parameters
 from grblogtools.nodelog import NodeLogParser
 from grblogtools.norel import NoRelParser
+
 
 # Log Status Codes
 class logstatus:

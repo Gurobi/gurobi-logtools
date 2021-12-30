@@ -1,5 +1,5 @@
 import re
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 from .parser_helpers import ParserLinesMixin
 
@@ -42,8 +42,8 @@ class NoRelParser(ParserLinesMixin):
         return bool(self.norel_log_start.match(line))
 
     def _timeline_entry(self, arg):
-        """ Type convert timeline data and include incumbent in the log record
-        if there is one. """
+        """Type convert timeline data and include incumbent in the log record
+        if there is one."""
         entry = {k: float(v) for k, v in arg.items()}
         if self._incumbent is not None:
             entry["Incumbent"] = self._incumbent

@@ -1,6 +1,5 @@
 from grblogtools.norel import NoRelParser
 
-
 norel_section_test_data = """
 Variable types: 19 continuous, 297 integer (297 binary)
 Found heuristic solution: objective 3.133356e+09
@@ -21,7 +20,7 @@ Root simplex log...
 
 
 def test_norel_parser():
-    """ Pass all test lines in sequence and test summary/timeline. """
+    """Pass all test lines in sequence and test summary/timeline."""
     parser = NoRelParser()
     lines = norel_section_test_data.strip().split("\n")
     parser.parse_lines(lines)

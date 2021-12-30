@@ -71,7 +71,7 @@ class NodeLogParser(ParserLinesMixin):
         return bool(self.tree_search_log_start.match(line))
 
     def _timeline_entry(self, arg):
-        """ Type convert and store log lines. """
+        """Type convert and store log lines."""
         result = {}
         for k, v in arg.items():
             if k in ["CurrentNode", "RemainingNodes", "Depth", "IntInf"]:
@@ -89,8 +89,8 @@ class NodeLogParser(ParserLinesMixin):
         self.timeline.append(result)
 
     def parse(self, line: str) -> bool:
-        """ Match against all log line formats, exiting on the first match. If
-        no match, check for the end line or record an ignored line. """
+        """Match against all log line formats, exiting on the first match. If
+        no match, check for the end line or record an ignored line."""
         if not line.strip():
             return True  # continue
         for regex in self.line_types:

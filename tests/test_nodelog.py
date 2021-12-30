@@ -1,6 +1,4 @@
 from grblogtools.nodelog import NodeLogParser
-from grblogtools.nodelog import NodeLogParser
-
 
 nodelog_section_test_data = """
 Variable types: 19 continuous, 297 integer (297 binary)
@@ -24,7 +22,7 @@ Thread count was 8 (of 8 available processors)
 
 
 def test_nodelog_parser():
-    """ Pass all test lines in sequence and test timeline. """
+    """Pass all test lines in sequence and test timeline."""
     parser = NodeLogParser()
     lines = nodelog_section_test_data.strip().split("\n")
     parser.parse_lines(lines)
