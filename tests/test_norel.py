@@ -1,3 +1,4 @@
+from grblogtools.helpers import parse_block
 from grblogtools.norel import NoRelParser
 
 norel_section_test_data = """
@@ -18,18 +19,36 @@ Elapsed time for NoRel heuristic: 93s (best bound 8.00002e+08)
 Root simplex log...
 """
 
+norel_section_test_data_nobound = """
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 5s
+Found heuristic solution: objective 1.450014e+09
+Elapsed time for NoRel heuristic: 10s
+"""
+
+norel_section_test_data_nosol = """
+Starting NoRel heuristic
+Elapsed time for NoRel heuristic: 5s
+"""
+
+
+def test_empty():
+    """To check that timeline to summary conversion is sane."""
+    parser = NoRelParser()
+    assert parser.timeline == []
+    assert parser.summary == {}
+
 
 def test_norel_parser():
     """Pass all test lines in sequence and test summary/timeline."""
     parser = NoRelParser()
-    lines = norel_section_test_data.strip().split("\n")
-    parser.parse_lines(lines)
+    parse_block(parser, norel_section_test_data)
     # only the 'Root simplex log...' line was passed but not parsed.
     assert parser.ignored_lines == 1
     assert parser.summary == {
-        "NoRelBestSolution": 1.200013e9,
+        "NoRelBestSol": 1.200013e9,
         "NoRelTime": 93.0,
-        "NoRelBestBound": 8.00002e8,
+        "NoRelBestBd": 8.00002e8,
     }
     assert parser.timeline == [
         {"Time": 5.0},
@@ -39,3 +58,15 @@ def test_norel_parser():
         {"Time": 27.0, "BestBd": 8.00002e8, "Incumbent": 1.200013e9},
         {"Time": 93.0, "BestBd": 8.00002e8, "Incumbent": 1.200013e9},
     ]
+
+
+def test_nobound():
+    parser = NoRelParser()
+    parse_block(parser, norel_section_test_data_nobound)
+    assert parser.summary == {"NoRelTime": 10.0, "NoRelBestSol": 1.450014e9}
+
+
+def test_nosol():
+    parser = NoRelParser()
+    parse_block(parser, norel_section_test_data_nosol)
+    assert parser.summary == {"NoRelTime": 5.0}

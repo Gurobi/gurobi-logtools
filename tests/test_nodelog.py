@@ -1,3 +1,4 @@
+from grblogtools.helpers import parse_block
 from grblogtools.nodelog import NodeLogParser
 
 nodelog_section_test_data = """
@@ -24,10 +25,14 @@ Thread count was 8 (of 8 available processors)
 def test_nodelog_parser():
     """Pass all test lines in sequence and test timeline."""
     parser = NodeLogParser()
-    lines = nodelog_section_test_data.strip().split("\n")
-    parser.parse_lines(lines)
+    parse_block(parser, nodelog_section_test_data)
     # 'Explored' line ends parsing so future lines are not passed at all.
     assert parser.ignored_lines == 0
+    assert parser.summary == {
+        "NodeCount": 188145,
+        "IterCount": 1383139,
+        "Runtime": 35.66,
+    }
     assert parser.timeline == [
         {
             "CurrentNode": 0,

@@ -8,7 +8,11 @@ import plotly.express as px
 from ipywidgets import interact
 from numpy import nan
 
-from grblogtools.helpers import add_categorical_descriptions, fill_default_parameters
+from grblogtools.helpers import (
+    add_categorical_descriptions,
+    fill_default_parameters,
+    parse_lines,
+)
 from grblogtools.nodelog import NodeLogParser
 from grblogtools.norel import NoRelParser
 
@@ -479,7 +483,7 @@ def get_log_info(values, loglines, verbose=False):
 
     # NoRel log
     norel_parser = NoRelParser()
-    norel_parser.parse_lines(loglines)
+    parse_lines(norel_parser, loglines)
     norel_log = norel_parser.timeline
     if len(norel_log) > 0:
         values["NoRelLog"] = norel_log
@@ -536,10 +540,9 @@ def get_log_info(values, loglines, verbose=False):
 
     # Tree Search Log
     nodelog_parser = NodeLogParser()
-    nodelog_parser.parse_lines(loglines)
-    tree_search_log = nodelog_parser.timeline
-    if len(tree_search_log) > 0:
-        values["TreeSearchLog"] = tree_search_log
+    parse_lines(nodelog_parser, loglines)
+    if len(nodelog_parser.timeline) > 0:
+        values["TreeSearchLog"] = nodelog_parser.timeline
         if nodelog_parser.ignored_lines > 0 and verbose:
             print("Info: Ignored", nodelog_parser.ignored_lines, "tree search lines")
 
