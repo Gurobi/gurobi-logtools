@@ -40,8 +40,8 @@ def test_single_log_parser():
     parser = SingleLogParser()
     parse_block(parser, full_log_data)
     # Test just that something is populated for all parsers.
-    assert parser.header_parser.get_log()
-    assert parser.presolve_parser.get_log()
+    assert parser.header_parser.get_summary()
+    assert parser.presolve_parser.get_summary()
     assert parser.norel_parser.summary
     assert parser.norel_parser.timeline
     assert parser.norel_parser.ignored_lines == 1
