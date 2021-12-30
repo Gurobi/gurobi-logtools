@@ -1,6 +1,6 @@
 import re
 
-from grblogtools.helpers import convert_data_types
+from grblogtools.helpers import typeconvert_groupdict
 
 
 class PresolveParser:
@@ -69,14 +69,6 @@ class PresolveParser:
         """
         self._summary = {}
 
-    def _update_summary(self, match):
-        self._summary.update(
-            {
-                sub_match: convert_data_types(value)
-                for sub_match, value in match.groupdict().items()
-            }
-        )
-
     def start_parsing(self, line: str) -> bool:
         """Return True if the parser should start parsing the log lines.
 
@@ -89,7 +81,7 @@ class PresolveParser:
         match = PresolveParser.presolve_start_pattern.match(line)
         if match:
             # The start line encodes information that should be stored
-            self._update_summary(match)
+            self._summary.update(typeconvert_groupdict(match))
             return True
         return False
 
@@ -118,7 +110,7 @@ class PresolveParser:
                         }
                     )
                 else:
-                    self._update_summary(match)
+                    self._summary.update(typeconvert_groupdict(match))
                 break
         return True
 

@@ -1,6 +1,6 @@
 import re
 
-from grblogtools.helpers import convert_data_types
+from grblogtools.helpers import convert_data_types, typeconvert_groupdict
 
 
 class HeaderParser:
@@ -49,12 +49,7 @@ class HeaderParser:
                 {"Param" + dict_["ParamName"]: convert_data_types(dict_["ParamValue"])}
             )
         else:
-            self._summary.update(
-                {
-                    sub_match: convert_data_types(value)
-                    for sub_match, value in dict_.items()
-                }
-            )
+            self._summary.update(typeconvert_groupdict(match))
 
     def start_parsing(self, line: str) -> bool:
         """Return True if the parser should start parsing the future log lines.
