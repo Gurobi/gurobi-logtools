@@ -4,13 +4,6 @@ from grblogtools.helpers import parse_lines
 from grblogtools.presolve_parser import PresolveParser
 
 example_log_0 = """
-Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])
-Copyright (c) 2021, Gurobi Optimization, LLC
-
-Read MPS format model from file /Library/gurobi950/macos_universal2/examples/data/glass4.mps
-Reading time = 0.00 seconds
-glass4: 396 rows, exit columns, 1815 nonzeros
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 Optimize a model with 396 rows, 322 columns and 1815 nonzeros
 Model fingerprint: 0x18b19fdf
 Variable types: 20 continuous, 302 integer (0 binary)
@@ -26,9 +19,7 @@ Variable types: 19 continuous, 297 integer (297 binary)
 Found heuristic solution: objective 3.133356e+09
 """
 
-expected_log_0 = {
-    "ModelFilePath": "/Library/gurobi950/macos_universal2/examples/data/glass4.mps",
-    "ReadingTime": 0.0,
+expected_summary_0 = {
     "NumConstrs": 396,
     "NumVars": 322,
     "NumNZs": 1815,
@@ -51,10 +42,6 @@ expected_log_0 = {
 }
 
 example_log_1 = """
-Set parameter Presolve to value 0
-Set parameter NonConvex to value 2
-Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[rosetta2])
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 Optimize a model with 1 rows, 3 columns and 3 nonzeros
 Model fingerprint: 0x83663ee2
 Model has 2 quadratic constraints
@@ -68,13 +55,10 @@ Coefficient statistics:
 
 Continuous model is non-convex -- solving as a MIP
 
-Variable types: 6 continuous, 0 integer (0 binary)
+Presolve: All rows and columns removed
 """
 
-expected_log_1 = {
-    "ParamPresolve": 0,
-    "ParamNonConvex": 2,
-    "Version": "9.5.0",
+expected_summary_1 = {
     "NumConstrs": 1,
     "NumVars": 3,
     "NumNZs": 3,
@@ -92,17 +76,12 @@ expected_log_1 = {
     "MaxRHS": 10.0,
     "MinQCRHS": 1.0,
     "MaxQCRHS": 2.0,
-    "PresolvedNumConVars": 6,
-    "PresolvedNumIntVars": 0,
-    "PresolvedNumBinVars": 0,
+    "PresolvedNumConstrs": 0,
+    "PresolvedNumVars": 0,
+    "PresolvedNumNZs": 0,
 }
 
 example_log_2 = """
-Set parameter ConcurrentMIP to value 2
-Set parameter FuncPieces to value 1
-Set parameter FuncPieceLength to value 0.001
-Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[rosetta2])
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 Optimize a model with 1 rows, 4 columns and 2 nonzeros
 Model fingerprint: 0x741a3617
 Model has 2 general constraints
@@ -122,11 +101,7 @@ Presolved model has 2 SOS constraint(s)
 Variable types: 7267 continuous, 0 integer (0 binary)
 """
 
-expected_log_2 = {
-    "ParamConcurrentMIP": 2,
-    "ParamFuncPieces": 1,
-    "ParamFuncPieceLength": 0.001,
-    "Version": "9.5.0",
+expected_summary_2 = {
     "NumConstrs": 1,
     "NumVars": 4,
     "NumNZs": 2,
@@ -157,9 +132,9 @@ class TestHeaderLog(TestCase):
 
     def test_start_parsing(self):
         expected_start_lines = [
-            "Read MPS format model from file /Library/gurobi950/macos_universal2/examples/data/glass4.mps",
-            "Set parameter Presolve to value 0",
-            "Set parameter ConcurrentMIP to value 2",
+            "Optimize a model with 396 rows, 322 columns and 1815 nonzeros",
+            "Optimize a model with 1 rows, 3 columns and 3 nonzeros",
+            "Optimize a model with 1 rows, 4 columns and 2 nonzeros",
         ]
 
         for i, example_log in enumerate([example_log_0, example_log_1, example_log_2]):
@@ -169,15 +144,21 @@ class TestHeaderLog(TestCase):
                     if presolve_parser.start_parsing(line):
                         self.assertEqual(line, expected_start_lines[i])
                         break
+                else:
+                    self.assertRaises("No start line found.")
 
-    def test_get_log(self):
-        expected_logs = [expected_log_0, expected_log_1, expected_log_2]
+    def test_get_summary(self):
+        expected_summaries = [
+            expected_summary_0,
+            expected_summary_1,
+            expected_summary_2,
+        ]
         for i, example_log in enumerate([example_log_0, example_log_1, example_log_2]):
             with self.subTest(example_log=example_log):
                 presolve_parser = PresolveParser()
                 lines = example_log.strip().split("\n")
                 parse_lines(presolve_parser, lines)
-                self.assertEqual(presolve_parser.get_log(), expected_logs[i])
+                self.assertEqual(presolve_parser.get_summary(), expected_summaries[i])
 
 
 if __name__ == "__main__":

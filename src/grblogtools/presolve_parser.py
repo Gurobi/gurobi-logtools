@@ -4,26 +4,13 @@ from grblogtools.helpers import convert_data_types
 
 
 class PresolveParser:
-    # Possible patterns indicating the initialization of the parser.
-    presolve_start_patterns = [
-        re.compile("Set parameter (?P<ParamName>[^\s]+) to value (?P<ParamValue>.*)$"),
-        re.compile("Read (MPS|LP) format model from file (?P<ModelFilePath>.*)$"),
-        re.compile(
-            "Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
-        ),
-    ]
+    # The pattern indicating the initialization of the parser
+    presolve_start_pattern = re.compile(
+        "Optimize a model with (?P<NumConstrs>\d+) (R|r)ows, (?P<NumVars>\d+) (C|c)olumns and (?P<NumNZs>\d+) (N|n)on(Z|z)ero(e?)s"
+    )
+
     # Possible intermediate patterns to be parsed
     presolve_intermediate_patterns = [
-        re.compile("Set parameter (?P<ParamName>[^\s]+) to value (?P<ParamValue>.*)$"),
-        re.compile("Gurobi Optimizer version (?P<Version>\d{1,2}\.[^\s]+)"),
-        re.compile("Read (MPS|LP) format model from file (?P<ModelFilePath>.*)$"),
-        re.compile("Reading time = (?P<ReadingTime>[\d\.]+) seconds"),
-        re.compile(
-            "Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
-        ),
-        re.compile(
-            "Optimize a model with (?P<NumConstrs>\d+) (R|r)ows, (?P<NumVars>\d+) (C|c)olumns and (?P<NumNZs>\d+) (N|n)on(Z|z)ero(e?)s"
-        ),
         re.compile("Model fingerprint: (?P<Fingerprint>.*)$"),
         re.compile(
             "Variable types: (?P<PresolvedNumConVars>\d+) continuous, (?P<PresolvedNumIntVars>\d+) integer \((?P<PresolvedNumBinVars>\d+) binary\)$"
@@ -80,32 +67,15 @@ class PresolveParser:
         Specifically, it includes information for all lines appearing between the
         HeaderParser and the NoRelParser or the RelaxationParser.
         """
-        self._log = {}
+        self._summary = {}
 
-    def _update_log(self, match):
-        # This can happend if all the rows and columns are removed by presolve
-        dict_ = match.groupdict()
-        if not dict_:
-            self._log.update(
-                {
-                    "PresolvedNumConstrs": 0,
-                    "PresolvedNumVars": 0,
-                    "PresolvedNumNZs": 0,
-                }
-            )
-        elif "ParamName" in dict_:
-            # Add the keyword "Param" at the beginning of the ParamName to make
-            # it clear it is a parameter
-            self._log.update(
-                {"Param" + dict_["ParamName"]: convert_data_types(dict_["ParamValue"])}
-            )
-        else:
-            self._log.update(
-                {
-                    sub_match: convert_data_types(value)
-                    for sub_match, value in dict_.items()
-                }
-            )
+    def _update_summary(self, match):
+        self._summary.update(
+            {
+                sub_match: convert_data_types(value)
+                for sub_match, value in match.groupdict().items()
+            }
+        )
 
     def start_parsing(self, line: str) -> bool:
         """Return True if the parser should start parsing the log lines.
@@ -114,15 +84,13 @@ class PresolveParser:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line matches one of the parser's start
-                patterns.
+            bool: Return True if the given line matches the parser start pattern.
         """
-        for possible_start in PresolveParser.presolve_start_patterns:
-            match = possible_start.match(line)
-            if match:
-                # The start line encodes information that should to be stored
-                self._update_log(match)
-                return True
+        match = PresolveParser.presolve_start_pattern.match(line)
+        if match:
+            # The start line encodes information that should be stored
+            self._update_summary(match)
+            return True
         return False
 
     def continue_parsing(self, line: str) -> bool:
@@ -137,16 +105,26 @@ class PresolveParser:
         # If an empty line, return True
         if not line.strip():
             return True
+
         for pattern in PresolveParser.presolve_intermediate_patterns:
             match = pattern.match(line)
             if match:
-                self._update_log(match)
+                if match.string == "Presolve: All rows and columns removed":
+                    self._summary.update(
+                        {
+                            "PresolvedNumConstrs": 0,
+                            "PresolvedNumVars": 0,
+                            "PresolvedNumNZs": 0,
+                        }
+                    )
+                else:
+                    self._update_summary(match)
                 break
         return True
 
-    def get_log(self) -> dict:
-        """Return the current parsed log.
+    def get_summary(self) -> dict:
+        """Return the current parsed summary.
 
         It returns an empty dictionary if the parser is not initialized yet.
         """
-        return self._log
+        return self._summary
