@@ -36,7 +36,7 @@ def test_empty():
     """To check that timeline to summary conversion is sane."""
     parser = NoRelParser()
     assert parser.timeline == []
-    assert parser.summary == {}
+    assert parser.get_summary() == {}
 
 
 def test_norel_parser():
@@ -45,7 +45,7 @@ def test_norel_parser():
     parse_block(parser, norel_section_test_data)
     # only the 'Root simplex log...' line was passed but not parsed.
     assert parser.ignored_lines == 1
-    assert parser.summary == {
+    assert parser.get_summary() == {
         "NoRelBestSol": 1.200013e9,
         "NoRelTime": 93.0,
         "NoRelBestBd": 8.00002e8,
@@ -63,10 +63,10 @@ def test_norel_parser():
 def test_nobound():
     parser = NoRelParser()
     parse_block(parser, norel_section_test_data_nobound)
-    assert parser.summary == {"NoRelTime": 10.0, "NoRelBestSol": 1.450014e9}
+    assert parser.get_summary() == {"NoRelTime": 10.0, "NoRelBestSol": 1.450014e9}
 
 
 def test_nosol():
     parser = NoRelParser()
     parse_block(parser, norel_section_test_data_nosol)
-    assert parser.summary == {"NoRelTime": 5.0}
+    assert parser.get_summary() == {"NoRelTime": 5.0}

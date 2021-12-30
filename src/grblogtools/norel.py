@@ -37,8 +37,7 @@ class NoRelParser:
         self.ignored_lines: int = 0
         self._incumbent = None
 
-    @property
-    def summary(self) -> Dict[str, Any]:
+    def get_summary(self) -> Dict[str, Any]:
         """Return summary dataframe based on the timeline information. Assumes
         that the best bound is always found in the last line (if one was found
         at all)."""

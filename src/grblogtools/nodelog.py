@@ -1,4 +1,5 @@
 import re
+from typing import Any, Dict
 
 from grblogtools.helpers import typeconvert_groupdict
 
@@ -59,9 +60,12 @@ class NodeLogParser:
     ]
 
     def __init__(self):
-        self.summary = {}
+        self._summary = {}
         self.timeline = []
         self.ignored_lines = 0
+
+    def get_summary(self) -> Dict[str, Any]:
+        return self._summary
 
     def start_parsing(self, line: str) -> bool:
         return bool(self.tree_search_log_start.match(line))
@@ -78,7 +82,7 @@ class NodeLogParser:
                 return True  # continue
         match = self.tree_search_explored.match(line)
         if match:
-            self.summary.update(typeconvert_groupdict(match))
+            self._summary.update(typeconvert_groupdict(match))
             return False  # stop
         self.ignored_lines += 1
         return True  # continue

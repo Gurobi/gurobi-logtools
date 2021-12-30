@@ -22,8 +22,8 @@ class SingleLogParser:
         summary = {}
         summary.update(self.header_parser.get_summary())
         summary.update(self.presolve_parser.get_summary())
-        summary.update(self.norel_parser.summary)
-        summary.update(self.nodelog_parser.summary)
+        summary.update(self.norel_parser.get_summary())
+        summary.update(self.nodelog_parser.get_summary())
         return summary
 
     def start_parsing(self, line: str) -> bool:

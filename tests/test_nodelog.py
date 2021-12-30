@@ -28,7 +28,7 @@ def test_nodelog_parser():
     parse_block(parser, nodelog_section_test_data)
     # 'Explored' line ends parsing so future lines are not passed at all.
     assert parser.ignored_lines == 0
-    assert parser.summary == {
+    assert parser.get_summary() == {
         "NodeCount": 188145,
         "IterCount": 1383139,
         "Runtime": 35.66,

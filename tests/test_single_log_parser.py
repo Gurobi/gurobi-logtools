@@ -42,10 +42,10 @@ def test_single_log_parser():
     # Test just that something is populated for all parsers.
     assert parser.header_parser.get_summary()
     assert parser.presolve_parser.get_summary()
-    assert parser.norel_parser.summary
+    assert parser.norel_parser.get_summary()
     assert parser.norel_parser.timeline
     assert parser.norel_parser.ignored_lines == 1
-    assert parser.nodelog_parser.summary
+    assert parser.nodelog_parser.get_summary()
     assert parser.nodelog_parser.timeline
     assert parser.nodelog_parser.ignored_lines == 0
     # Combined summary data
