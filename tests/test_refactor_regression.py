@@ -24,29 +24,33 @@ import grblogtools as glt
 HERE = pathlib.Path(__file__).parent
 
 
+def stem(path: str) -> str:
+    return pathlib.Path(path).parts[-1]
+
+
+def normalize(df):
+    """Convert full log file paths to file name only, and remove index in
+    case it was affected by sorting."""
+    return df.assign(LogFilePath=lambda df: df["LogFilePath"].apply(stem)).reset_index(
+        drop=True
+    )
+
+
 def test_summary():
-    expected = (
-        pd.read_feather(HERE / "assets/summary.feather")
-        .sort_values("LogFilePath")
-        .reset_index(drop=True)
+    expected = normalize(
+        pd.read_feather(HERE / "assets/summary.feather").sort_values("LogFilePath")
     )
-    summary = (
-        glt.get_dataframe(["data/*.log"])
-        .sort_values("LogFilePath")
-        .reset_index(drop=True)
-    )
+    summary = normalize(glt.get_dataframe(["data/*.log"]).sort_values("LogFilePath"))
     assert_frame_equal(summary[expected.columns], expected)
 
 
 def test_nodelog_timelines():
     _, timelines = glt.get_dataframe(["data/912-glass4-*.log"], timelines=True)
-    nodelog = (
-        timelines["nodelog"].sort_values(["LogFilePath", "Time"]).reset_index(drop=True)
-    )
-    expected = (
-        pd.read_feather(HERE / "assets/nodelog.feather")
-        .sort_values(["LogFilePath", "Time"])
-        .reset_index(drop=True)
+    nodelog = normalize(timelines["nodelog"].sort_values(["LogFilePath", "Time"]))
+    expected = normalize(
+        pd.read_feather(HERE / "assets/nodelog.feather").sort_values(
+            ["LogFilePath", "Time"]
+        )
     )
     assert_frame_equal(nodelog[expected.columns], expected)
 
