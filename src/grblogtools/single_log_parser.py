@@ -20,8 +20,8 @@ class SingleLogParser:
 
     def get_summary(self):
         summary = {}
-        summary.update(self.header_parser.get_log())
-        summary.update(self.presolve_parser.get_log())
+        summary.update(self.header_parser.get_summary())
+        summary.update(self.presolve_parser.get_summary())
         summary.update(self.norel_parser.summary)
         summary.update(self.nodelog_parser.summary)
         return summary
