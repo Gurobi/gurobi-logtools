@@ -14,13 +14,11 @@ class HeaderParser:
             r"Gurobi Compute Server Worker version (?P<Version>\d{1,2}\.[^\s]+) build (.*) \((?P<Platform>[^\)]+)\)$"
         ),
         re.compile(r"Compute Server job ID: (?P<JobID>.*)$"),
-        re.compile(r"Set parameter (?P<ParamName>[^\s]+) to value (?P<ParamValue>.*)$"),
         re.compile(r"Gurobi Optimizer version (?P<Version>\d{1,2}\.[^\s]+)"),
     ]
 
     # Possible intermediate patterns to be parsed
     header_intermediate_patterns = [
-        re.compile(r"Set parameter (?P<ParamName>[^\s]+) to value (?P<ParamValue>.*)$"),
         re.compile(
             r"Gurobi Compute Server Worker version (?P<Version>\d{1,2}\.[^\s]+) build (.*) \((?P<Platform>[^\)]+)\)$"
         ),
@@ -36,20 +34,35 @@ class HeaderParser:
         ),
     ]
 
-    def __init__(self):
-        """Initialize the Header parser."""
-        self._summary = {}
+    # Special case for parameter changes
+    re_parameter_change = re.compile(
+        r"Set parameter (?P<ParamName>[^\s]+) to value (?P<ParamValue>.*)$"
+    )
 
-    def _update_summary(self, match):
-        dict_ = match.groupdict()
-        if "ParamName" in dict_:
-            # Add the keyword "Param" at the beginning of the ParamName to make
-            # it clear it is a parameter
-            self._summary.update(
-                {"Param" + dict_["ParamName"]: convert_data_types(dict_["ParamValue"])}
+    def __init__(self):
+        """Initialize the Header parser.
+
+        Parameters are stored separately from the summary data as they are
+        handled differently in the final output."""
+        self._summary = {}
+        self._parameters = {}
+
+    def parameter_change(self, line: str) -> bool:
+        """Return True and store the changed value if a parameter is changed.
+
+        Args:
+            line (str): A line in the log file
+
+        Returns:
+            bool: return True if the line indicated a parameter change
+        """
+        match = HeaderParser.re_parameter_change.match(line)
+        if match:
+            self._parameters[match.group("ParamName")] = convert_data_types(
+                match.group("ParamValue")
             )
-        else:
-            self._summary.update(typeconvert_groupdict(match))
+            return True
+        return False
 
     def start_parsing(self, line: str) -> bool:
         """Return True if the parser should start parsing the future log lines.
@@ -61,11 +74,13 @@ class HeaderParser:
             bool: Return True if the given line matches one of the parser's start
                 patterns.
         """
+        if self.parameter_change(line):
+            return True
         for possible_start in HeaderParser.header_start_patterns:
             match = possible_start.match(line)
             if match:
                 # The start line encodes information that should be stored
-                self._update_summary(match)
+                self._summary.update(typeconvert_groupdict(match))
                 return True
         return False
 
@@ -81,11 +96,15 @@ class HeaderParser:
         if not line.strip():
             return True
 
+        if self.parameter_change(line):
+            return True
+
         for pattern in HeaderParser.header_intermediate_patterns:
             match = pattern.match(line)
             if match:
-                self._update_summary(match)
-                break
+                self._summary.update(typeconvert_groupdict(match))
+                return True
+
         return True
 
     def get_summary(self) -> dict:
@@ -94,3 +113,7 @@ class HeaderParser:
         It returns an empty dictionary if the parser is not initialized yet.
         """
         return self._summary
+
+    def get_parameters(self) -> dict:
+        """Return all changed parameters detected in the header."""
+        return self._parameters

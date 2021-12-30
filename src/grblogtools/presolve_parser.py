@@ -56,13 +56,15 @@ class PresolveParser:
         re.compile(
             r"Presolved: (?P<PresolvedNumConstrs>\d+) (R|r)ows, (?P<PresolvedNumVars>\d+) (C|c)olumns, (?P<PresolvedNumNZs>\d+) (N|n)on(Z|z)ero(e?)s"
         ),
-        re.compile(r"Presolve: All rows and columns removed"),
         re.compile(r"Presolved model has (?P<PresolvedNumSOS>\d+) SOS constraint(s)\n"),
         re.compile(
             r"Presolved model has (?P<PresolvedNumQNZs>\d+) quadratic objective terms"
         ),
         re.compile(r"Presolve time: (?P<PresolveTime>[\d\.]+)s"),
     ]
+
+    # Special case: model solved by presolve
+    presolve_all_removed = re.compile(r"Presolve: All rows and columns removed")
 
     def __init__(self):
         """Initialize the Presolve parser.
@@ -105,17 +107,20 @@ class PresolveParser:
         for pattern in PresolveParser.presolve_intermediate_patterns:
             match = pattern.match(line)
             if match:
-                if match.string == "Presolve: All rows and columns removed":
-                    self._summary.update(
-                        {
-                            "PresolvedNumConstrs": 0,
-                            "PresolvedNumVars": 0,
-                            "PresolvedNumNZs": 0,
-                        }
-                    )
-                else:
-                    self._summary.update(typeconvert_groupdict(match))
-                break
+                self._summary.update(typeconvert_groupdict(match))
+                return True
+
+        match = PresolveParser.presolve_all_removed.match(line)
+        if match:
+            self._summary.update(
+                {
+                    "PresolvedNumConstrs": 0,
+                    "PresolvedNumVars": 0,
+                    "PresolvedNumNZs": 0,
+                }
+            )
+            return True
+
         return True
 
     def get_summary(self) -> dict:
