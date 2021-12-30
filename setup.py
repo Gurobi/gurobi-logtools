@@ -31,7 +31,6 @@ setup(
         "pandas",
         "plotly",
         "xlsxwriter",
-        "pre-commit",
     ],
     python_requires=">=3.6",
     include_package_data=True,
