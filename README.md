@@ -41,12 +41,12 @@ Additionally, there is a [Gurobi TechTalk demonstrating how to use grblogtools (
     Depending on your requirements, you may need to filter or modify the resulting DataFrames.
 
 2. draw interactive charts, preferably in a [Jupyter Notebook](https://jupyter.org/):
-    
+
     - final results from the individual runs:
     ```Python
     glt.plot(summary, type="box")
     ```
-    
+
     - progress charts for the individual runs:
     ```Python
     glt.plot(timelines['nodelog'], y="Gap", color="Log", type="line")

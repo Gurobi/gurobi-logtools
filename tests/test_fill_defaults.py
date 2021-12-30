@@ -1,8 +1,6 @@
-import grblogtools as glt
+from pandas.api.types import is_categorical_dtype, is_float_dtype, is_integer_dtype
 
-from pandas.api.types import is_categorical_dtype
-from pandas.api.types import is_float_dtype
-from pandas.api.types import is_integer_dtype
+import grblogtools as glt
 
 
 def test_parameter_values():

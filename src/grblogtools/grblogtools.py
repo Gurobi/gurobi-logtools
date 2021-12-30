@@ -1,10 +1,11 @@
 import glob
 import os
 import re
+
 import ipywidgets as widgets
-from ipywidgets import interact
-import plotly.express as px
 import pandas as pd
+import plotly.express as px
+from ipywidgets import interact
 from numpy import nan
 
 from grblogtools.helpers import fill_default_parameters
@@ -38,7 +39,7 @@ class logpattern:
         re.compile(
             "Gurobi Compute Server Worker version (?P<Version>\d{1,2}\.[^\s]+) build (.*) \((?P<Platform>[^\)]+)\)$"
         ),
-        re.compile("Compute Server job ID: (?P<JobID>.*)$")
+        re.compile("Compute Server job ID: (?P<JobID>.*)$"),
     ]
 
     # Parameter settings
@@ -122,7 +123,9 @@ class logpattern:
             "Optimize a model with (?P<NumConstrs>\d+) (R|r)ows, (?P<NumVars>\d+) (C|c)olumns and (?P<NumNZs>\d+) (N|n)on(Z|z)ero(e?)s"
         ),
         re.compile("Presolve time: (?P<PresolveTime>[\d\.]+)s"),
-        re.compile("Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"),
+        re.compile(
+            "Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
+        ),
         re.compile("Distributed MIP job count: (?P<DistributedMIPJobs>\d+)"),
         re.compile("Concurrent MIP job count: (?P<ConcurrentJobs>\d+)"),
         re.compile("Reading time = (?P<ReadTime>[\d\.]+) seconds"),
@@ -372,7 +375,7 @@ def get_log_info(values, loglines, verbose=False):
         return None
     else:
         # get all header information
-        for _,result in _regex_matches(loglines[:first_line+1], logpattern.headers):
+        for _, result in _regex_matches(loglines[: first_line + 1], logpattern.headers):
             values.update(result)
 
     # Discard previous lines
@@ -660,8 +663,10 @@ def get_dataframe(
                 header.append(len(loglines))
             else:
                 header = [0, len(loglines)]
-            for i,h in enumerate(range(len(header) - 1)):
-                log_info = get_log_info(dict(), loglines[header[h] : header[h + 1]], verbose)
+            for i, h in enumerate(range(len(header) - 1)):
+                log_info = get_log_info(
+                    dict(), loglines[header[h] : header[h + 1]], verbose
+                )
                 if log_info is None:
                     print(f"error processing {logfile}")
                     continue
@@ -714,9 +719,7 @@ def get_dataframe(
             final = summary[summary["LogFilePath"] == log]
             nrlines = log_info.get("NoRelLog")
             if nrlines is not None:
-                norel_ = pd.DataFrame(nrlines).apply(
-                    pd.to_numeric, errors="coerce"
-                )
+                norel_ = pd.DataFrame(nrlines).apply(pd.to_numeric, errors="coerce")
                 _copy_keys(final, norel_)
                 norel = norel.append(norel_, ignore_index=True)
 
