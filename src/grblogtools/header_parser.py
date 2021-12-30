@@ -7,32 +7,32 @@ class HeaderParser:
     # Possible patterns indicating the initialization of the parser
     header_start_patterns = [
         re.compile(
-            "Gurobi (?P<Version>\d{1,2}\.[^\s]+) \((?P<Platform>[^\)]+)\) logging started (?P<Time>.*)$"
+            r"Gurobi (?P<Version>\d{1,2}\.[^\s]+) \((?P<Platform>[^\)]+)\) logging started (?P<Time>.*)$"
         ),
-        re.compile("Logging started (?P<Time>.*)$"),
+        re.compile(r"Logging started (?P<Time>.*)$"),
         re.compile(
-            "Gurobi Compute Server Worker version (?P<Version>\d{1,2}\.[^\s]+) build (.*) \((?P<Platform>[^\)]+)\)$"
+            r"Gurobi Compute Server Worker version (?P<Version>\d{1,2}\.[^\s]+) build (.*) \((?P<Platform>[^\)]+)\)$"
         ),
-        re.compile("Compute Server job ID: (?P<JobID>.*)$"),
-        re.compile("Set parameter (?P<ParamName>[^\s]+) to value (?P<ParamValue>.*)$"),
-        re.compile("Gurobi Optimizer version (?P<Version>\d{1,2}\.[^\s]+)"),
+        re.compile(r"Compute Server job ID: (?P<JobID>.*)$"),
+        re.compile(r"Set parameter (?P<ParamName>[^\s]+) to value (?P<ParamValue>.*)$"),
+        re.compile(r"Gurobi Optimizer version (?P<Version>\d{1,2}\.[^\s]+)"),
     ]
 
     # Possible intermediate patterns to be parsed
     header_intermediate_patterns = [
-        re.compile("Set parameter (?P<ParamName>[^\s]+) to value (?P<ParamValue>.*)$"),
+        re.compile(r"Set parameter (?P<ParamName>[^\s]+) to value (?P<ParamValue>.*)$"),
         re.compile(
-            "Gurobi Compute Server Worker version (?P<Version>\d{1,2}\.[^\s]+) build (.*) \((?P<Platform>[^\)]+)\)$"
+            r"Gurobi Compute Server Worker version (?P<Version>\d{1,2}\.[^\s]+) build (.*) \((?P<Platform>[^\)]+)\)$"
         ),
-        re.compile("Compute Server job ID: (?P<JobID>.*)$"),
-        re.compile("Gurobi Optimizer version (?P<Version>\d{1,2}\.[^\s]+)"),
-        re.compile("Read (MPS|LP) format model from file (?P<ModelFilePath>.*)$"),
-        re.compile("Reading time = (?P<ReadingTime>[\d\.]+) seconds"),
+        re.compile(r"Compute Server job ID: (?P<JobID>.*)$"),
+        re.compile(r"Gurobi Optimizer version (?P<Version>\d{1,2}\.[^\s]+)"),
+        re.compile(r"Read (MPS|LP) format model from file (?P<ModelFilePath>.*)$"),
+        re.compile(r"Reading time = (?P<ReadingTime>[\d\.]+) seconds"),
         re.compile(
-            "Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
+            r"Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
         ),
         re.compile(
-            "Thread count: (?P<PhysicalCores>\d+) physical cores, (?P<LogicalProcessors>\d+) logical processors, using up to (?P<Threads>\d+) threads"
+            r"Thread count: (?P<PhysicalCores>\d+) physical cores, (?P<LogicalProcessors>\d+) logical processors, using up to (?P<Threads>\d+) threads"
         ),
     ]
 
