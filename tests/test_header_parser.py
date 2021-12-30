@@ -1,68 +1,105 @@
-import datetime
 from unittest import TestCase, main
 
 from grblogtools.header_parser import HeaderParser
 from grblogtools.helpers import parse_lines
 
+example_log_0 = """
+Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])
+Copyright (c) 2021, Gurobi Optimization, LLC
+
+Read MPS format model from file /Library/gurobi950/macos_universal2/examples/data/glass4.mps
+Reading time = 0.00 seconds
+glass4: 396 rows, exit columns, 1815 nonzeros
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+"""
+
+expected_summary_0 = {
+    "Version": "9.5.0",
+    "ModelFilePath": "/Library/gurobi950/macos_universal2/examples/data/glass4.mps",
+    "ReadingTime": 0.0,
+    "PhysicalCores": 8,
+    "LogicalProcessors": 8,
+    "Threads": 8,
+}
+
+example_log_1 = """
+Set parameter Presolve to value 0
+Set parameter NonConvex to value 2
+Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[rosetta2])
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+"""
+
+expected_summary_1 = {
+    "ParamPresolve": 0,
+    "ParamNonConvex": 2,
+    "Version": "9.5.0",
+    "PhysicalCores": 8,
+    "LogicalProcessors": 8,
+    "Threads": 8,
+}
+
+
+example_log_2 = """
+Set parameter CSManager to value "localhost:61000"
+Set parameter CSAuthToken
+Compute Server job ID: 4e90605d-8ec1-4b56-8351-d8a5355ff641
+Capacity available on 'localhost' - connecting...
+Established HTTP unencrypted connection
+Set parameter ConcurrentMIP to value 2
+Set parameter FuncPieces to value 1
+Set parameter FuncPieceLength to value 0.001
+Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[rosetta2])
+Gurobi Compute Server Worker version 9.5.0 build v9.5.0rc5 (mac64[arm])
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+"""
+
+expected_summary_2 = {
+    "ParamCSManager": '"localhost:61000"',
+    "JobID": "4e90605d-8ec1-4b56-8351-d8a5355ff641",
+    "ParamConcurrentMIP": 2,
+    "ParamFuncPieces": 1,
+    "ParamFuncPieceLength": 0.001,
+    "Version": "9.5.0",
+    "Platform": "mac64[arm]",
+    "PhysicalCores": 8,
+    "LogicalProcessors": 8,
+    "Threads": 8,
+}
+
 
 class TestHeaderLog(TestCase):
     def setUp(self):
-        self._correct_start_lines = [
-            "Gurobi 9.1.2 (linux64, gurobi_cl) logging started Fri Jul 30 13:53:48 2021",
-            "Compute Server job ID: 7a51ec41-f72d-4b31-95ba-28407986eda3",
-            "Gurobi Compute Server Worker version 9.5.0 build v9.1.1rc0 (linux64)",
-            "Logging started Fri Jul 30 13:53:48 2021",
-            "Logging started ",
-            "Gurobi 10.0.0 (linux64, gurobi_cl) logging started Fri Jul 30 13:53:48 2021",
-        ]
-
-        self._wrong_start_lines = [
-            "Gurobi 900.1.2 (linux64, gurobi_cl) logging started Fri Jul 30 13:53:48 2021",
-            "Compute Server job: 7a51ec41-f72d-4b31-95ba-28407986eda3",
-            "Gurobi Compute Server Worker version 9.5.0 build v9.1.1rc0 linux64",
-            "Logging starte",
-        ]
+        pass
 
     def test_start_parsing(self):
-        for line in self._correct_start_lines:
-            with self.subTest(line=line):
-                header_parser = HeaderParser()
-                self.assertTrue(header_parser.start_parsing(line))
-
-        for line in self._wrong_start_lines:
-            with self.subTest(line=line):
-                header_parser = HeaderParser()
-                self.assertFalse(header_parser.start_parsing(line))
-
-    def test_get_log(self):
-        expected_logs = [
-            {
-                "Version": "9.1.2",
-                "Platform": "linux64, gurobi_cl",
-                "Time": datetime.datetime(2021, 7, 30, 13, 53, 48),
-            },
-            {"JobID": "7a51ec41-f72d-4b31-95ba-28407986eda3"},
-            {"Version": "9.5.0", "Platform": "linux64"},
-            {"Time": datetime.datetime(2021, 7, 30, 13, 53, 48)},
-            {"Time": ""},
-            {
-                "Version": "10.0.0",
-                "Platform": "linux64, gurobi_cl",
-                "Time": datetime.datetime(2021, 7, 30, 13, 53, 48),
-            },
+        expected_start_lines = [
+            "Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])",
+            "Set parameter Presolve to value 0",
+            'Set parameter CSManager to value "localhost:61000"',
         ]
 
-        for i, line in enumerate(self._correct_start_lines):
-            with self.subTest(line=line):
+        for i, example_log in enumerate([example_log_0, example_log_1, example_log_2]):
+            with self.subTest(example_log=example_log):
                 header_parser = HeaderParser()
-                parse_lines(header_parser, [line])
-                self.assertEqual(header_parser.get_log(), expected_logs[i])
+                for line in example_log.strip().split("\n"):
+                    if header_parser.start_parsing(line):
+                        self.assertEqual(line, expected_start_lines[i])
+                        break
+                else:
+                    self.assertRaises("No start line found.")
 
-        for line in self._wrong_start_lines:
-            with self.subTest(line=line):
+    def test_get_summary(self):
+        expected_summaries = [
+            expected_summary_0,
+            expected_summary_1,
+            expected_summary_2,
+        ]
+        for i, example_log in enumerate([example_log_0, example_log_1, example_log_2]):
+            with self.subTest(example_log=example_log):
                 header_parser = HeaderParser()
-                parse_lines(header_parser, [line])
-                self.assertEqual(header_parser.get_log(), {})
+                lines = example_log.strip().split("\n")
+                parse_lines(header_parser, lines)
+                self.assertEqual(header_parser.get_summary(), expected_summaries[i])
 
 
 if __name__ == "__main__":
