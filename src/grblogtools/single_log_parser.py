@@ -18,6 +18,14 @@ class SingleLogParser:
         self.current_parser = None
         self.future_parsers = []
 
+    def get_summary(self):
+        summary = {}
+        summary.update(self.header_parser.get_log())
+        summary.update(self.presolve_parser.get_log())
+        summary.update(self.norel_parser.summary)
+        summary.update(self.nodelog_parser.summary)
+        return summary
+
     def start_parsing(self, line: str) -> bool:
         """The start of a log is the start of the header, so that's all that
         needs to be checked."""

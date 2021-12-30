@@ -48,3 +48,10 @@ def test_single_log_parser():
     assert parser.nodelog_parser.summary
     assert parser.nodelog_parser.timeline
     assert parser.nodelog_parser.ignored_lines == 0
+    # Combined summary data
+    summary = parser.get_summary()
+    assert summary["Version"] == "9.1.2"
+    assert summary["NumVars"] == 322
+    assert summary["PresolvedNumIntVars"] == 297
+    assert summary["NoRelBestSol"] == 1.450014e09
+    assert summary["NodeCount"] == 188145
