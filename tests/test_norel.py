@@ -44,7 +44,6 @@ def test_norel_parser():
     parser = NoRelParser()
     parse_block(parser, norel_section_test_data)
     # only the 'Root simplex log...' line was passed but not parsed.
-    assert parser.ignored_lines == 1
     assert parser.get_summary() == {
         "NoRelBestSol": 1.200013e9,
         "NoRelTime": 93.0,

@@ -15,8 +15,12 @@ class SingleLogParser:
         self.nodelog_parser = NodeLogParser()
 
         # State
-        self.current_parser = None
-        self.future_parsers = []
+        self.current_parser = self.header_parser
+        self.future_parsers = [
+            self.presolve_parser,
+            self.norel_parser,
+            self.nodelog_parser,
+        ]
 
     def get_summary(self):
         summary = {}
@@ -29,36 +33,19 @@ class SingleLogParser:
     def start_parsing(self, line: str) -> bool:
         """The start of a log is the start of the header, so that's all that
         needs to be checked."""
-        if self.header_parser.start_parsing(line):
-            self.current_parser = self.header_parser
-            self.future_parsers = [
-                self.presolve_parser,
-                self.norel_parser,
-                self.nodelog_parser,
-            ]
-            return True
-        return False
+        assert self.current_parser is self.header_parser
+        return self.current_parser.start_parsing(line)
 
     def continue_parsing(self, line: str) -> bool:
-        # watch for log termination (or have a termination parser?)
         assert self.current_parser not in self.future_parsers
-        # First check if any future parsers want to take over.
+        # First try the current parser.
+        matched_line = self.current_parser.continue_parsing(line)
+        if matched_line:
+            return True
+        # Check if any future parsers should take over.
         for i, parser in enumerate(self.future_parsers):
             if parser.start_parsing(line):
                 self.current_parser = parser
-                trigger = i
-                break
-        else:
-            trigger = None
-        # If no-one took over, pass to the current parser.
-        if trigger is None:
-            # this assert can fail; just don't have a test for it yet
-            assert self.current_parser is not None
-            if not self.current_parser.continue_parsing(line):
-                self.current_parser = None
-                if not self.future_parsers:
-                    return False
-        # Control passed to a future parser. Shorten the list.
-        else:
-            self.future_parsers = self.future_parsers[i + 1 :]
-        return True
+                self.future_parsers = self.future_parsers[i + 1 :]
+                return True
+        return False

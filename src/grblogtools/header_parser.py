@@ -91,10 +91,8 @@ class HeaderParser:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True.
+            bool: Return True if the line was match by any pattern.
         """
-        if not line.strip():
-            return True
 
         if self.parameter_change(line):
             return True
@@ -105,7 +103,7 @@ class HeaderParser:
                 self._summary.update(typeconvert_groupdict(match))
                 return True
 
-        return True
+        return False
 
     def get_summary(self) -> dict:
         """Return the current parsed summary.

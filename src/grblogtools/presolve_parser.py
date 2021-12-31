@@ -100,9 +100,6 @@ class PresolveParser:
         Returns:
             bool: Return True.
         """
-        # If an empty line, return True
-        if not line.strip():
-            return True
 
         for pattern in PresolveParser.presolve_intermediate_patterns:
             match = pattern.match(line)
@@ -121,7 +118,7 @@ class PresolveParser:
             )
             return True
 
-        return True
+        return False
 
     def get_summary(self) -> dict:
         """Return the current parsed summary.

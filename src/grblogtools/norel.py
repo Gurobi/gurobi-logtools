@@ -34,7 +34,6 @@ class NoRelParser:
     def __init__(self):
         super().__init__()
         self.timeline: List[Dict[str, Any]] = []
-        self.ignored_lines: int = 0
         self._incumbent = None
 
     def get_summary(self) -> Dict[str, Any]:
@@ -75,6 +74,4 @@ class NoRelParser:
                     entry["Incumbent"] = self._incumbent
                 self.timeline.append(entry)
                 return True
-        if line.strip():
-            self.ignored_lines += 1
-        return True
+        return False

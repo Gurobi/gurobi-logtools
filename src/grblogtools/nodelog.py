@@ -63,6 +63,7 @@ class NodeLogParser:
         self._summary = {}
         self.timeline = []
         self.ignored_lines = 0
+        self._complete = False
 
     def get_summary(self) -> Dict[str, Any]:
         return self._summary
@@ -73,16 +74,17 @@ class NodeLogParser:
     def continue_parsing(self, line: str) -> bool:
         """Match against all log line formats, exiting on the first match. If
         no match, check for the end line or record an ignored line."""
-        if not line.strip():
-            return True  # continue
         for regex in self.line_types:
             match = regex.match(line)
             if match:
                 self.timeline.append(typeconvert_groupdict(match))
-                return True  # continue
+                return True
         match = self.tree_search_explored.match(line)
         if match:
             self._summary.update(typeconvert_groupdict(match))
-            return False  # stop
-        self.ignored_lines += 1
-        return True  # continue
+            self._complete = True
+            return True
+        if line.strip() and not self._complete:
+            print("Ignored '{}'".format(line))
+            self.ignored_lines += 1
+        return False

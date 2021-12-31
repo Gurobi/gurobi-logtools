@@ -127,11 +127,10 @@ def parse_lines(parser, loglines: Iterable[str]):
     lines = iter(loglines)
     for line in lines:
         if parser.start_parsing(line):
-            # Once the parser indicates start, use the parser to parse the remaining
-            # lines until signalled to stop.
+            # Once the parser indicates start, use the parser to parse all
+            # remaining lines.
             for line in lines:
-                if not parser.continue_parsing(line):
-                    return
+                parser.continue_parsing(line)
 
 
 def parse_block(parser, log):

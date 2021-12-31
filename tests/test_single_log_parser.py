@@ -44,10 +44,8 @@ def test_single_log_parser():
     assert parser.presolve_parser.get_summary()
     assert parser.norel_parser.get_summary()
     assert parser.norel_parser.timeline
-    assert parser.norel_parser.ignored_lines == 1
     assert parser.nodelog_parser.get_summary()
     assert parser.nodelog_parser.timeline
-    assert parser.nodelog_parser.ignored_lines == 0
     # Combined summary data
     summary = parser.get_summary()
     assert summary["Version"] == "9.1.2"
