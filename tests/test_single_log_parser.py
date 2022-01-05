@@ -32,7 +32,9 @@ H    0     0                    2.200019e+09 8.0000e+08  63.6%     -    0s
 Explored 188145 nodes (1383139 simplex iterations) in 35.66 seconds
 Thread count was 8 (of 8 available processors)
 
-Some other stuff...
+Solution count 10: 1.20001e+09 1.26668e+09 1.40001e+09 ... 1.50001e+09
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.200012600000e+09, best bound 1.200012600000e+09, gap 0.0000%
 """
 
 
@@ -53,3 +55,5 @@ def test_single_log_parser():
     assert summary["PresolvedNumIntVars"] == 297
     assert summary["NoRelBestSol"] == 1.450014e09
     assert summary["NodeCount"] == 188145
+    assert summary["Status"] == "OPTIMAL"
+    assert summary["ObjVal"] == 1.2000126e09

@@ -1,6 +1,8 @@
 from grblogtools.helpers import parse_block
 from grblogtools.termination import TerminationParser
 
+# TODO add tests for other status parsers
+
 test_lines_1 = """
 Solution count 10: 1.20001e+09 1.26668e+09 1.40001e+09 ... 1.50001e+09
 Optimal solution found (tolerance 1.00e-04)

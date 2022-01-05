@@ -2,6 +2,7 @@ from grblogtools.header_parser import HeaderParser
 from grblogtools.nodelog import NodeLogParser
 from grblogtools.norel import NoRelParser
 from grblogtools.presolve_parser import PresolveParser
+from grblogtools.termination import TerminationParser
 
 
 class SingleLogParser:
@@ -13,6 +14,7 @@ class SingleLogParser:
         self.norel_parser = NoRelParser()
         # Add relaxation/continuous model parser here
         self.nodelog_parser = NodeLogParser()
+        self.termination_parser = TerminationParser()
 
         # State
         self.current_parser = self.header_parser
@@ -20,6 +22,7 @@ class SingleLogParser:
             self.presolve_parser,
             self.norel_parser,
             self.nodelog_parser,
+            self.termination_parser,
         ]
 
     def get_summary(self):
@@ -28,6 +31,7 @@ class SingleLogParser:
         summary.update(self.presolve_parser.get_summary())
         summary.update(self.norel_parser.get_summary())
         summary.update(self.nodelog_parser.get_summary())
+        summary.update(self.termination_parser.get_summary())
         return summary
 
     def start_parsing(self, line: str) -> bool:
