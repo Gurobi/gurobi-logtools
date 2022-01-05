@@ -91,7 +91,7 @@ class HeaderParser:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the line was match by any pattern.
+            bool: Return True if the line was matched by any pattern.
         """
 
         if self.parameter_change(line):
