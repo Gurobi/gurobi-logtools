@@ -85,6 +85,5 @@ class NodeLogParser:
             self._complete = True
             return True
         if line.strip() and not self._complete:
-            print("Ignored '{}'".format(line))
             self.ignored_lines += 1
         return False
