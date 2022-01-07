@@ -18,8 +18,36 @@ H    0     0                    2.200019e+09 8.0000e+08  63.6%     -    0s
 *187499 14704             320    1.350013e+09 1.2000e+09  11.1%   7.3   35s
 
 Explored 188145 nodes (1383139 simplex iterations) in 35.66 seconds
-Thread count was 8 (of 8 available processors)
 """
+
+
+nodelog_section_test_data_withcuts = """
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 8.0000e+08    0   72          - 8.0000e+08  74.5%     -    0s
+
+Cutting planes:
+  Gomory: 13
+  Implied bound: 5
+  MIR: 20
+
+Explored 188 nodes (1389 simplex iterations) in 5.2 seconds
+"""
+
+
+def test_nodelog_parser_withcuts():
+    parser = NodeLogParser()
+    parse_block(parser, nodelog_section_test_data_withcuts)
+    assert parser.get_summary() == {
+        "Cuts: Gomory": 13,
+        "Cuts: Implied bound": 5,
+        "Cuts: MIR": 20,
+        "NodeCount": 188,
+        "IterCount": 1389,
+        "Runtime": 5.2,
+    }
+    assert len(parser.timeline) == 1
 
 
 def test_nodelog_parser():

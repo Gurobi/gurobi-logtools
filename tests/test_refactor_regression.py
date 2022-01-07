@@ -44,9 +44,6 @@ def test_summary():
     expected = expected.drop(
         columns=["RelaxIterCount", "RelaxObj", "RelaxTime"]
     )  # coming from cont. parser
-    expected = expected.drop(
-        columns=[c for c in expected.columns if c.startswith("Cuts")]
-    )  # coming from nodelog parser
     summary = normalize(glt.get_dataframe(["data/*.log"]).sort_values("LogFilePath"))
     assert_frame_equal(summary[expected.columns], expected)
 

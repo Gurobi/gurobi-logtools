@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict
 
-from grblogtools.helpers import typeconvert_groupdict
+from grblogtools.helpers import convert_data_types, typeconvert_groupdict
 
 float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
 
@@ -58,15 +58,21 @@ class NodeLogParser:
         #     )
         # ),
     ]
+    cut_report_start = re.compile(r"Cutting planes:")
+    cut_report_line = re.compile(r"  (?P<Name>[\w ]+): (?P<Count>\d+)")
 
     def __init__(self):
         self._summary = {}
+        self._cuts = {}
         self.timeline = []
         self.ignored_lines = 0
         self._complete = False
+        self._in_cut_report = False
 
     def get_summary(self) -> Dict[str, Any]:
-        return self._summary
+        summary = self._summary
+        summary.update({f"Cuts: {name}": count for name, count in self._cuts.items()})
+        return summary
 
     def start_parsing(self, line: str) -> bool:
         return bool(self.tree_search_log_start.match(line))
@@ -83,7 +89,19 @@ class NodeLogParser:
         if match:
             self._summary.update(typeconvert_groupdict(match))
             self._complete = True
+            self._in_cut_report = False
             return True
+        match = self.cut_report_start.match(line)
+        if match:
+            self._in_cut_report = True
+            return True
+        if self._in_cut_report:
+            match = self.cut_report_line.match(line)
+            if match:
+                self._cuts[match.group("Name")] = convert_data_types(
+                    match.group("Count")
+                )
+                return True
         if line.strip() and not self._complete:
             self.ignored_lines += 1
         return False
