@@ -761,7 +761,8 @@ def get_dataframe(
                 log_info["Log"] = os.path.splitext(os.path.basename(logfile))[0]
 
                 # add counter if using merged_logs:
-                log_info["LogFilePath"] += f"({i+1})"
+                if merged_logs:
+                    log_info["LogFilePath"] += f"({i+1})"
 
                 if log_info.get("ModelFilePath"):
                     log_info["ModelFile"] = os.path.basename(
