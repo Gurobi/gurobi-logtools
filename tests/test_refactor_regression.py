@@ -40,7 +40,7 @@ def test_summary():
     expected = normalize(
         pd.read_feather(HERE / "assets/summary.feather").sort_values("LogFilePath")
     )
-    expected = expected.drop(columns=["ModelType", "Model", "Log"])  # post-processing?
+    expected = expected.drop(columns=["ModelType"])  # post-processing?
     expected = expected.drop(
         columns=["RelaxIterCount", "RelaxObj", "RelaxTime"]
     )  # coming from cont. parser

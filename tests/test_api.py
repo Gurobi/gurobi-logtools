@@ -26,12 +26,19 @@ def test_logfile(glass4_summary):
         logfiles,
         check_names=False,
     )
+    # log names are stripped of the model name and seed
+    log = glass4_summary["Log"]
+    assert log.str.startswith("912").all()
+    assert not log.str.contains("glass4").any()
+    assert not log.str.endswith("-").any()
+    assert len(log.unique()) == 21  # different seeds get same label
 
 
 def test_modelfile(glass4_summary):
     modelfiles = glass4_summary["ModelFilePath"]
     assert len(modelfiles.unique()) == 1
     assert glass4_summary["ModelFile"].eq("glass4").all()
+    assert glass4_summary["Model"].eq("glass4").all()
 
 
 def test_parameters(glass4_summary):

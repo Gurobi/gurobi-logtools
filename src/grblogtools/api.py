@@ -7,6 +7,22 @@ from grblogtools.helpers import fill_default_parameters
 from grblogtools.single_log_parser import SingleLogParser
 
 
+def strip_model_and_seed(row):
+    """
+    If the log path contains the model name, return everything to the left.
+    Otherwise, just return the log stem.
+
+    i.e. with Model = 'glass4'
+        data/912-Cuts0-glass4-0.log -> 912-Cuts0
+        data/some-log.log -> some-log
+    """
+    log_stem = Path(row["LogFilePath"]).stem
+    run, mid, _ = log_stem.partition(row["Model"])
+    if mid:
+        return run.rstrip("-")
+    return log_stem
+
+
 class ParseResult:
     def __init__(self):
         self.parsers = []
@@ -31,11 +47,11 @@ class ParseResult:
             .join(parameters)
             .join(seed)
             .assign(
-                #         Model=lambda df: df["ModelFilePath"],
                 ModelFile=lambda df: df["ModelFilePath"].apply(
                     lambda p: Path(p).parts[-1].partition(".")[0]
                 ),
-                #         Log=lambda df: df["LogFilePath"],
+                Model=lambda df: df["ModelFile"],
+                Log=lambda df: df.apply(strip_model_and_seed, axis=1),
             )
         )
         # TODO fill_default_parameters could be much cleaner now, without column regexes
