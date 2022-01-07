@@ -10,12 +10,16 @@ class TerminationParser:
         re.compile(
             r"Best objective (?P<ObjVal>[^,]+), best bound (?P<ObjBound>[^,]+), gap (?P<MIPGap>.*)$"
         ),
+        re.compile(
+            r"Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
+        ),
     ]
 
     re_termination_status = {
         "OPTIMAL": re.compile(
             r"(?P<OPTIMAL>Optimal solution found)(?: \(tolerance .*\))"
         ),
+        "TIME_LIMIT": re.compile(r"(?P<TIME_LIMIT>Time limit reached)"),
     }
 
     def __init__(self):

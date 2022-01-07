@@ -27,9 +27,6 @@ class HeaderParser:
         re.compile(r"Read (MPS|LP) format model from file (?P<ModelFilePath>.*)$"),
         re.compile(r"Reading time = (?P<ReadingTime>[\d\.]+) seconds"),
         re.compile(
-            r"Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
-        ),
-        re.compile(
             r"Thread count: (?P<PhysicalCores>\d+) physical cores, (?P<LogicalProcessors>\d+) logical processors, using up to (?P<Threads>\d+) threads"
         ),
     ]
