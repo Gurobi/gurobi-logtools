@@ -1,7 +1,9 @@
 import glob
+from pathlib import Path
 
 import pandas as pd
 
+from grblogtools.helpers import fill_default_parameters
 from grblogtools.single_log_parser import SingleLogParser
 
 
@@ -10,9 +12,38 @@ class ParseResult:
         self.parsers = []
 
     def summary(self):
-        return pd.DataFrame([parser.get_summary() for parser in self.parsers])
+        summary = pd.DataFrame(
+            [
+                dict(parser.get_summary(), LogFilePath=logfile)
+                for logfile, parser in self.parsers
+            ]
+        )
+        # Post-processing to match old API
+        parameters = pd.DataFrame(
+            [parser.header_parser.get_parameters() for _, parser in self.parsers]
+        )
+        seed = parameters[["Seed"]].fillna(0).astype(int)
+        parameters = parameters.drop(columns=["Seed"]).rename(
+            columns=lambda c: c + " (Parameter)"
+        )
+        summary = (
+            summary.rename(columns={"ReadingTime": "ReadTime"})
+            .join(parameters)
+            .join(seed)
+            .assign(
+                #         Model=lambda df: df["ModelFilePath"],
+                ModelFile=lambda df: df["ModelFilePath"].apply(
+                    lambda p: Path(p).parts[-1].partition(".")[0]
+                ),
+                #         Log=lambda df: df["LogFilePath"],
+            )
+        )
+        # TODO fill_default_parameters could be much cleaner now, without column regexes
+        summary = fill_default_parameters(summary)
+        return summary
 
-    def parse(self, logfile):
+    def parse(self, logfile: str) -> None:
+        """Parse a single log from one file."""
         parser = SingleLogParser()
         with open(logfile) as infile:
             lines = iter(infile)
@@ -20,7 +51,7 @@ class ParseResult:
                 if parser.start_parsing(line):
                     for line in lines:
                         parser.continue_parsing(line)
-        self.parsers.append(parser)
+        self.parsers.append((logfile, parser))
 
 
 def parse(arg) -> ParseResult:
