@@ -114,8 +114,7 @@ def convert_data_types(value):
 
 
 def typeconvert_groupdict(match: re.Match):
-    """Given a regex match, return its groupdict but with type converted
-    values."""
+    """Return the groupdict of a regex match with type converted values."""
     return {k: convert_data_types(v) for k, v in match.groupdict().items()}
 
 

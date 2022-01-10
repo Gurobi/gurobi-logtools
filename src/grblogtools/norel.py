@@ -5,20 +5,6 @@ from grblogtools.helpers import typeconvert_groupdict
 
 
 class NoRelParser:
-    """
-    Methods:
-        - log_start(line) -> parse a string, returing true if this string
-          indicates the start of the norel section
-        - parse(line) -> parse a string, return true if this parser should
-          continue receiving future log lines
-
-    Attributes:
-        - summary -> dict of summary data (total time, best bound, best solution)
-        - timeline -> list of dicts for log timeline entries (incumbent, bound, time)
-        - ignored_lines -> count of lines after the log start which were recieved
-          but not parsed
-    """
-
     norel_log_start = re.compile(r"Starting NoRel heuristic")
     norel_primal_regex = re.compile(
         r"Found heuristic solution:\sobjective\s(?P<Incumbent>[^\s]+)"
@@ -32,7 +18,6 @@ class NoRelParser:
     ]
 
     def __init__(self):
-        super().__init__()
         self.timeline: List[Dict[str, Any]] = []
         self._incumbent = None
 
@@ -55,9 +40,10 @@ class NoRelParser:
         return bool(self.norel_log_start.match(line))
 
     def continue_parsing(self, line: str) -> bool:
-        """Parse a log line to populate data. Since the incumbent and time/bound
-        come from separate lines, we need to retain a parsed incumbent value for
-        recording against the next timestamp.
+        """Parse a log line to populate data.
+
+        Since the incumbent and time/bound come from separate lines, we need to
+        retain a parsed incumbent value for recording against the next timestamp.
 
         Always returns true, since NoRel does not have an end line to speak of,
         except an empty line which does not seem like a great idea to rely on.
