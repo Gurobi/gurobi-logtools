@@ -32,7 +32,7 @@ class HeaderParser:
     ]
 
     # Special case for parameter changes
-    re_parameter_change = re.compile(
+    parameter_change_pattern = re.compile(
         r"Set parameter (?P<ParamName>[^\s]+) to value (?P<ParamValue>.*)$"
     )
 
@@ -44,7 +44,7 @@ class HeaderParser:
         self._summary = {}
         self._parameters = {}
 
-    def parameter_change(self, line: str) -> bool:
+    def check_parameter_change(self, line: str) -> bool:
         """Return True and store the changed value if a parameter is changed.
 
         Args:
@@ -53,7 +53,7 @@ class HeaderParser:
         Returns:
             bool: return True if the line indicated a parameter change
         """
-        match = HeaderParser.re_parameter_change.match(line)
+        match = HeaderParser.parameter_change_pattern.match(line)
         if match:
             self._parameters[match.group("ParamName")] = convert_data_types(
                 match.group("ParamValue")
@@ -71,7 +71,7 @@ class HeaderParser:
             bool: Return True if the given line matches one of the parser's start
                 patterns.
         """
-        if self.parameter_change(line):
+        if self.check_parameter_change(line):
             return True
         for possible_start in HeaderParser.header_start_patterns:
             match = possible_start.match(line)
@@ -91,7 +91,7 @@ class HeaderParser:
             bool: Return True if the line was matched by any pattern.
         """
 
-        if self.parameter_change(line):
+        if self.check_parameter_change(line):
             return True
 
         for pattern in HeaderParser.header_intermediate_patterns:
