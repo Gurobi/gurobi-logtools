@@ -1,59 +1,67 @@
-from grblogtools.helpers import parse_block
+from grblogtools.helpers import parse_lines
 from grblogtools.single_log_parser import SingleLogParser
 
-full_log_data = """
-Gurobi 9.1.2 (linux64, gurobi_cl) logging started Fri Jul 30 13:53:48 2021
-Read MPS format model from file /Library/gurobi950/macos_universal2/examples/data/glass4.mps
-Optimize a model with 396 rows, 322 columns and 1815 nonzeros
-Model fingerprint: 0x18b19fdf
-Variable types: 20 continuous, 302 integer (0 binary)
-Presolve removed 6 rows and 6 columns
-Presolve time: 0.01s
-Presolved: 390 rows, 316 columns, 1803 nonzeros
-Variable types: 19 continuous, 297 integer (297 binary)
-Found heuristic solution: objective 3.133356e+09
 
-Starting NoRel heuristic
-Elapsed time for NoRel heuristic: 5s
-Found heuristic solution: objective 3.033354e+09
-Found heuristic solution: objective 1.450014e+09
-Elapsed time for NoRel heuristic: 10s (best bound 8.00002e+08)
-
-    Nodes    |    Current Node    |     Objective Bounds      |     Work
- Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
-
-     0     0 8.0000e+08    0   72          - 8.0000e+08  74.5%     -    0s
-     0     0 8.0000e+08    0   72 3.1334e+09 8.0000e+08  74.5%     -    0s
-H    0     0                    2.200019e+09 8.0000e+08  63.6%     -    0s
- 29986 17212 1.5267e+09   68  108 1.6500e+09 8.8832e+08  46.2%   4.4   15s
- 40414 18935 infeasible  300      1.6000e+09 9.0001e+08  43.0%   5.7   25s
-*187499 14704             320    1.350013e+09 1.2000e+09  11.1%   7.3   35s
-
-Explored 188145 nodes (1383139 simplex iterations) in 35.66 seconds
-Thread count was 8 (of 8 available processors)
-
-Solution count 10: 1.20001e+09 1.26668e+09 1.40001e+09 ... 1.50001e+09
-Optimal solution found (tolerance 1.00e-04)
-Best objective 1.200012600000e+09, best bound 1.200012600000e+09, gap 0.0000%
-"""
-
-
-def test_single_log_parser():
+def test_mip_norel_log():
     parser = SingleLogParser()
-    parse_block(parser, full_log_data)
-    # Test just that something is populated for all parsers.
+    with open("tests/assets/mip_norel.log") as infile:
+        parse_lines(parser, infile)
+    # Check that something is populated for all parsers.
     assert parser.header_parser.get_summary()
     assert parser.presolve_parser.get_summary()
     assert parser.norel_parser.get_summary()
     assert parser.norel_parser.timeline
+    assert parser.continuous_parser.get_summary()
+    assert parser.continuous_parser.get_progress()
     assert parser.nodelog_parser.get_summary()
     assert parser.nodelog_parser.timeline
-    # Combined summary data
+    # Combined summary data.
     summary = parser.get_summary()
     assert summary["Version"] == "9.1.2"
     assert summary["NumVars"] == 322
     assert summary["PresolvedNumIntVars"] == 297
-    assert summary["NoRelBestSol"] == 1.450014e09
-    assert summary["NodeCount"] == 188145
+    assert summary["NoRelBestSol"] == 1.200013e09
+    assert summary["NodeCount"] == 5135
     assert summary["Status"] == "OPTIMAL"
     assert summary["ObjVal"] == 1.2000126e09
+    assert summary["Runtime"] == 93.70
+
+
+def test_lp_barrier():
+    parser = SingleLogParser()
+    with open("tests/assets/lp_barrier.log") as infile:
+        parse_lines(parser, infile)
+    # Test relevant bits are populated.
+    assert parser.header_parser.get_summary()
+    assert parser.presolve_parser.get_summary()
+    assert parser.continuous_parser.get_summary()
+    assert not parser.norel_parser.get_summary()
+    assert not parser.nodelog_parser.get_summary()
+    assert parser.termination_parser.get_summary()  # fail
+    # Combined summary data.
+    summary = parser.get_summary()
+    assert summary["Version"] == "9.5.0"
+    assert summary["Model"] == "savsched1"  # fail
+    assert summary["OrderingTime"] == 0.41  # fail
+    assert summary["BarIterCount"] == 17
+    assert summary["Runtime"] == 4.83
+    assert summary["Status"] == "OPTIMAL"  # fail
+
+
+def test_lp_simplex():
+    parser = SingleLogParser()
+    with open("tests/assets/lp_simplex.log") as infile:
+        parse_lines(parser, infile)
+    # Test relevant bits are populated.
+    assert parser.header_parser.get_summary()
+    assert parser.presolve_parser.get_summary()
+    assert parser.continuous_parser.get_summary()
+    assert not parser.norel_parser.get_summary()
+    assert not parser.nodelog_parser.get_summary()
+    assert parser.termination_parser.get_summary()  # fail
+    # Combined summary data.
+    summary = parser.get_summary()
+    assert summary["Version"] == "9.5.0"
+    assert summary["IterCount"] == 75321
+    assert summary["Runtime"] == 300.00
+    assert summary["Status"] == "TIME_LIMIT"  # fail
