@@ -5,7 +5,7 @@ from pandas.testing import assert_series_equal
 import grblogtools.api as glt
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def glass4_summary():
     """Summary data from API call."""
     return glt.parse("data/*.log").summary()
@@ -13,7 +13,9 @@ def glass4_summary():
 
 def test_summary_basic(glass4_summary):
     assert len(glass4_summary) == 63
-    assert set(glass4_summary.columns).issuperset({"Status", "ObjVal", "ReadTime"})
+    assert set(glass4_summary.columns).issuperset(
+        {"Status", "ObjVal", "ReadTime", "RelaxObj"}
+    )
 
 
 def test_logfile(glass4_summary):

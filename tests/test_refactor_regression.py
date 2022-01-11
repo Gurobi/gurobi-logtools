@@ -41,9 +41,6 @@ def test_summary():
         pd.read_feather(HERE / "assets/summary.feather").sort_values("LogFilePath")
     )
     expected = expected.drop(columns=["ModelType"])  # post-processing?
-    expected = expected.drop(
-        columns=["RelaxIterCount", "RelaxObj", "RelaxTime"]
-    )  # coming from cont. parser
     summary = normalize(glt.get_dataframe(["data/*.log"]).sort_values("LogFilePath"))
     assert_frame_equal(summary[expected.columns], expected)
 

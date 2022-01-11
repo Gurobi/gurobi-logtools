@@ -1,3 +1,4 @@
+from grblogtools.continuous_parser import ContinuousParser
 from grblogtools.header_parser import HeaderParser
 from grblogtools.nodelog import NodeLogParser
 from grblogtools.norel import NoRelParser
@@ -12,7 +13,7 @@ class SingleLogParser:
         self.header_parser = HeaderParser()
         self.presolve_parser = PresolveParser()
         self.norel_parser = NoRelParser()
-        # Add relaxation/continuous model parser here
+        self.continuous_parser = ContinuousParser()
         self.nodelog_parser = NodeLogParser()
         self.termination_parser = TerminationParser()
 
@@ -21,6 +22,7 @@ class SingleLogParser:
         self.future_parsers = [
             self.presolve_parser,
             self.norel_parser,
+            self.continuous_parser,
             self.nodelog_parser,
             self.termination_parser,
         ]
@@ -30,6 +32,7 @@ class SingleLogParser:
         summary.update(self.header_parser.get_summary())
         summary.update(self.presolve_parser.get_summary())
         summary.update(self.norel_parser.get_summary())
+        summary.update(self.continuous_parser.get_summary())
         summary.update(self.nodelog_parser.get_summary())
         summary.update(self.termination_parser.get_summary())
         return summary
