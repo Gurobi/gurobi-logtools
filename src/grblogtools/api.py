@@ -38,14 +38,15 @@ class ParseResult:
         parameters = pd.DataFrame(
             [parser.header_parser.get_parameters() for _, parser in self.parsers]
         )
-        seed = parameters[["Seed"]].fillna(0).astype(int)
-        parameters = parameters.drop(columns=["Seed"]).rename(
-            columns=lambda c: c + " (Parameter)"
-        )
+        if "Seed" in parameters.columns:
+            seed = parameters[["Seed"]].fillna(0).astype(int)
+            parameters = parameters.drop(columns=["Seed"])
+        else:
+            seed = None
+        parameters = parameters.rename(columns=lambda c: c + " (Parameter)")
         summary = (
             summary.rename(columns={"ReadingTime": "ReadTime"})
             .join(parameters)
-            .join(seed)
             .assign(
                 ModelFile=lambda df: df["ModelFilePath"].apply(
                     lambda p: Path(p).parts[-1].partition(".")[0]
@@ -54,6 +55,8 @@ class ParseResult:
                 Log=lambda df: df.apply(strip_model_and_seed, axis=1),
             )
         )
+        if seed is not None:
+            summary = summary.join(seed)
         # TODO fill_default_parameters could be much cleaner now, without column regexes
         summary = fill_default_parameters(summary)
         return summary

@@ -11,10 +11,22 @@ def glass4_summary():
     return glt.parse("data/*.log").summary()
 
 
-def test_summary_basic(glass4_summary):
+@pytest.fixture(scope="module")
+def testlog_summary():
+    return glt.parse("tests/assets/*.log").summary()
+
+
+def test_summary(testlog_summary):
+    assert len(testlog_summary) == 4
+    assert set(testlog_summary.columns).issuperset(
+        {"Status", "ObjVal", "ReadTime", "RelaxObj"}
+    )
+
+
+def test_summary_glass4(glass4_summary):
     assert len(glass4_summary) == 63
     assert set(glass4_summary.columns).issuperset(
-        {"Status", "ObjVal", "ReadTime", "RelaxObj"}
+        {"Status", "ObjVal", "ReadTime", "RelaxObj", "Seed"}
     )
 
 
