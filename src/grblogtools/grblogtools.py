@@ -512,7 +512,7 @@ def get_log_info(values, loglines, verbose=False, populate_tree_search_log=popul
         )
         for line, result in _regex_matches(
             loglines[cut_count_first_line + 1 : cut_count_last_line + 1],
-            re.compile("  (?P<Name>[\w ]+): (?P<Count>\d+)"),
+            re.compile("  (?P<Name>[\w\- ]+): (?P<Count>\d+)"),
             reverse=False,
         ):
             if result:
