@@ -1,3 +1,15 @@
+"""Top level API for parsing log files.
+
+Examples:
+
+    import grblogtools.api as glt
+    result = glt.parse("data/*.log")
+    result.summary()  # summary dataframe (like get_dataframe)
+
+Similar for dataframes
+
+"""
+
 import glob
 from pathlib import Path
 
@@ -28,6 +40,7 @@ class ParseResult:
         self.parsers = []
 
     def summary(self):
+        """Construct and return a summary dataframe for all parsed logs."""
         summary = pd.DataFrame(
             [
                 dict(parser.get_summary(), LogFilePath=logfile)
@@ -62,7 +75,10 @@ class ParseResult:
         return summary
 
     def parse(self, logfile: str) -> None:
-        """Parse a single log from one file."""
+        """Parse a single log file, containing the log from one run.
+
+        TODO extend this to also check multiple logs from one file.
+        """
         parser = SingleLogParser()
         with open(logfile) as infile:
             lines = iter(infile)
@@ -73,7 +89,14 @@ class ParseResult:
         self.parsers.append((logfile, parser))
 
 
-def parse(arg) -> ParseResult:
+def parse(arg: str) -> ParseResult:
+    """Main entry point function.
+
+    Args:
+        arg (str): A glob pattern matchine log files.
+
+    TODO extend this, a list of patterns, or a vararg of patterns, should also work.
+    """
     result = ParseResult()
     for logfile in glob.glob(arg):
         result.parse(logfile)
@@ -81,5 +104,9 @@ def parse(arg) -> ParseResult:
 
 
 def get_dataframe(logfiles):
+    """Compatibility function for the legacy API.
+
+    TODO extend this with other args from the old api
+    """
     result = parse(*logfiles)
     return result.summary()

@@ -7,6 +7,10 @@ from grblogtools.termination import TerminationParser
 
 
 class SingleLogParser:
+    """Parses one log. The class expects start_parsing to be called once for each
+    line, until it returns true, after which it expects continue_parsing to be
+    called once for each remaining line in sequence."""
+
     def __init__(self):
 
         # Parsers in sequence.
@@ -28,6 +32,8 @@ class SingleLogParser:
         ]
 
     def get_summary(self):
+        """Return a summary dictionary, which is just a merged result of the
+        sub-parser results."""
         summary = {}
         summary.update(self.header_parser.get_summary())
         summary.update(self.presolve_parser.get_summary())
@@ -38,12 +44,28 @@ class SingleLogParser:
         return summary
 
     def start_parsing(self, line: str) -> bool:
-        """The start of a log is the start of the header, so that's all that
-        needs to be checked."""
+        """Return True if this parser should start parsing future log lines. This
+        is equivalent to checking whether the header parser detects its start.
+
+        Args:
+            line (str): A line in the log file.
+
+        Returns:
+            bool: Return True if the given line matches the parser start patterns.
+        """
         assert self.current_parser is self.header_parser
         return self.current_parser.start_parsing(line)
 
     def continue_parsing(self, line: str) -> bool:
+        """Parse the given log line. This method simply hands along from one parser
+        to the next.
+
+        Args:
+            line (str): A line in the log file.
+
+        Returns:
+            bool: Return True if the given line is matched by any sub-parser.
+        """
         assert self.current_parser not in self.future_parsers
         # First try the current parser.
         matched_line = self.current_parser.continue_parsing(line)
