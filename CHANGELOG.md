@@ -5,6 +5,10 @@
 ### Changed
 ### Removed
 
+## 1.3.2 - 2022-01-12
+### Fixed
+- fix error when log contains cuts with the name containing a hyphen
+
 ## 1.3.1 - 2021-Dec-14
 ### Fixed
 - fix error when log does not have a tree section
