@@ -24,3 +24,13 @@ def test_qafiro():
     assert line['DRes'] == approx(1.17e-15, abs=1e-13)
     assert line['Compl'] == approx(8.66e-12, abs=1e-14)
     assert line['Time'] == 0
+
+def test_barrier_and_tree_search():
+    row, timelines = read_single('950_glass4_Method2.log')
+    
+    barrier = timelines['rootlp']
+    assert len(barrier.index) == 10
+
+    tree = timelines['nodelog']
+    assert len(tree.index) == 41
+
