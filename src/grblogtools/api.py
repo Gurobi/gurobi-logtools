@@ -30,7 +30,7 @@ def strip_model_and_seed(row):
     """
     log_stem = Path(row["LogFilePath"]).stem
     run, mid, _ = log_stem.partition(row["Model"])
-    if mid:
+    if mid and run:
         return run.rstrip("-")
     return log_stem
 

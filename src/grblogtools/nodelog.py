@@ -89,7 +89,6 @@ class NodeLogParser:
         if match:
             self._summary.update(typeconvert_groupdict(match))
             self._complete = True
-            self._in_cut_report = False
             return True
         match = self.cut_report_start.match(line)
         if match:
