@@ -115,3 +115,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Produced by tox tests
+test.xlsx
