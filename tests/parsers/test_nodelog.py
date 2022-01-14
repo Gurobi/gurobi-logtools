@@ -1,5 +1,5 @@
-from grblogtools.helpers import parse_block
-from grblogtools.nodelog import NodeLogParser
+from grblogtools.parsers.nodelog import NodeLogParser
+from grblogtools.parsers.util import parse_block
 
 nodelog_section_test_data = """
 Variable types: 19 continuous, 297 integer (297 binary)

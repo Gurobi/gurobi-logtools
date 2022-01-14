@@ -1,7 +1,7 @@
 from unittest import TestCase, main
 
-from grblogtools.continuous_parser import ContinuousParser
-from grblogtools.helpers import parse_lines
+from grblogtools.parsers.continuous import ContinuousParser
+from grblogtools.parsers.util import parse_lines
 
 example_log_simplex = """
 Iteration    Objective       Primal Inf.    Dual Inf.      Time

@@ -1,7 +1,7 @@
 from unittest import TestCase, main
 
-from grblogtools.header_parser import HeaderParser
-from grblogtools.helpers import parse_lines
+from grblogtools.parsers.header import HeaderParser
+from grblogtools.parsers.util import parse_lines
 
 example_log_0 = """
 Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])

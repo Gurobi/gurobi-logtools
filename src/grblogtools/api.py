@@ -16,7 +16,7 @@ from pathlib import Path
 import pandas as pd
 
 from grblogtools.helpers import fill_default_parameters
-from grblogtools.single_log_parser import SingleLogParser
+from grblogtools.parsers.single_log import SingleLogParser
 
 
 def strip_model_and_seed(row):

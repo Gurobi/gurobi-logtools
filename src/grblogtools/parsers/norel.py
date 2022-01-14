@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict, List
 
-from grblogtools.helpers import typeconvert_groupdict
+from grblogtools.parsers.util import typeconvert_groupdict
 
 
 class NoRelParser:

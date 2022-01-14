@@ -1,5 +1,5 @@
-from grblogtools.helpers import parse_block
-from grblogtools.termination import TerminationParser
+from grblogtools.parsers.termination import TerminationParser
+from grblogtools.parsers.util import parse_block
 
 # TODO add tests for other status parsers
 

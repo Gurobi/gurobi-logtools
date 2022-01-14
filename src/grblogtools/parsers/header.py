@@ -1,6 +1,6 @@
 import re
 
-from grblogtools.helpers import convert_data_types, typeconvert_groupdict
+from grblogtools.parsers.util import convert_data_types, typeconvert_groupdict
 
 
 class HeaderParser:

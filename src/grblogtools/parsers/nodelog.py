@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict
 
-from grblogtools.helpers import convert_data_types, typeconvert_groupdict
+from grblogtools.parsers.util import convert_data_types, typeconvert_groupdict
 
 float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
 

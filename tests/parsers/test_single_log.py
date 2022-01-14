@@ -1,7 +1,7 @@
 import pytest
 
-from grblogtools.helpers import parse_lines
-from grblogtools.single_log_parser import SingleLogParser
+from grblogtools.parsers.single_log import SingleLogParser
+from grblogtools.parsers.util import parse_lines
 
 
 def test_mip_norel_log():

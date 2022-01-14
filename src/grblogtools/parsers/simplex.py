@@ -1,6 +1,6 @@
 import re
 
-from grblogtools.helpers import typeconvert_groupdict
+from grblogtools.parsers.util import typeconvert_groupdict
 
 
 class SimplexParser:
