@@ -59,7 +59,7 @@ class NodeLogParser:
         # ),
     ]
     cut_report_start = re.compile(r"Cutting planes:")
-    cut_report_line = re.compile(r"  (?P<Name>[\w ]+): (?P<Count>\d+)")
+    cut_report_line = re.compile(r"  (?P<Name>[\w\- ]+): (?P<Count>\d+)")
 
     def __init__(self):
         self._summary = {}

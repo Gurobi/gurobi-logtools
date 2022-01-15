@@ -31,6 +31,7 @@ Cutting planes:
   Gomory: 13
   Implied bound: 5
   MIR: 20
+  Relax-and-lift: 8
 
 Explored 188 nodes (1389 simplex iterations) in 5.2 seconds
 """
@@ -43,6 +44,7 @@ def test_nodelog_parser_withcuts():
         "Cuts: Gomory": 13,
         "Cuts: Implied bound": 5,
         "Cuts: MIR": 20,
+        "Cuts: Relax-and-lift": 8,
         "NodeCount": 188,
         "IterCount": 1389,
         "Runtime": 5.2,
