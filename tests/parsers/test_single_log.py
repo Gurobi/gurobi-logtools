@@ -1,7 +1,16 @@
 import pytest
 
 from grblogtools.parsers.single_log import SingleLogParser
-from grblogtools.parsers.util import parse_lines
+
+
+def parse_lines(parser, loglines):
+    """Parse the given lines using the given parser object.
+
+    This function is mainly used in the tests. Updated for simpler API.
+    """
+    lines = iter(loglines)
+    for line in lines:
+        parser.parse(line)
 
 
 def test_mip_norel_log():
@@ -20,6 +29,7 @@ def test_mip_norel_log():
     # Combined summary data.
     summary = parser.get_summary()
     assert summary["Version"] == "9.1.2"
+    assert summary["Platform"] == "mac64, gurobi_cl"
     assert summary["NumVars"] == 322
     assert summary["PresolvedNumIntVars"] == 297
     assert summary["NoRelBestSol"] == 1.200013e09

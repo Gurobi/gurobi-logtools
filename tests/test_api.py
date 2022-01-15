@@ -1,6 +1,10 @@
+import glob
+import tempfile
+
+import pandas as pd
 import pytest
 from pandas.api.types import is_integer_dtype
-from pandas.testing import assert_series_equal
+from pandas.testing import assert_frame_equal, assert_series_equal
 
 import grblogtools.api as glt
 
@@ -14,6 +18,29 @@ def glass4_summary():
 @pytest.fixture(scope="module")
 def testlog_summary():
     return glt.parse("tests/assets/*.log").summary()
+
+
+@pytest.fixture(scope="module")
+def merged_log():
+    with tempfile.NamedTemporaryFile("w") as fp:
+        for path in sorted(glob.glob("data/912-glass4-*.log")):
+            with open(path) as infile:
+                fp.writelines(infile.readlines())
+        fp.flush()
+        yield fp.name
+
+
+def test_merged_log(merged_log):
+    summary = glt.parse(merged_log).summary()
+    result = summary[["Seed", "Runtime", "LogFilePath"]]
+    expected = pd.DataFrame(
+        [
+            {"Seed": 0, "Runtime": 35.66, "LogFilePath": f"{merged_log}(1)"},
+            {"Seed": 1, "Runtime": 42.79, "LogFilePath": f"{merged_log}(2)"},
+            {"Seed": 2, "Runtime": 11.37, "LogFilePath": f"{merged_log}(3)"},
+        ]
+    )
+    assert_frame_equal(result, expected)
 
 
 def test_summary(testlog_summary):

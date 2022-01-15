@@ -22,6 +22,7 @@ class SingleLogParser:
         self.termination_parser = TerminationParser()
 
         # State
+        self.started = False
         self.current_parser = self.header_parser
         self.future_parsers = [
             self.presolve_parser,
@@ -43,38 +44,35 @@ class SingleLogParser:
         summary.update(self.termination_parser.get_summary())
         return summary
 
-    def start_parsing(self, line: str) -> bool:
-        """Return True if this parser should start parsing future log lines. This
-        is equivalent to checking whether the header parser detects its start.
+    def parse(self, line: str) -> bool:
+        """Parse the given log line.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line matches the parser start patterns.
+            bool: Return True if the given line is matched.
         """
-        assert self.current_parser is self.header_parser
-        return self.current_parser.start_parsing(line)
 
-    def continue_parsing(self, line: str) -> bool:
-        """Parse the given log line. This method simply hands along from one parser
-        to the next.
+        # Initially, only check the header parser until started.
+        if not self.started:
+            assert self.current_parser is self.header_parser
+            matched = self.current_parser.start_parsing(line)
+            if matched:
+                self.started = True
+            return matched
 
-        Args:
-            line (str): A line in the log file.
-
-        Returns:
-            bool: Return True if the given line is matched by any sub-parser.
-        """
-        assert self.current_parser not in self.future_parsers
         # First try the current parser.
-        matched_line = self.current_parser.continue_parsing(line)
-        if matched_line:
+        assert self.current_parser not in self.future_parsers
+        if self.current_parser.continue_parsing(line):
             return True
+
         # Check if any future parsers should take over.
         for i, parser in enumerate(self.future_parsers):
             if parser.start_parsing(line):
                 self.current_parser = parser
                 self.future_parsers = self.future_parsers[i + 1 :]
                 return True
+
+        # Nothing matched.
         return False

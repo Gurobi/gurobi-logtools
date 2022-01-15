@@ -75,18 +75,28 @@ class ParseResult:
         return summary
 
     def parse(self, logfile: str) -> None:
-        """Parse a single log file, containing the log from one run.
-
-        TODO extend this to also check multiple logs from one file.
-        """
+        """Parse a single file. The log file may contain multiple run logs."""
         parser = SingleLogParser()
+        subsequent = SingleLogParser()
+        log_count = 0
         with open(logfile) as infile:
             lines = iter(infile)
             for line in lines:
-                if parser.start_parsing(line):
-                    for line in lines:
-                        parser.continue_parsing(line)
-        self.parsers.append((logfile, parser))
+                if not parser.parse(line):
+                    assert not subsequent.started
+                    if subsequent.parse(line):
+                        # The current parser did not match but an empty parser
+                        # matched a header line.
+                        log_count += 1
+                        self.parsers.append((f"{logfile}({log_count})", parser))
+                        parser = subsequent
+                        subsequent = SingleLogParser()
+
+        if log_count:
+            log_count += 1
+            self.parsers.append((f"{logfile}({log_count})", parser))
+        else:
+            self.parsers.append((logfile, parser))
 
 
 def parse(arg: str) -> ParseResult:
@@ -104,9 +114,6 @@ def parse(arg: str) -> ParseResult:
 
 
 def get_dataframe(logfiles):
-    """Compatibility function for the legacy API.
-
-    TODO extend this with other args from the old api
-    """
+    """Compatibility function for the legacy API."""
     result = parse(*logfiles)
     return result.summary()
