@@ -45,6 +45,23 @@ def fill_default_parameters(summary):
     )
 
 
+def fill_for_version_nosuffix(group):
+    parameter_defaults = load_defaults(
+        version=group["Version"].iloc[0].replace(".", "")
+    )
+    for parameter in group.columns:
+        default = parameter_defaults.get(parameter)
+        if default is not None:
+            group[parameter] = group[parameter].fillna(default).astype(type(default))
+    return group
+
+
+def fill_default_parameters_nosuffix(parameters):
+    """Fill defaults for a dataframe which is only Version and parameter
+    columns with no (Parameter) suffix."""
+    return parameters.groupby("Version").apply(fill_for_version_nosuffix)
+
+
 PARAMETER_DESCRIPTIONS = {
     "Method (Parameter)": {
         -1: "-1: Default",

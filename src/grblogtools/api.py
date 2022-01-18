@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from grblogtools.helpers import fill_default_parameters
+from grblogtools.helpers import fill_default_parameters_nosuffix
 from grblogtools.parsers.single_log import SingleLogParser
 
 
@@ -62,23 +62,23 @@ class ParseResult:
         )
 
     def summary(self):
-        """Construct and return a summary dataframe for all parsed logs."""
+        """Construct and return a summary dataframe for all parsed logs.
+        Some post-processing performed."""
         summary = pd.DataFrame(
             [
                 dict(parser.get_summary(), LogFilePath=logfile, LogNumber=lognumber)
                 for logfile, lognumber, parser in self.parsers
             ]
         )
-        # Post-processing to match old API
         parameters = pd.DataFrame(
             [parser.header_parser.get_parameters() for _, _, parser in self.parsers]
         )
-        if "Seed" in parameters.columns:
-            seed = parameters[["Seed"]].fillna(0).astype(int)
-            parameters = parameters.drop(columns=["Seed"])
-        else:
-            seed = None
-        parameters = parameters.rename(columns=lambda c: c + " (Parameter)")
+        # Fill defaults and add suffix to parameter columns.
+        parameters = (
+            fill_default_parameters_nosuffix(parameters.join(summary["Version"]))
+            .drop(columns="Version")
+            .rename(columns=lambda c: c if c == "Seed" else c + " (Parameter)")
+        )
         summary = (
             summary.rename(columns={"ReadingTime": "ReadTime"})
             .join(parameters)
@@ -90,10 +90,6 @@ class ParseResult:
                 Log=lambda df: df.apply(strip_model_and_seed, axis=1),
             )
         )
-        if seed is not None:
-            summary = summary.join(seed)
-        # TODO fill_default_parameters could be much cleaner now, without column regexes
-        summary = fill_default_parameters(summary)
         return summary
 
     def parse(self, logfile: str) -> None:
