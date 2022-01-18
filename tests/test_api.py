@@ -32,12 +32,12 @@ def merged_log():
 
 def test_merged_log(merged_log):
     summary = glt.parse(merged_log).summary()
-    result = summary[["Seed", "Runtime", "LogFilePath"]]
+    result = summary[["Seed", "Runtime", "LogFilePath", "LogNumber"]]
     expected = pd.DataFrame(
         [
-            {"Seed": 0, "Runtime": 35.66, "LogFilePath": f"{merged_log}(1)"},
-            {"Seed": 1, "Runtime": 42.79, "LogFilePath": f"{merged_log}(2)"},
-            {"Seed": 2, "Runtime": 11.37, "LogFilePath": f"{merged_log}(3)"},
+            {"Seed": 0, "Runtime": 35.66, "LogFilePath": merged_log, "LogNumber": 1},
+            {"Seed": 1, "Runtime": 42.79, "LogFilePath": merged_log, "LogNumber": 2},
+            {"Seed": 2, "Runtime": 11.37, "LogFilePath": merged_log, "LogNumber": 3},
         ]
     )
     assert_frame_equal(result, expected)
