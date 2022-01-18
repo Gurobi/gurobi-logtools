@@ -61,3 +61,7 @@ class NoRelParser:
                 self.timeline.append(entry)
                 return True
         return False
+
+    def get_progress(self) -> list:
+        """Return the progress of the norel heuristic."""
+        return self.timeline

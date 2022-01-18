@@ -29,7 +29,6 @@ class SingleLogParser:
             self.norel_parser,
             self.continuous_parser,
             self.nodelog_parser,
-            self.termination_parser,
         ]
 
     def get_summary(self):
@@ -53,7 +52,6 @@ class SingleLogParser:
         Returns:
             bool: Return True if the given line is matched.
         """
-
         # Initially, only check the header parser until started.
         if not self.started:
             assert self.current_parser is self.header_parser
@@ -73,6 +71,10 @@ class SingleLogParser:
                 self.current_parser = parser
                 self.future_parsers = self.future_parsers[i + 1 :]
                 return True
+
+        # Check if the line matches any pattern of the termination parser.
+        if self.termination_parser.parse(line):
+            return True
 
         # Nothing matched.
         return False

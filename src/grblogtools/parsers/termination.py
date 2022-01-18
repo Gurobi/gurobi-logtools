@@ -4,46 +4,72 @@ from grblogtools.parsers.util import typeconvert_groupdict
 
 
 class TerminationParser:
-
+    # Termination patterns
     patterns = [
-        re.compile(r"Solution count (?P<SolCount>\d+)"),
         re.compile(
             r"Best objective (?P<ObjVal>[^,]+), best bound (?P<ObjBound>[^,]+), gap (?P<MIPGap>.*)$"
         ),
+        re.compile(r"ERROR (?P<ErrorCode>[^:]+): (?P<ErrorMessage>.*)$"),
+        re.compile(r"\[(?P<ErrorMessage>process terminated with exit code [^\\]]+)\]$"),
+        re.compile(r"(?P<TIME_LIMIT>Time limit reached)"),
+        re.compile(r"(?P<OPTIMAL>Optimal solution found)(?: \(tolerance .*\))"),
+        re.compile(r"(?P<OPTIMAL>Optimal objective\s+(?P<ObjVal>.*))$"),
+        re.compile(r"(?P<ITERATION_LIMIT>Iteration limit reached)"),
+        re.compile(r"(?P<INF_OR_UNBD>Infeasible or unbounded model)"),
+        re.compile(r"(?P<INF_OR_UNBD>Model is infeasible or unbounded)"),
+        re.compile(r"(?P<UNBOUNDED>Unbounded model)"),
+        re.compile(r"(?P<UNBOUNDED>Model is unbounded)"),
+        re.compile(r"(?P<INFEASIBLE>Infeasible model)"),
+        re.compile(r"(?P<INFEASIBLE>Model is infeasible)"),
+        re.compile(r"(?P<SOLUTION_LIMIT>Solution limit reached)"),
+        re.compile(r"(?P<NODE_LIMIT>Node limit reached)"),
+        re.compile(r"(?P<NUMERIC>Numeric error)"),
+        re.compile(r"(?P<NUMERIC>Numerical trouble encountered)"),
+        re.compile(
+            r"(?P<SUBOPTIMAL>Sub-optimal termination)(?: - objective (?P<ObjVal>.*))$"
+        ),
+        re.compile(r"(?P<CUTOFF>Model objective exceeds cutoff)"),
+        re.compile(r"(?P<CUTOFF>Objective cutoff exceeded)"),
+        re.compile(r"(?P<USER_OBJ_LIMIT>Optimization achieved user objective limit)"),
+        re.compile(
+            r"(?P<INTERRUPTED>(Interrupt request received|Solve interrupted))(?: \\(error code (?P<ErrorCode>[^\\)]+)\\))?"
+        ),
+        re.compile(r"Solution count (?P<SolCount>\d+)"),
         re.compile(
             r"Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
         ),
     ]
 
-    re_termination_status = {
-        "OPTIMAL": re.compile(
-            r"(?P<OPTIMAL>Optimal solution found)(?: \(tolerance .*\))"
-        ),
-        "TIME_LIMIT": re.compile(r"(?P<TIME_LIMIT>Time limit reached)"),
-    }
+    status = [
+        "OPTIMAL",
+        "TIME_LIMIT",
+        "ITERATION_LIMIT",
+        "INF_OR_UNBD",
+        "UNBOUNDED",
+        "INFEASIBLE",
+        "SOLUTION_LIMIT",
+        "NUMERIC",
+        "SUBOPTIMAL",
+        "CUTOFF",
+        "USER_OBJ_LIMIT",
+        "INTERRUPTED",
+    ]
 
     def __init__(self):
         self._summary = {}
 
-    def _parse(self, line: str) -> bool:
-        """No specific section start, so start and continue are the same."""
-        for pattern in self.patterns:
+    def parse(self, line: str) -> bool:
+        """Return True if the line is matched by one of the patterns."""
+        for pattern in TerminationParser.patterns:
             match = pattern.match(line)
             if match:
-                self._summary.update(typeconvert_groupdict(match))
-                return True
-        for status, pattern in self.re_termination_status.items():
-            match = pattern.match(line)
-            if match:
-                self._summary["Status"] = status
+                for key, value in typeconvert_groupdict(match).items():
+                    if key in TerminationParser.status:
+                        self._summary.update({"Status": key})
+                    else:
+                        self._summary.update({key: value})
                 return True
         return False
-
-    def start_parsing(self, line: str) -> bool:
-        return self._parse(line)
-
-    def continue_parsing(self, line: str) -> bool:
-        return self._parse(line)
 
     def get_summary(self) -> dict:
         return self._summary

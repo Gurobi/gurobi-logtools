@@ -39,6 +39,28 @@ class ParseResult:
     def __init__(self):
         self.parsers = []
 
+    def progress(self, section="nodelog") -> dict:
+        """Return the optimization search progress of the given section in the log.
+
+        Args:
+            section (str): Possible values are 'norel', 'rootlp', and 'nodelog'.
+                Defaults to 'nodelog'.
+        Returns:
+            pf.DataFrame: A data frame representing the progress of the given section
+                in the log.
+        """
+        return pd.DataFrame(
+            [
+                dict(row, LogFilePath=logfile, LogNumber=lognumber)
+                for logfile, lognumber, parser in self.parsers
+                for row in {
+                    "nodelog": parser.nodelog_parser.get_progress(),
+                    "rootlp": parser.continuous_parser.get_progress(),
+                    "norel": parser.norel_parser.get_progress(),
+                }[section]
+            ]
+        )
+
     def summary(self):
         """Construct and return a summary dataframe for all parsed logs."""
         summary = pd.DataFrame(
@@ -109,7 +131,19 @@ def parse(arg: str) -> ParseResult:
     return result
 
 
-def get_dataframe(logfiles):
-    """Compatibility function for the legacy API."""
+def get_dataframe(logfiles, timelines=False):
+    """Compatibility function for the legacy API.
+
+    Args:
+        logfiles (str): A glob pattern of the log files.
+        timeliens (bool, optional): Return the norel, the relaxation, and the
+            search tree progress if set to True. Defaults to False.
+    """
     result = parse(*logfiles)
-    return result.summary()
+    if not timelines:
+        return result.summary()
+    return result.summary(), dict(
+        norel=result.progress("norel"),
+        rootlp=result.progress("rootlp"),
+        nodelog=result.progress("nodelog"),
+    )

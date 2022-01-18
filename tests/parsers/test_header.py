@@ -74,7 +74,7 @@ expected_parameters_2 = {
 }
 
 
-class TestHeaderLog(TestCase):
+class TestHeader(TestCase):
     def setUp(self):
         pass
 

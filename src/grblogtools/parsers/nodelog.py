@@ -9,7 +9,7 @@ float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
 class NodeLogParser:
     """
     Methods:
-        - log_start(line) -> parse a string, returing true if this string
+        - log_start(line) -> parse a string, returning true if this string
           indicates the start of the norel section
         - parse(line) -> parse a string, return true if this parser should
           continue receiving future log lines
@@ -17,7 +17,7 @@ class NodeLogParser:
     Attributes:
         - timeline -> list of dicts for log timeline entries (incumbent, bound,
           time, depth, etc)
-        - ignored_lines -> count of lines after the log start which were recieved
+        - ignored_lines -> count of lines after the log start which were received
           but not parsed
     """
 
@@ -104,3 +104,7 @@ class NodeLogParser:
         if line.strip() and not self._complete:
             self.ignored_lines += 1
         return False
+
+    def get_progress(self) -> list:
+        """Return the progress of the search tree."""
+        return self.timeline

@@ -85,6 +85,32 @@ expected_progress_barrier = [
     },
 ]
 
+example_log_concurrent = """
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   4.56435085e+07  1.53061018e+04  1.69e+05 8.58e+00  1.59e+03     2s
+
+Barrier performed 7 iterations in 4.02 seconds (4.19 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+
+Solved with dual simplex
+Solved in 69986 iterations and 4.03 seconds (3.91 work units)
+Optimal objective  2.174035714e+02
+"""
+expected_summary_concurrent = {"BarIterCount": 7, "IterCount": 69986, "Runtime": 4.03}
+expected_progress_concurrent = [
+    {
+        "Iteration": 0,
+        "Indicator": " ",
+        "PObj": 45643508.5,
+        "DObj": 15306.1018,
+        "PRes": 169000.0,
+        "DRes": 8.58,
+        "Compl": 1590.0,
+        "Time": 2,
+    },
+]
+
 example_log_relaxation = """
 Root relaxation: objective 4.473603e+00, 25 iterations, 0.01 seconds
 """
@@ -117,7 +143,7 @@ expected_progress_mip = [
 ]
 
 
-class TestSimplexLog(TestCase):
+class TestContinuous(TestCase):
     def setUp(self):
         pass
 
@@ -144,18 +170,21 @@ class TestSimplexLog(TestCase):
             [
                 example_log_simplex,
                 example_log_barrier,
+                example_log_concurrent,
                 example_log_relaxation,
                 example_log_mip,
             ],
             [
                 expected_summary_simplex,
                 expected_summary_barrier,
+                expected_summary_concurrent,
                 expected_summary_relaxation,
                 expected_summary_mip,
             ],
             [
                 expected_progress_simplex,
                 expected_progress_barrier,
+                expected_progress_concurrent,
                 expected_progress_relaxation,
                 expected_progress_mip,
             ],
