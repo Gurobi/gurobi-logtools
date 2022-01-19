@@ -1,5 +1,3 @@
-import pytest
-
 from grblogtools.parsers.single_log import SingleLogParser
 
 
@@ -47,7 +45,6 @@ def test_mip_norel_log():
     assert len(nodelog_progress) == 6
 
 
-@pytest.mark.xfail
 def test_lp_barrier():
     parser = SingleLogParser()
     with open("tests/assets/lp_barrier.log") as infile:
@@ -62,7 +59,7 @@ def test_lp_barrier():
     # Combined summary data.
     summary = parser.get_summary()
     assert summary["Version"] == "9.5.0"
-    assert summary["Model"] == "savsched1"  # fail
+    assert summary["ModelName"] == "savsched1.mps"
     assert summary["OrderingTime"] == 0.41
     assert summary["BarIterCount"] == 17
     assert summary["Runtime"] == 4.83

@@ -29,6 +29,9 @@ class HeaderParser:
         re.compile(
             r"Thread count: (?P<PhysicalCores>\d+) physical cores, (?P<LogicalProcessors>\d+) logical processors, using up to (?P<Threads>\d+) threads"
         ),
+        re.compile(
+            r"(?P<ModelName>.*): (?P<Rows>\d+) rows, (?P<Columns>\d+) columns, (?P<Nonzeros>\d+) nonzeros"
+        ),
     ]
 
     # Special case for parameter changes

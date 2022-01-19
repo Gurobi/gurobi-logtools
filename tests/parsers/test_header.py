@@ -9,7 +9,7 @@ Copyright (c) 2021, Gurobi Optimization, LLC
 
 Read MPS format model from file /Library/gurobi950/macos_universal2/examples/data/glass4.mps
 Reading time = 0.00 seconds
-glass4: 396 rows, exit columns, 1815 nonzeros
+glass4: 396 rows, 322 columns, 1815 nonzeros
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 """
 
@@ -20,6 +20,10 @@ expected_summary_0 = {
     "PhysicalCores": 8,
     "LogicalProcessors": 8,
     "Threads": 8,
+    "ModelName": "glass4",
+    "Rows": 396,
+    "Columns": 322,
+    "Nonzeros": 1815,
 }
 
 expected_parameters_0 = {}
