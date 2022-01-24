@@ -58,12 +58,10 @@ def lp_legacy_rootlogs():
 
 def test_summary(glass4_legacy_summary):
     expected = normalize(glass4_legacy_summary.sort_values("LogFilePath"))
-    expected = expected.drop(columns=["ModelType"])  # post-processing?
     summary = normalize(glt.get_dataframe(["data/*.log"]).sort_values("LogFilePath"))
     assert_frame_equal(summary[expected.columns], expected)
 
 
-@pytest.mark.xfail
 def test_nodelog_timelines(glass4_legacy_nodelogs):
     expected = normalize(glass4_legacy_nodelogs.sort_values(["LogFilePath", "Time"]))
     _, timelines = glt.get_dataframe(["data/912-glass4-*.log"], timelines=True)
@@ -71,7 +69,6 @@ def test_nodelog_timelines(glass4_legacy_nodelogs):
     assert_frame_equal(nodelog[expected.columns], expected)
 
 
-@pytest.mark.xfail
 def test_rootlp_timelines(lp_legacy_rootlogs):
     expected = normalize(lp_legacy_rootlogs.sort_values(["LogFilePath", "Time"]))
     _, timelines = glt.get_dataframe(["tests/assets/lp*.log"], timelines=True)
