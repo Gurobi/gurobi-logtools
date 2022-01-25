@@ -46,3 +46,16 @@ def parse_block(parser, log):
     This function is mainly used in the tests.
     """
     parse_lines(parser, log.strip().split("\n"))
+
+
+def model_type(discrete_vars=0, quad_nonzeros=0, quad_constrs=0):
+    mtype = ""
+    if discrete_vars > 0:
+        mtype += "MI"
+    if quad_constrs > 0:
+        mtype += "QC"
+    elif quad_nonzeros > 0:
+        mtype += "Q"
+    if not mtype:
+        return "LP"
+    return mtype + "P"

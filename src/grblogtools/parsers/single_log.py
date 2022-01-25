@@ -4,6 +4,7 @@ from grblogtools.parsers.nodelog import NodeLogParser
 from grblogtools.parsers.norel import NoRelParser
 from grblogtools.parsers.presolve import PresolveParser
 from grblogtools.parsers.termination import TerminationParser
+from grblogtools.parsers.util import model_type
 
 
 class SingleLogParser:
@@ -40,6 +41,14 @@ class SingleLogParser:
         summary.update(self.continuous_parser.get_summary())
         summary.update(self.nodelog_parser.get_summary())
         summary.update(self.termination_parser.get_summary())
+        summary["ModelType"] = model_type(
+            discrete_vars=summary.get("PresolvedNumBinVars", 0)
+            + summary.get("PresolvedNumIntVars", 0)
+            + summary.get("PresolvedNumSemiContVars", 0)
+            + summary.get("PresolvedNumSemiIntVars", 0),
+            quad_nonzeros=summary.get("NumQNZs", 0),
+            quad_constrs=summary.get("NumQConstrs", 0),
+        )
         return summary
 
     def parse(self, line: str) -> bool:
