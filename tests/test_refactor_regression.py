@@ -15,7 +15,6 @@ Notes:
 import pathlib
 
 import pandas as pd
-import pytest
 from pandas.testing import assert_frame_equal
 
 import grblogtools as glt_legacy
@@ -36,41 +35,42 @@ def normalize(df):
     )
 
 
-@pytest.fixture
-def glass4_legacy_summary():
-    summary = glt_legacy.get_dataframe(["data/*.log"])
-    summary["Time"] = pd.to_datetime(summary["Time"])
-    summary["Seed"] = summary["Seed"].astype(int)
-    return summary
+def test_summary():
+    """Check summary dataframe from glass4 examples logs are unchanged.
 
+    Changes from current version are:
+        - Seed is always an integer (default-filled with zeros)
+        - Time is parsed as a datetime type, not stored as string
 
-@pytest.fixture
-def glass4_legacy_nodelogs():
-    _, timelines = glt_legacy.get_dataframe(["data/*.log"], timelines=True)
-    return timelines["nodelog"]
-
-
-@pytest.fixture
-def lp_legacy_rootlogs():
-    _, timelines = glt_legacy.get_dataframe(["tests/assets/lp*.log"], timelines=True)
-    return timelines["rootlp"]
-
-
-def test_summary(glass4_legacy_summary):
-    expected = normalize(glass4_legacy_summary.sort_values("LogFilePath"))
-    summary = normalize(glt.get_dataframe(["data/*.log"]).sort_values("LogFilePath"))
+    """
+    glob_files = "data/*.log"
+    expected = normalize(
+        glt_legacy.get_dataframe([glob_files])
+        .assign(
+            Time=lambda df: pd.to_datetime(df["Time"]),
+            Seed=lambda df: df["Seed"].astype(int),
+        )
+        .sort_values("LogFilePath")
+    )
+    summary = normalize(glt.get_dataframe([glob_files]).sort_values("LogFilePath"))
     assert_frame_equal(summary[expected.columns], expected)
 
 
-def test_nodelog_timelines(glass4_legacy_nodelogs):
-    expected = normalize(glass4_legacy_nodelogs.sort_values(["LogFilePath", "Time"]))
-    _, timelines = glt.get_dataframe(["data/912-glass4-*.log"], timelines=True)
+def test_nodelog_timelines():
+    """Check nodelog timelines for glass4 with defaults parameters are unchanged."""
+    glob_files = "data/912-glass4-*.log"
+    _, timelines = glt_legacy.get_dataframe([glob_files], timelines=True)
+    expected = normalize(timelines["nodelog"].sort_values(["LogFilePath", "Time"]))
+    _, timelines = glt.get_dataframe([glob_files], timelines=True)
     nodelog = normalize(timelines["nodelog"].sort_values(["LogFilePath", "Time"]))
     assert_frame_equal(nodelog[expected.columns], expected)
 
 
-def test_rootlp_timelines(lp_legacy_rootlogs):
-    expected = normalize(lp_legacy_rootlogs.sort_values(["LogFilePath", "Time"]))
-    _, timelines = glt.get_dataframe(["tests/assets/lp*.log"], timelines=True)
-    rootlog = normalize(timelines["nodelog"].sort_values(["LogFilePath", "Time"]))
+def test_rootlp_timelines():
+    """Check timelines for LP test data are unchanged."""
+    glob_files = "tests/assets/lp*.log"
+    _, timelines = glt_legacy.get_dataframe([glob_files], timelines=True)
+    expected = normalize(timelines["rootlp"].sort_values(["LogFilePath", "Time"]))
+    _, timelines = glt.get_dataframe([glob_files], timelines=True)
+    rootlog = normalize(timelines["rootlp"].sort_values(["LogFilePath", "Time"]))
     assert_frame_equal(rootlog[expected.columns], expected)
