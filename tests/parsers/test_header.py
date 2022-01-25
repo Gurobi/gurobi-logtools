@@ -82,7 +82,7 @@ class TestHeader(TestCase):
     def setUp(self):
         pass
 
-    def test_start_parsing(self):
+    def test_first_line_matched(self):
         expected_start_lines = [
             "Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])",
             "Set parameter Presolve to value 0",
@@ -93,7 +93,7 @@ class TestHeader(TestCase):
             with self.subTest(example_log=example_log):
                 header_parser = HeaderParser()
                 for line in example_log.strip().split("\n"):
-                    if header_parser.start_parsing(line):
+                    if header_parser.parse(line):
                         self.assertEqual(line, expected_start_lines[i])
                         break
                 else:

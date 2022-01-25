@@ -1,14 +1,5 @@
 from grblogtools.parsers.single_log import SingleLogParser
-
-
-def parse_lines(parser, loglines):
-    """Parse the given lines using the given parser object.
-
-    This function is mainly used in the tests. Updated for simpler API.
-    """
-    lines = iter(loglines)
-    for line in lines:
-        parser.parse(line)
+from grblogtools.parsers.util import parse_lines
 
 
 def test_mip_norel_log():

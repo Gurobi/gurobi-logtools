@@ -74,32 +74,25 @@ class PresolveParser:
         HeaderParser and the NoRelParser or the RelaxationParser.
         """
         self._summary = {}
+        self.started = False
 
-    def start_parsing(self, line: str) -> bool:
-        """Return True if the parser should start parsing the log lines.
-
-        Args:
-            line (str): A line in the log file.
-
-        Returns:
-            bool: Return True if the given line matches the parser start pattern.
-        """
-        match = PresolveParser.presolve_start_pattern.match(line)
-        if match:
-            # The start line encodes information that should be stored
-            self._summary.update(typeconvert_groupdict(match))
-            return True
-        return False
-
-    def continue_parsing(self, line: str) -> bool:
-        """Parse the given line.
+    def parse(self, line: str) -> bool:
+        """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True.
+            bool: Return True if the given line is matched by some pattern.
         """
+
+        if not self.started:
+            match = PresolveParser.presolve_start_pattern.match(line)
+            if match:
+                # The start line encodes information that should be stored
+                self.started = True
+                self._summary.update(typeconvert_groupdict(match))
+            return bool(match)
 
         for pattern in PresolveParser.presolve_intermediate_patterns:
             match = pattern.match(line)

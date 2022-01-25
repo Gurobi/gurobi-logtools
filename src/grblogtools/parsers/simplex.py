@@ -23,29 +23,24 @@ class SimplexParser:
         """Initialize the Simplex parser."""
         self._summary = {}
         self._progress = []
+        self.started = False
 
-    def start_parsing(self, line: str) -> bool:
-        """Return True if the parser should start parsing the future log lines.
-
-        Args:
-            line (str): A line in the log file.
-
-        Returns:
-            bool: Return True if the given line matches the parser start patterns.
-        """
-        if SimplexParser.simplex_start_pattern.match(line):
-            return True
-        return False
-
-    def continue_parsing(self, line: str) -> bool:
-        """Parse the given line.
+    def parse(self, line: str) -> bool:
+        """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the parser should continue parsing future log lines.
+            bool: Return True if the given line is matched by some pattern.
         """
+
+        if not self.started:
+            match = SimplexParser.simplex_start_pattern.match(line)
+            if match:
+                self.started = True
+                return bool(match)
+
         progress_match = SimplexParser.simplex_progress_pattern.match(line)
         if progress_match:
             self._progress.append(typeconvert_groupdict(progress_match))

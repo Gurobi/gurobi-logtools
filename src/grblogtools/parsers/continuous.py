@@ -13,6 +13,10 @@ class ContinuousParser:
         r"Root relaxation: objective (?P<RelaxObj>[^,]+), (?P<RelaxIterCount>\d+) iterations, (?P<RelaxTime>[^\s]+) seconds"
     )
 
+    barrier_interruption_pattern = re.compile(
+        r"Barrier solve interrupted - model solved by another algorithm"
+    )
+
     def __init__(self):
         """Initialize the Continuous parser."""
         self._barrier_parser = BarrierParser()
@@ -23,22 +27,16 @@ class ContinuousParser:
 
         self._current_pattern = None
 
-    def start_parsing(self, line: str) -> bool:
-        """Return True if the parser should start parsing the future log lines.
+    def parse(self, line: str) -> bool:
+        """Parse the given log line to populate summary and progress data. Defer
+        to the simplex and barrier parsers as needed.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line matches the parser start patterns.
+            bool: Return True if the given line is matched by some pattern.
         """
-        if self._barrier_parser.start_parsing(line):
-            self._current_pattern = "barrier"
-            return True
-
-        if self._simplex_parser.start_parsing(line):
-            self._current_pattern = "simplex"
-            return True
 
         mip_relaxation_match = ContinuousParser.mip_relaxation_pattern.match(line)
         if mip_relaxation_match:
@@ -46,35 +44,32 @@ class ContinuousParser:
             self._summary.update(typeconvert_groupdict(mip_relaxation_match))
             return True
 
-        return False
+        if self._current_pattern is None:
 
-    def continue_parsing(self, line: str) -> bool:
-        """Parse the given line.
+            if self._barrier_parser.parse(line):
+                self._current_pattern = "barrier"
+                return True
 
-        Args:
-            line (str): A line in the log file.
+            if self._simplex_parser.parse(line):
+                self._current_pattern = "simplex"
+                return True
 
-        Returns:
-            bool: Return True if the parser should continue parsing future log lines.
-        """
-        mip_relaxation_match = ContinuousParser.mip_relaxation_pattern.match(line)
-        if mip_relaxation_match:
-            self._summary.update(typeconvert_groupdict(mip_relaxation_match))
             return False
 
         if self._current_pattern == "barrier":
-            matched = self._barrier_parser.continue_parsing(line)
+            matched = self._barrier_parser.parse(line)
             # If the barrier gets interrupted during the concurrent, switch to
-            # the simplex
-            if not matched and self._barrier_parser.is_interrupted(line):
+            # the simplex.
+            if not matched and ContinuousParser.barrier_interruption_pattern.match(
+                line
+            ):
                 self._current_pattern = "simplex"
             return matched
-        if self._current_pattern == "simplex":
-            return self._simplex_parser.continue_parsing(line)
-        if self._current_pattern == "relaxation":
-            return False
 
-        return True
+        if self._current_pattern == "simplex":
+            return self._simplex_parser.parse(line)
+
+        return False
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""

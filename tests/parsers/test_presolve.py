@@ -130,7 +130,7 @@ class TestPresolve(TestCase):
     def setUp(self):
         pass
 
-    def test_start_parsing(self):
+    def test_first_line_matched(self):
         expected_start_lines = [
             "Optimize a model with 396 rows, 322 columns and 1815 nonzeros",
             "Optimize a model with 1 rows, 3 columns and 3 nonzeros",
@@ -141,7 +141,7 @@ class TestPresolve(TestCase):
             with self.subTest(example_log=example_log):
                 presolve_parser = PresolveParser()
                 for line in example_log.strip().split("\n"):
-                    if presolve_parser.start_parsing(line):
+                    if presolve_parser.parse(line):
                         self.assertEqual(line, expected_start_lines[i])
                         break
                 else:

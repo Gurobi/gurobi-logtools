@@ -4,8 +4,8 @@ from grblogtools.parsers.util import convert_data_types, typeconvert_groupdict
 
 
 class HeaderParser:
-    # Possible patterns indicating the initialization of the parser
-    header_start_patterns = [
+
+    header_patterns = [
         re.compile(
             r"Gurobi (?P<Version>\d{1,2}\.[^\s]+) \((?P<Platform>[^\)]+)\) logging started (?P<Time>.*)$"
         ),
@@ -15,10 +15,6 @@ class HeaderParser:
         ),
         re.compile(r"Compute Server job ID: (?P<JobID>.*)$"),
         re.compile(r"Gurobi Optimizer version (?P<Version>\d{1,2}\.[^\s]+)"),
-    ]
-
-    # Possible intermediate patterns to be parsed
-    header_intermediate_patterns = [
         re.compile(
             r"Gurobi Compute Server Worker version (?P<Version>\d{1,2}\.[^\s]+) build (.*) \((?P<Platform>[^\)]+)\)$"
         ),
@@ -47,57 +43,24 @@ class HeaderParser:
         self._summary = {}
         self._parameters = {}
 
-    def check_parameter_change(self, line: str) -> bool:
-        """Return True and store the changed value if a parameter is changed.
+    def parse(self, line: str) -> bool:
+        """Parse the given log line to populate summary data.
 
         Args:
-            line (str): A line in the log file
+            line (str): A line in the log file.
 
         Returns:
-            bool: return True if the line indicated a parameter change
+            bool: Return True if the given line is matched by some pattern.
         """
+
         match = HeaderParser.parameter_change_pattern.match(line)
         if match:
             self._parameters[match.group("ParamName")] = convert_data_types(
                 match.group("ParamValue")
             )
             return True
-        return False
 
-    def start_parsing(self, line: str) -> bool:
-        """Return True if the parser should start parsing the future log lines.
-
-        Args:
-            line (str): A line in the log file.
-
-        Returns:
-            bool: Return True if the given line matches one of the parser's start
-                patterns.
-        """
-        if self.check_parameter_change(line):
-            return True
-        for possible_start in HeaderParser.header_start_patterns:
-            match = possible_start.match(line)
-            if match:
-                # The start line encodes information that should be stored
-                self._summary.update(typeconvert_groupdict(match))
-                return True
-        return False
-
-    def continue_parsing(self, line: str) -> bool:
-        """Parse the given line.
-
-        Args:
-            line (str): A line in the log file.
-
-        Returns:
-            bool: Return True if the line was matched by any pattern.
-        """
-
-        if self.check_parameter_change(line):
-            return True
-
-        for pattern in HeaderParser.header_intermediate_patterns:
+        for pattern in HeaderParser.header_patterns:
             match = pattern.match(line)
             if match:
                 self._summary.update(typeconvert_groupdict(match))

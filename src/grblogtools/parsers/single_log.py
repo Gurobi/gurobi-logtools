@@ -7,9 +7,8 @@ from grblogtools.parsers.termination import TerminationParser
 
 
 class SingleLogParser:
-    """Parses one log. The class expects start_parsing to be called once for each
-    line, until it returns true, after which it expects continue_parsing to be
-    called once for each remaining line in sequence."""
+    """Parses one log. The class expects parse to be called once for each line
+    in a log file."""
 
     def __init__(self):
 
@@ -44,30 +43,31 @@ class SingleLogParser:
         return summary
 
     def parse(self, line: str) -> bool:
-        """Parse the given log line.
+        """Parse the given log line to populate the component parsers in sequence.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line is matched.
+            bool: Return True if the given line is matched by some pattern.
         """
+
         # Initially, only check the header parser until started.
         if not self.started:
             assert self.current_parser is self.header_parser
-            matched = self.current_parser.start_parsing(line)
+            matched = self.current_parser.parse(line)
             if matched:
                 self.started = True
             return matched
 
         # First try the current parser.
         assert self.current_parser not in self.future_parsers
-        if self.current_parser.continue_parsing(line):
+        if self.current_parser.parse(line):
             return True
 
         # Check if any future parsers should take over.
         for i, parser in enumerate(self.future_parsers):
-            if parser.start_parsing(line):
+            if parser.parse(line):
                 self.current_parser = parser
                 self.future_parsers = self.future_parsers[i + 1 :]
                 return True

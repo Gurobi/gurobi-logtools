@@ -31,41 +31,33 @@ class BarrierParser:
         ),
     ]
 
-    barrier_interruption_pattern = re.compile(
-        r"Barrier solve interrupted - model solved by another algorithm"
-    )
-
     def __init__(self):
         """Initialize the Barrier parser."""
         self._summary = {}
         self._progress = []
+        self.barrier_started = False
 
-    def start_parsing(self, line: str) -> bool:
-        """Return True if the parser should start parsing the future log lines.
+    def parse(self, line: str) -> bool:
+        """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line matches the parser start patterns.
+            bool: Return True if the given line is matched by some pattern.
         """
-        if BarrierParser.barrier_start_pattern.match(line):
-            return True
+
         barrier_ordering_match = BarrierParser.barrier_ordering_pattern.match(line)
         if barrier_ordering_match:
             self._summary.update(typeconvert_groupdict(barrier_ordering_match))
             return True
-        return False
 
-    def continue_parsing(self, line: str) -> bool:
-        """Parse the given line.
+        if not self.barrier_started:
+            match = BarrierParser.barrier_start_pattern.match(line)
+            if match:
+                self.barrier_started = True
+            return bool(match)
 
-        Args:
-            line (str): A line in the log file.
-
-        Returns:
-            bool: Return True if the parser should continue parsing future log lines.
-        """
         progress_match = BarrierParser.barrier_progress_pattern.match(line)
         if progress_match:
             self._progress.append(typeconvert_groupdict(progress_match))
@@ -83,11 +75,6 @@ class BarrierParser:
             return True
 
         return False
-
-    def is_interrupted(self, line: str) -> bool:
-        """Return True if the given line matches the interruption pattern."""
-        if BarrierParser.barrier_interruption_pattern.match(line):
-            return True
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""

@@ -68,18 +68,29 @@ class NodeLogParser:
         self.ignored_lines = 0
         self._complete = False
         self._in_cut_report = False
+        self.started = False
 
     def get_summary(self) -> Dict[str, Any]:
         summary = self._summary
         summary.update({f"Cuts: {name}": count for name, count in self._cuts.items()})
         return summary
 
-    def start_parsing(self, line: str) -> bool:
-        return bool(self.tree_search_log_start.match(line))
+    def parse(self, line: str) -> bool:
+        """Parse the given log line to populate summary and progress data.
 
-    def continue_parsing(self, line: str) -> bool:
-        """Match against all log line formats, exiting on the first match. If
-        no match, check for the end line or record an ignored line."""
+        Args:
+            line (str): A line in the log file.
+
+        Returns:
+            bool: Return True if the given line is matched by some pattern.
+        """
+
+        if not self.started:
+            match = self.tree_search_log_start.match(line)
+            if match:
+                self.started = True
+            return bool(match)
+
         for regex in self.line_types:
             match = regex.match(line)
             if match:

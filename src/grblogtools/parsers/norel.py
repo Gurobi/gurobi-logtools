@@ -20,6 +20,7 @@ class NoRelParser:
     def __init__(self):
         self.timeline: List[Dict[str, Any]] = []
         self._incumbent = None
+        self.started = False
 
     def get_summary(self) -> Dict[str, Any]:
         """Return summary dataframe based on the timeline information. Assumes
@@ -35,19 +36,22 @@ class NoRelParser:
             result["NoRelBestSol"] = self._incumbent
         return result
 
-    def start_parsing(self, line: str) -> bool:
-        """Return true if the line indicates the start of the norel section."""
-        return bool(self.norel_log_start.match(line))
+    def parse(self, line: str) -> bool:
+        """Parse the given log line to populate summary and progress data.
 
-    def continue_parsing(self, line: str) -> bool:
-        """Parse a log line to populate data.
+        Args:
+            line (str): A line in the log file.
 
-        Since the incumbent and time/bound come from separate lines, we need to
-        retain a parsed incumbent value for recording against the next timestamp.
-
-        Always returns true, since NoRel does not have an end line to speak of,
-        except an empty line which does not seem like a great idea to rely on.
+        Returns:
+            bool: Return True if the given line is matched by some pattern.
         """
+
+        if not self.started:
+            match = self.norel_log_start.match(line)
+            if match:
+                self.started = True
+            return bool(match)
+
         match = self.norel_primal_regex.match(line)
         if match:
             self._incumbent = float(match.group("Incumbent"))
