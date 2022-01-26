@@ -4,12 +4,12 @@ Gurobi 9.5.0 (mac64[arm], gurobi_cl) logging started Thu Jan  6 17:18:22 2022
 Set parameter TimeLimit to value 300
 Set parameter Method to value 3
 Set parameter LogFile to value "concurrent.log"
-Using license file /Users/aramon/gurobi_named_user_0.lic
+Using license file /Users/x/gurobi.lic
 
 Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])
 Copyright (c) 2021, Gurobi Optimization, LLC
 
-Read MPS format model from file examples/savsched1.mps.bz2
+Read MPS format model from file x.mps.bz2
 Reading time = 0.80 seconds
 savsched1.mps: 295989 rows, 328575 columns, 1770507 nonzeros
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
