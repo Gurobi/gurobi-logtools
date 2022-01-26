@@ -1,0 +1,67 @@
+
+Gurobi 9.5.0 (mac64[arm], gurobi_cl) logging started Tue Jan 25 17:46:06 2022
+
+Set parameter TimeLimit to value 900
+Set parameter LogFile to value "nonconvex.log"
+Set parameter NonConvex to value 2
+Using license file /Users/x/gurobi.lic
+
+Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])
+Copyright (c) 2021, Gurobi Optimization, LLC
+
+Read LP format model from file x.lp.bz2
+Reading time = 0.01 seconds
+x21: 3 rows, 21 columns, 40 nonzeros
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+Optimize a model with 3 rows, 21 columns and 40 nonzeros
+Model fingerprint: 0x549a449e
+Model has 200 quadratic objective terms
+Model has 1 quadratic constraint
+Coefficient statistics:
+  Matrix range     [1e-02, 1e+00]
+  QMatrix range    [1e-02, 2e+00]
+  QLMatrix range   [1e-02, 9e-01]
+  Objective range  [3e-02, 1e+00]
+  QObjective range [2e-02, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [5e-01, 1e+00]
+  QRHS range       [7e+01, 7e+01]
+Presolve removed 1 rows and 1 columns
+
+Continuous model is non-convex -- solving as a MIP
+
+Presolve removed 1 rows and 1 columns
+Presolve time: 0.00s
+Presolved: 581 rows, 230 columns, 1603 nonzeros
+Presolved model has 7 quadratic constraint(s)
+Presolved model has 202 bilinear constraint(s)
+Variable types: 230 continuous, 0 integer (0 binary)
+
+Root relaxation: objective -2.997943e+01, 319 iterations, 0.01 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  -29.97943    0  197          -  -29.97943      -     -    0s
+H    0     0                     -16.7706131  -29.97943  78.8%     -    0s
+     0     0  -20.66554    0  175  -16.77061  -20.66554  23.2%     -    0s
+     0     0  -20.61108    0  176  -16.77061  -20.61108  22.9%     -    0s
+     0     0  -17.61135    0  178  -16.77061  -17.61135  5.01%     -    0s
+     0     0  -17.46459    0  176  -16.77061  -17.46459  4.14%     -    0s
+     0     0  -17.07358    0  180  -16.77061  -17.07358  1.81%     -    0s
+     0     0  -17.05414    0  175  -16.77061  -17.05414  1.69%     -    0s
+     0     0  -16.97372    0  139  -16.77061  -16.97372  1.21%     -    0s
+     0     2  -16.97372    0  139  -16.77061  -16.97372  1.21%     -    0s
+
+Cutting planes:
+  RLT: 82
+  BQP: 48
+  PSD: 17
+
+Explored 45 nodes (9392 simplex iterations) in 0.28 seconds (0.44 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 1: -16.7706
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective -1.677061298141e+01, best bound -1.677109891195e+01, gap 0.0029%
