@@ -49,7 +49,7 @@ def test_nodelog_parser_withcuts():
         "IterCount": 1389,
         "Runtime": 5.2,
     }
-    assert len(parser.timeline) == 1
+    assert len(parser.get_progress()) == 1
 
 
 def test_nodelog_parser():
@@ -57,13 +57,12 @@ def test_nodelog_parser():
     parser = NodeLogParser()
     parse_block(parser, nodelog_section_test_data)
     # 'Explored' line ends parsing so future lines are not passed at all.
-    assert parser.ignored_lines == 0
     assert parser.get_summary() == {
         "NodeCount": 188145,
         "IterCount": 1383139,
         "Runtime": 35.66,
     }
-    assert parser.timeline == [
+    assert parser.get_progress() == [
         {
             "CurrentNode": 0,
             "RemainingNodes": 0,
