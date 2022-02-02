@@ -46,7 +46,6 @@ class BarrierParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-
         barrier_ordering_match = BarrierParser.barrier_ordering_pattern.match(line)
         if barrier_ordering_match:
             self._summary.update(typeconvert_groupdict(barrier_ordering_match))
@@ -81,5 +80,5 @@ class BarrierParser:
         return self._summary
 
     def get_progress(self) -> list:
-        """Return the detailed progress in barrier method."""
+        """Return the detailed progress in the barrier method."""
         return self._progress

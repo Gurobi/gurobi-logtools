@@ -59,7 +59,14 @@ class TerminationParser:
         self._summary = {}
 
     def parse(self, line: str) -> bool:
-        """Return True if the line is matched by one of the patterns."""
+        """Return True if the line is matched by some pattern.
+
+        Args:
+            line (str): A line in the log file.
+
+        Returns:
+            bool: Return True if the given line is matched by some pattern.
+        """
         for pattern in TerminationParser.patterns:
             match = pattern.match(line)
             if match:
@@ -69,7 +76,9 @@ class TerminationParser:
                     else:
                         self._summary.update({key: value})
                 return True
+
         return False
 
     def get_summary(self) -> dict:
+        """Return the current parsed summary."""
         return self._summary

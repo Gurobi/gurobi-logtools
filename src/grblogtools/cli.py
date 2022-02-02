@@ -3,8 +3,8 @@ import argparse
 import pandas as pd
 
 
+# TODO: Should we refactor this too?
 def cli(get_dataframe, argparse_kwargs):
-
     parser = argparse.ArgumentParser(**argparse_kwargs)
     parser.add_argument("outfile", help="Output file name (.xlsx)", metavar="XLSXFILE")
     parser.add_argument(

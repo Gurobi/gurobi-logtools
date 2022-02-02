@@ -34,7 +34,6 @@ class SimplexParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-
         if not self.started:
             match = SimplexParser.simplex_start_pattern.match(line)
             if match:

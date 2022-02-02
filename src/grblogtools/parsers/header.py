@@ -4,7 +4,6 @@ from grblogtools.parsers.util import convert_data_types, typeconvert_groupdict
 
 
 class HeaderParser:
-
     header_patterns = [
         re.compile(
             r"Gurobi (?P<Version>\d{1,2}\.[^\s]+) \((?P<Platform>[^\)]+)\) logging started (?P<Time>.*)$"
@@ -39,7 +38,8 @@ class HeaderParser:
         """Initialize the Header parser.
 
         Parameters are stored separately from the summary data as they are
-        handled differently in the final output."""
+        handled differently in the final output.
+        """
         self._summary = {}
         self._parameters = {}
 
@@ -52,7 +52,6 @@ class HeaderParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-
         match = HeaderParser.parameter_change_pattern.match(line)
         if match:
             self._parameters[match.group("ParamName")] = convert_data_types(
@@ -69,10 +68,7 @@ class HeaderParser:
         return False
 
     def get_summary(self) -> dict:
-        """Return the current parsed summary.
-
-        It returns an empty dictionary if the parser is not initialized yet.
-        """
+        """Return the current parsed summary."""
         return self._summary
 
     def get_parameters(self) -> dict:

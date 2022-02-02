@@ -1,66 +1,11 @@
 import json
-import pathlib
 import re
 from functools import lru_cache, partial
+from pathlib import Path
 
-defaults_dir = pathlib.Path(__file__).parent.joinpath("defaults")
+defaults_dir = Path(__file__).parent.joinpath("defaults")
 
 re_parameter_column = re.compile(r"(.*) \(Parameter\)")
-
-
-@lru_cache()
-def load_defaults(version):
-    version_file = defaults_dir.joinpath(f"{version}.json")
-    if not version_file.exists():
-        # Fall back to 950 defaults.
-        version_file = defaults_dir.joinpath("950.json")
-    with version_file.open() as infile:
-        return json.load(infile)
-
-
-def fill_for_version(group, parameter_columns):
-    parameter_defaults = load_defaults(
-        version=group["Version"].iloc[0].replace(".", "")
-    )
-    for column in parameter_columns:
-        default = parameter_defaults.get(re_parameter_column.match(column).group(1))
-        if default is not None:
-            group[column] = group[column].fillna(default).astype(type(default))
-    return group
-
-
-def fill_default_parameters(summary):
-    """If we leave defaults for a parameter .assign(
-            **{column: lambda df: dfas NaN, plotly seems to ignore these
-    records in the plot. So we should fill these values with the actual default.
-    """
-    parameter_columns = [
-        column
-        for column, series in summary.items()
-        if re_parameter_column.match(column) and series.isnull().any()
-    ]
-    # TODO test cases where there are different versions involved
-    return summary.groupby("Version").apply(
-        partial(fill_for_version, parameter_columns=parameter_columns)
-    )
-
-
-def fill_for_version_nosuffix(group):
-    parameter_defaults = load_defaults(
-        version=group["Version"].iloc[0].replace(".", "")
-    )
-    for parameter in group.columns:
-        default = parameter_defaults.get(parameter)
-        if default is not None:
-            group[parameter] = group[parameter].fillna(default).astype(type(default))
-    return group
-
-
-def fill_default_parameters_nosuffix(parameters):
-    """Fill defaults for a dataframe which is only Version and parameter
-    columns with no (Parameter) suffix."""
-    return parameters.groupby("Version").apply(fill_for_version_nosuffix)
-
 
 PARAMETER_DESCRIPTIONS = {
     "Method (Parameter)": {
@@ -94,9 +39,61 @@ PARAMETER_DESCRIPTIONS = {
 }
 
 
+@lru_cache()
+def load_defaults(version):
+    version_file = defaults_dir.joinpath(f"{version}.json")
+    if not version_file.exists():
+        # Fall back to 950 defaults
+        version_file = defaults_dir.joinpath("950.json")
+    with version_file.open() as infile:
+        return json.load(infile)
+
+
+def fill_for_version(group, parameter_columns):
+    parameter_defaults = load_defaults(
+        version=group["Version"].iloc[0].replace(".", "")
+    )
+    for column in parameter_columns:
+        default = parameter_defaults.get(re_parameter_column.match(column).group(1))
+        if default is not None:
+            group[column] = group[column].fillna(default).astype(type(default))
+    return group
+
+
+def fill_default_parameters(summary):
+    """Fill Nan parameter values with the actual default value."""
+    parameter_columns = [
+        column
+        for column, series in summary.items()
+        if re_parameter_column.match(column) and series.isnull().any()
+    ]
+    # TODO test cases where there are different versions involved
+    return summary.groupby("Version").apply(
+        partial(fill_for_version, parameter_columns=parameter_columns)
+    )
+
+
+def fill_for_version_nosuffix(group):
+    parameter_defaults = load_defaults(
+        version=group["Version"].iloc[0].replace(".", "")
+    )
+    for parameter in group.columns:
+        default = parameter_defaults.get(parameter)
+        if default is not None:
+            group[parameter] = group[parameter].fillna(default).astype(type(default))
+    return group
+
+
+def fill_default_parameters_nosuffix(parameters):
+    """Fill defaults for a dataframe with Version and parameter cols with no (Parameter) suffix."""
+    return parameters.groupby("Version").apply(fill_for_version_nosuffix)
+
+
 def add_categorical_descriptions(summary):
-    """Replace some columns with categorical descriptions if available in the
-    PARAMETER_DESCRIPTIONS dictionary. Modifies :summary in place."""
+    """Replace some columns with categorical descriptions if available.
+
+    It modifies the summary dict in place.
+    """
     parameter_columns = [
         column for column in summary.columns if column in PARAMETER_DESCRIPTIONS
     ]
@@ -105,3 +102,20 @@ def add_categorical_descriptions(summary):
             summary[column].map(PARAMETER_DESCRIPTIONS[column]).astype("category")
         )
     return summary
+
+
+def strip_model_and_seed(row):
+    """Return the Log name.
+
+    If the log path contains the model name, return everything to the left.
+    Otherwise, just return the log stem.
+
+    i.e. with Model = 'glass4'
+        data/912-Cuts0-glass4-0.log -> 912-Cuts0
+        data/some-log.log -> some-log
+    """
+    log_stem = Path(row["LogFilePath"]).stem
+    run, mid, _ = log_stem.partition(row["Model"])
+    if mid and run:
+        return run.rstrip("-")
+    return log_stem

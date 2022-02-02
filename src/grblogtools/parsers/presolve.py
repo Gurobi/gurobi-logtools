@@ -85,7 +85,6 @@ class PresolveParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-
         if not self.started:
             match = PresolveParser.presolve_start_pattern.match(line)
             if match:
@@ -114,8 +113,5 @@ class PresolveParser:
         return False
 
     def get_summary(self) -> dict:
-        """Return the current parsed summary.
-
-        It returns an empty dictionary if the parser is not initialized yet.
-        """
+        """Return the current parsed summary."""
         return self._summary

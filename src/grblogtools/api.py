@@ -1,13 +1,14 @@
 """Top level API for parsing log files.
 
-Examples:
-
+Usage example:
     import grblogtools.api as glt
     result = glt.parse("data/*.log")
-    result.summary()  # summary dataframe (like get_dataframe)
+    result.summary()
+    result.progress(section="nodelog")
 
-Similar for dataframes
-
+OR, use
+    summary = glt.get_dataframe("data/*.log", timeline=False)
+    summary, timeline = glt.get_dataframe("data/*.log", timeline=True)
 """
 
 import glob
@@ -15,24 +16,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from grblogtools.helpers import fill_default_parameters_nosuffix
+from grblogtools.helpers import fill_default_parameters_nosuffix, strip_model_and_seed
 from grblogtools.parsers.single_log import SingleLogParser
-
-
-def strip_model_and_seed(row):
-    """
-    If the log path contains the model name, return everything to the left.
-    Otherwise, just return the log stem.
-
-    i.e. with Model = 'glass4'
-        data/912-Cuts0-glass4-0.log -> 912-Cuts0
-        data/some-log.log -> some-log
-    """
-    log_stem = Path(row["LogFilePath"]).stem
-    run, mid, _ = log_stem.partition(row["Model"])
-    if mid and run:
-        return run.rstrip("-")
-    return log_stem
 
 
 class ParseResult:
@@ -43,8 +28,9 @@ class ParseResult:
         """Return the optimization search progress of the given section in the log.
 
         Args:
-            section (str): Possible values are 'norel', 'rootlp', and 'nodelog'.
-                Defaults to 'nodelog'.
+            section (str): Possible values are norel, rootlp, and nodelog. Defaults
+                to nodelog.
+
         Returns:
             pf.DataFrame: A data frame representing the progress of the given section
                 in the log.
@@ -62,8 +48,7 @@ class ParseResult:
         )
 
     def summary(self):
-        """Construct and return a summary dataframe for all parsed logs.
-        Some post-processing performed."""
+        """Construct and return a summary dataframe for all parsed logs."""
         summary = pd.DataFrame(
             [
                 dict(parser.get_summary(), LogFilePath=logfile, LogNumber=lognumber)
@@ -129,6 +114,9 @@ def parse(arg: str) -> ParseResult:
 
 def get_dataframe(logfiles, timelines=False):
     """Compatibility function for the legacy API.
+
+    If one log file contains more than one run, all runs are parsed, each reported
+    as a separate row in the summay and timelines dataframes.
 
     Args:
         logfiles (str): A glob pattern of the log files.

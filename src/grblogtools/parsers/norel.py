@@ -1,5 +1,4 @@
 import re
-from typing import Any, Dict, List
 
 from grblogtools.parsers.util import typeconvert_groupdict
 
@@ -18,14 +17,17 @@ class NoRelParser:
     ]
 
     def __init__(self):
-        self.timeline: List[Dict[str, Any]] = []
+        """Initialize the NoRel parser."""
+        self.timeline = []
         self._incumbent = None
         self.started = False
 
-    def get_summary(self) -> Dict[str, Any]:
-        """Return summary dataframe based on the timeline information. Assumes
-        that the best bound is always found in the last line (if one was found
-        at all)."""
+    def get_summary(self) -> dict:
+        """Return summary dict based on the timeline information.
+
+        It assumes that the best bound is always found in the last line
+        (if one was found at all).
+        """
         if not self.timeline:
             return {}
         last_log = self.timeline[-1]
@@ -45,7 +47,6 @@ class NoRelParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-
         if not self.started:
             match = self.norel_log_start.match(line)
             if match:
@@ -56,6 +57,7 @@ class NoRelParser:
         if match:
             self._incumbent = float(match.group("Incumbent"))
             return True
+
         for regex in self.norel_elapsed:
             match = regex.match(line)
             if match:
@@ -64,6 +66,7 @@ class NoRelParser:
                     entry["Incumbent"] = self._incumbent
                 self.timeline.append(entry)
                 return True
+
         return False
 
     def get_progress(self) -> list:

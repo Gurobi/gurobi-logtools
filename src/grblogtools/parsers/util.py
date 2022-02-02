@@ -49,6 +49,10 @@ def parse_block(parser, log):
 
 
 def model_type(discrete_vars=0, quad_nonzeros=0, quad_constrs=0):
+    """Return the type of the optimization model.
+
+    The model type is MIP, QCP, QP, or LP.
+    """
     mtype = ""
     if discrete_vars > 0:
         mtype += "MI"
