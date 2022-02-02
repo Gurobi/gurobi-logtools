@@ -7,7 +7,7 @@ from grblogtools.parsers.util import typeconvert_groupdict
 
 class ContinuousParser:
     # The pattern indicating the start or the termination of the barrier/simplex
-    # in case of solving an MIP. In some cases, the log might only include this one
+    # in case of solving a MIP. In some cases, the log might only include this one
     # line
     mip_relaxation_pattern = re.compile(
         r"Root relaxation: objective (?P<RelaxObj>[^,]+), (?P<RelaxIterCount>\d+) iterations, (?P<RelaxTime>[^\s]+) seconds"
@@ -28,8 +28,9 @@ class ContinuousParser:
         self._current_pattern = None
 
     def parse(self, line: str) -> bool:
-        """Parse the given log line to populate summary and progress data. Defer
-        to the simplex and barrier parsers as needed.
+        """Parse the given log line to populate summary and progress data.
+
+        It defers to the simplex and the barrier parsers as needed.
 
         Args:
             line (str): A line in the log file.
@@ -37,7 +38,6 @@ class ContinuousParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-
         mip_relaxation_match = ContinuousParser.mip_relaxation_pattern.match(line)
         if mip_relaxation_match:
             self._current_pattern = "relaxation"
@@ -45,11 +45,9 @@ class ContinuousParser:
             return True
 
         if self._current_pattern is None:
-
             if self._barrier_parser.parse(line):
                 self._current_pattern = "barrier"
                 return True
-
             if self._simplex_parser.parse(line):
                 self._current_pattern = "simplex"
                 return True
@@ -64,10 +62,13 @@ class ContinuousParser:
                 line
             ):
                 self._current_pattern = "simplex"
+                return True
+
             return matched
 
         if self._current_pattern == "simplex":
-            return self._simplex_parser.parse(line)
+            match = self._simplex_parser.parse(line)
+            return match
 
         return False
 

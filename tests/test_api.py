@@ -63,7 +63,7 @@ def test_merged_log(merged_log):
 
 
 def test_summary(testlog_summary):
-    assert len(testlog_summary) == 4
+    assert len(testlog_summary) == 7
     assert set(testlog_summary.columns).issuperset(
         {"Status", "ObjVal", "ReadTime", "RelaxObj"}
     )
@@ -75,11 +75,11 @@ def test_progress(testlog_progress):
     assert set(testlog_progress["norel"].columns).issuperset(
         {"Time", "BestBd", "Incumbent"}
     )
-    assert len(testlog_progress["rootlp"]) == 88
+    assert len(testlog_progress["rootlp"]) == 405
     assert set(testlog_progress["rootlp"].columns).issuperset(
         {"Iteration", "PInf", "DInf", "PObj", "DObj"}
     )
-    assert len(testlog_progress["nodelog"]) == 6
+    assert len(testlog_progress["nodelog"]) == 130
     assert set(testlog_progress["nodelog"].columns).issuperset(
         {"Depth", "IntInf", "Incumbent", "BestBd", "ItPerNode"}
     )

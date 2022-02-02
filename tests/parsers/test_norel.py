@@ -35,7 +35,7 @@ Elapsed time for NoRel heuristic: 5s
 def test_empty():
     """To check that timeline to summary conversion is sane."""
     parser = NoRelParser()
-    assert parser.timeline == []
+    assert parser.get_progress() == []
     assert parser.get_summary() == {}
 
 
@@ -49,7 +49,7 @@ def test_norel_parser():
         "NoRelTime": 93.0,
         "NoRelBestBd": 8.00002e8,
     }
-    assert parser.timeline == [
+    assert parser.get_progress() == [
         {"Time": 5.0},
         {"Time": 10.0, "BestBd": 8.00002e8, "Incumbent": 1.450014e9},
         {"Time": 16.0, "BestBd": 8.00002e8, "Incumbent": 1.400013e9},
