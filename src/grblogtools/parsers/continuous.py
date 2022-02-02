@@ -62,10 +62,13 @@ class ContinuousParser:
                 line
             ):
                 self._current_pattern = "simplex"
+                return True
+
             return matched
 
         if self._current_pattern == "simplex":
-            return self._simplex_parser.parse(line)
+            match = self._simplex_parser.parse(line)
+            return match
 
         return False
 

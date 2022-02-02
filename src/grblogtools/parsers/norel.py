@@ -17,20 +17,17 @@ class NoRelParser:
     ]
 
     def __init__(self):
-        """Initialize the NoRel parser."""
-        self.timeline = []
+        self._progress: List[Dict[str, Any]] = []
         self._incumbent = None
-        self.started = False
+        self._started = False
 
-    def get_summary(self) -> dict:
-        """Return summary dict based on the timeline information.
-
-        It assumes that the best bound is always found in the last line
-        (if one was found at all).
-        """
-        if not self.timeline:
+    def get_summary(self) -> Dict[str, Any]:
+        """Return summary dataframe based on the timeline information. Assumes
+        that the best bound is always found in the last line (if one was found
+        at all)."""
+        if not self._progress:
             return {}
-        last_log = self.timeline[-1]
+        last_log = self._progress[-1]
         result = {"NoRelTime": last_log["Time"]}
         if "BestBd" in last_log:
             result["NoRelBestBd"] = last_log["BestBd"]
@@ -47,11 +44,13 @@ class NoRelParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-        if not self.started:
+
+        if not self._started:
             match = self.norel_log_start.match(line)
             if match:
-                self.started = True
-            return bool(match)
+                self._started = True
+                return True
+            return False
 
         match = self.norel_primal_regex.match(line)
         if match:
@@ -64,11 +63,11 @@ class NoRelParser:
                 entry = typeconvert_groupdict(match)
                 if self._incumbent is not None:
                     entry["Incumbent"] = self._incumbent
-                self.timeline.append(entry)
+                self._progress.append(entry)
                 return True
 
         return False
 
     def get_progress(self) -> list:
         """Return the progress of the norel heuristic."""
-        return self.timeline
+        return self._progress

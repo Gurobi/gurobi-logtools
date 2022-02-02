@@ -6,6 +6,18 @@ float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
 
 
 class NodeLogParser:
+    """
+    Methods:
+        - log_start(line) -> parse a string, returning true if this string
+          indicates the start of the norel section
+        - parse(line) -> parse a string, return true if this parser should
+          continue receiving future log lines
+
+    Attributes:
+        - timeline -> list of dicts for log timeline entries (incumbent, bound,
+          time, depth, etc)
+    """
+
     tree_search_log_start = re.compile(r" Expl Unexpl(.*)It/Node Time$")
     tree_search_explored = re.compile(
         r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>[^\s]+) seconds"
@@ -50,11 +62,9 @@ class NodeLogParser:
         """Initialize the NodeLog parser."""
         self._summary = {}
         self._cuts = {}
-        self.timeline = []
-        self.ignored_lines = 0
-        self._complete = False
+        self._progress = []
         self._in_cut_report = False
-        self.started = False
+        self._started = False
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""
@@ -71,22 +81,23 @@ class NodeLogParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-        if not self.started:
+
+        if not self._started:
             match = self.tree_search_log_start.match(line)
             if match:
-                self.started = True
-            return bool(match)
+                self._started = True
+                return True
+            return False
 
         for regex in self.line_types:
             match = regex.match(line)
             if match:
-                self.timeline.append(typeconvert_groupdict(match))
+                self._progress.append(typeconvert_groupdict(match))
                 return True
 
         match = self.tree_search_explored.match(line)
         if match:
             self._summary.update(typeconvert_groupdict(match))
-            self._complete = True
             return True
 
         match = self.cut_report_start.match(line)
@@ -101,11 +112,8 @@ class NodeLogParser:
                     match.group("Count")
                 )
                 return True
-
-        if line.strip() and not self._complete:
-            self.ignored_lines += 1
         return False
 
     def get_progress(self) -> list:
-        """Return the detailed progress of the search tree."""
-        return self.timeline
+        """Return the progress of the search tree."""
+        return self._progress
