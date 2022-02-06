@@ -21,13 +21,6 @@ Crossover log...
         0 PPushes remaining with PInf 0.0000000e+00                 9s
 
    Push phase complete: Pinf 0.0000000e+00, Dinf 1.8540725e-14      9s
-
-Extra simplex iterations after uncrush: 1
-Iteration    Objective       Primal Inf.    Dual Inf.      Time
-    51765    2.1740357e+02   0.000000e+00   0.000000e+00      9s
-
-Solved in 51765 iterations and 9.18 seconds (13.22 work units)
-Optimal objective  2.174035714e+02
 """
 expected_summary_barrier = {
     "BarIterCount": 17,
