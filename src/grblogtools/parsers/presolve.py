@@ -69,9 +69,9 @@ class PresolveParser:
     def __init__(self):
         """Initialize the Presolve parser.
 
-        The PresolveParser extends beyond the lines associated with the presolved model.
-        Specifically, it includes information for all lines appearing between the
-        HeaderParser and the NoRelParser or the RelaxationParser.
+        The PresolveParser extends beyond the lines associated with the presolved
+        model. Specifically, it includes information for all lines appearing between
+        the HeaderParser and the NoRelParser or the RelaxationParser.
         """
         self._summary = {}
         self._started = False
@@ -85,7 +85,6 @@ class PresolveParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-
         if not self._started:
             match = PresolveParser.presolve_start_pattern.match(line)
             if match:
