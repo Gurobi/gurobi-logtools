@@ -14,9 +14,30 @@ Optimal objective -1.590781794e+00
 """
 expected_summary_simplex = {"IterCount": 17, "Runtime": 0.01}
 expected_progress_simplex = [
-    {"Iteration": 0, "Objective": 0.0, "PInf": 0.0, "DInf": 0.0, "Time": 0},
-    {"Iteration": 0, "Objective": 440.0, "PInf": 0.0, "DInf": 51.02, "Time": 0},
-    {"Iteration": 17, "Objective": -1.5907818, "PInf": 0.0, "DInf": 0.0, "Time": 0},
+    {
+        "Type": "simplex",
+        "Iteration": 0,
+        "Objective": 0.0,
+        "PInf": 0.0,
+        "DInf": 0.0,
+        "Time": 0,
+    },
+    {
+        "Type": "simplex",
+        "Iteration": 0,
+        "Objective": 440.0,
+        "PInf": 0.0,
+        "DInf": 51.02,
+        "Time": 0,
+    },
+    {
+        "Type": "simplex",
+        "Iteration": 17,
+        "Objective": -1.5907818,
+        "PInf": 0.0,
+        "DInf": 0.0,
+        "Time": 0,
+    },
 ]
 
 
