@@ -34,7 +34,7 @@ def test_mip_norel_log():
     rootlp_progress = parser.continuous_parser.get_progress()
     assert len(rootlp_progress) == 2
     nodelog_progress = parser.nodelog_parser.get_progress()
-    assert len(nodelog_progress) == 6
+    assert len(nodelog_progress) == 7
 
 
 def test_lp_barrier():
@@ -47,19 +47,18 @@ def test_lp_barrier():
     assert parser.continuous_parser.get_summary()
     assert not parser.norel_parser.get_summary()
     assert not parser.nodelog_parser.get_summary()
-    assert parser.termination_parser.get_summary()
     # Combined summary data.
     summary = parser.get_summary()
     assert summary["Version"] == "9.5.0"
     assert summary["ModelName"] == "savsched1.mps"
     assert summary["OrderingTime"] == 0.41
     assert summary["BarIterCount"] == 17
-    assert summary["Runtime"] == 4.83
+    assert summary["Runtime"] == 9.18
     assert summary["Status"] == "OPTIMAL"
     assert summary["ModelType"] == "LP"
 
     rootlp_progress = parser.continuous_parser.get_progress()
-    assert len(rootlp_progress) == 18
+    assert len(rootlp_progress) == 19
 
 
 def test_lp_simplex():
