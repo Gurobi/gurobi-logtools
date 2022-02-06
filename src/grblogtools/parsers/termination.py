@@ -6,14 +6,10 @@ from grblogtools.parsers.util import typeconvert_groupdict
 class TerminationParser:
     # Termination patterns
     patterns = [
-        re.compile(
-            r"Best objective (?P<ObjVal>[^,]+), best bound (?P<ObjBound>[^,]+), gap (?P<MIPGap>.*)$"
-        ),
         re.compile(r"ERROR (?P<ErrorCode>[^:]+): (?P<ErrorMessage>.*)$"),
         re.compile(r"\[(?P<ErrorMessage>process terminated with exit code [^\\]]+)\]$"),
         re.compile(r"(?P<TIME_LIMIT>Time limit reached)"),
         re.compile(r"(?P<OPTIMAL>Optimal solution found)(?: \(tolerance .*\))"),
-        re.compile(r"(?P<OPTIMAL>Optimal objective\s+(?P<ObjVal>.*))$"),
         re.compile(r"(?P<ITERATION_LIMIT>Iteration limit reached)"),
         re.compile(r"(?P<INF_OR_UNBD>Infeasible or unbounded model)"),
         re.compile(r"(?P<INF_OR_UNBD>Model is infeasible or unbounded)"),
@@ -25,9 +21,6 @@ class TerminationParser:
         re.compile(r"(?P<NODE_LIMIT>Node limit reached)"),
         re.compile(r"(?P<NUMERIC>Numeric error)"),
         re.compile(r"(?P<NUMERIC>Numerical trouble encountered)"),
-        re.compile(
-            r"(?P<SUBOPTIMAL>Sub-optimal termination)(?: - objective (?P<ObjVal>.*))$"
-        ),
         re.compile(r"(?P<CUTOFF>Model objective exceeds cutoff)"),
         re.compile(r"(?P<CUTOFF>Objective cutoff exceeded)"),
         re.compile(r"(?P<USER_OBJ_LIMIT>Optimization achieved user objective limit)"),
@@ -49,7 +42,6 @@ class TerminationParser:
         "INFEASIBLE",
         "SOLUTION_LIMIT",
         "NUMERIC",
-        "SUBOPTIMAL",
         "CUTOFF",
         "USER_OBJ_LIMIT",
         "INTERRUPTED",
@@ -76,7 +68,6 @@ class TerminationParser:
                     else:
                         self._summary.update({key: value})
                 return True
-
         return False
 
     def get_summary(self) -> dict:
