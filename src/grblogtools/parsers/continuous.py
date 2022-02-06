@@ -17,6 +17,17 @@ class ContinuousParser:
         r"Barrier solve interrupted - model solved by another algorithm"
     )
 
+    barrier_extra_simplex_pattern = re.compile(
+        r"Extra simplex iterations after uncrush"
+    )
+
+    continuous_termination_patterns = [
+        re.compile(
+            r"(?P<SUBOPTIMAL>Sub-optimal termination)(?: - objective (?P<ObjVal>.*))$"
+        ),
+        re.compile(r"(?P<OPTIMAL>Optimal objective\s+(?P<ObjVal>.*))$"),
+    ]
+
     def __init__(self):
         """Initialize the Continuous parser."""
         self._barrier_parser = BarrierParser()
@@ -44,6 +55,16 @@ class ContinuousParser:
             self._summary.update(typeconvert_groupdict(mip_relaxation_match))
             return True
 
+        for pattern in ContinuousParser.continuous_termination_patterns:
+            match = pattern.match(line)
+            if match:
+                for key, value in typeconvert_groupdict(match).items():
+                    if key in ["OPTIMAL", "SUBOPTIMAL"]:
+                        self._summary.update({"Status": key})
+                    else:
+                        self._summary.update({key: value})
+                return True
+
         if self._current_pattern is None:
             if self._barrier_parser.parse(line):
                 self._current_pattern = "barrier"
@@ -56,10 +77,11 @@ class ContinuousParser:
 
         if self._current_pattern == "barrier":
             matched = self._barrier_parser.parse(line)
-            # If the barrier gets interrupted during the concurrent, switch to
-            # the simplex.
-            if not matched and ContinuousParser.barrier_interruption_pattern.match(
-                line
+            # If the barrier gets interrupted during the concurrent or there are
+            # extra simplex iterations after uncrush, switch to simplex
+            if not matched and (
+                ContinuousParser.barrier_interruption_pattern.match(line)
+                or ContinuousParser.barrier_extra_simplex_pattern.match(line)
             ):
                 self._current_pattern = "simplex"
                 return True
