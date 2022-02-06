@@ -6,22 +6,14 @@ float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
 
 
 class NodeLogParser:
-    """
-    Methods:
-        - log_start(line) -> parse a string, returning true if this string
-          indicates the start of the norel section
-        - parse(line) -> parse a string, return true if this parser should
-          continue receiving future log lines
-
-    Attributes:
-        - timeline -> list of dicts for log timeline entries (incumbent, bound,
-          time, depth, etc)
-    """
-
-    tree_search_log_start = re.compile(r" Expl Unexpl(.*)It/Node Time$")
+    tree_search_start = re.compile(r" Expl Unexpl(.*)It/Node Time$")
     tree_search_explored = re.compile(
         r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>[^\s]+) seconds"
     )
+    tree_search_termination = re.compile(
+        r"Best objective (?P<ObjVal>[^,]+), best bound (?P<ObjBound>[^,]+), gap (?P<MIPGap>.*)$"
+    )
+
     line_types = [
         # tree_search_full_log_line_regex
         re.compile(
@@ -65,6 +57,8 @@ class NodeLogParser:
         self._progress = []
         self._in_cut_report = False
         self._started = False
+        # Used to store the data for the last entry of the progress list
+        self._progress_last_entry = {}
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""
@@ -81,9 +75,8 @@ class NodeLogParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-
         if not self._started:
-            match = self.tree_search_log_start.match(line)
+            match = self.tree_search_start.match(line)
             if match:
                 self._started = True
                 return True
@@ -97,7 +90,28 @@ class NodeLogParser:
 
         match = self.tree_search_explored.match(line)
         if match:
-            self._summary.update(typeconvert_groupdict(match))
+            entry = typeconvert_groupdict(match)
+            self._summary.update(entry)
+            self._progress_last_entry.update(
+                {
+                    "CurrentNode": entry["NodeCount"],
+                    "Time": entry["Runtime"],
+                }
+            )
+            return True
+
+        match = self.tree_search_termination.match(line)
+        if match:
+            entry = typeconvert_groupdict(match)
+            self._summary.update(entry)
+            self._progress_last_entry.update(
+                {
+                    "Incumbent": entry["ObjVal"],
+                    "BestBd": entry["ObjBound"],
+                    "Gap": entry["MIPGap"],
+                }
+            )
+            self._progress.append(self._progress_last_entry)
             return True
 
         match = self.cut_report_start.match(line)
