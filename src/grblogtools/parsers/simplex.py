@@ -34,7 +34,6 @@ class SimplexParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-
         # Check this first since the termination line might appear
         # without any progress log in the concurrent case.
         match = SimplexParser.simplex_termination_pattern.match(line)
@@ -51,7 +50,9 @@ class SimplexParser:
 
         progress_match = SimplexParser.simplex_progress_pattern.match(line)
         if progress_match:
-            self._progress.append(typeconvert_groupdict(progress_match))
+            entry = {"Type": "simplex"}
+            entry.update(typeconvert_groupdict(progress_match))
+            self._progress.append(entry)
             return True
 
         return False
