@@ -28,8 +28,7 @@ def stem(path: str) -> str:
 
 
 def normalize(df):
-    """Convert full log file paths to file name only, and remove index in
-    case it was affected by sorting."""
+    """Convert log file paths to file name, and remove index."""
     return df.assign(LogFilePath=lambda df: df["LogFilePath"].apply(stem)).reset_index(
         drop=True
     )
@@ -41,7 +40,6 @@ def test_summary():
     Changes from current version are:
         - Seed is always an integer (default-filled with zeros)
         - Time is parsed as a datetime type, not stored as string
-
     """
     glob_files = "data/*.log"
     expected = normalize(
@@ -60,7 +58,13 @@ def test_nodelog_timelines():
     """Check nodelog timelines for glass4 with defaults parameters are unchanged."""
     glob_files = "data/912-glass4-*.log"
     _, timelines = glt_legacy.get_dataframe([glob_files], timelines=True)
-    expected = normalize(timelines["nodelog"].sort_values(["LogFilePath", "Time"]))
+    expected = normalize(
+        timelines["nodelog"]
+        .assign(
+            Seed=lambda df: df["Seed"].astype(int),
+        )
+        .sort_values(["LogFilePath", "Time"])
+    )
     _, timelines = glt.get_dataframe([glob_files], timelines=True)
     nodelog = normalize(timelines["nodelog"].sort_values(["LogFilePath", "Time"]))
     assert_frame_equal(nodelog[expected.columns], expected)
@@ -70,7 +74,14 @@ def test_rootlp_timelines():
     """Check timelines for LP test data are unchanged."""
     glob_files = "tests/assets/lp*.log"
     _, timelines = glt_legacy.get_dataframe([glob_files], timelines=True)
-    expected = normalize(timelines["rootlp"].sort_values(["LogFilePath", "Time"]))
+    expected = normalize(
+        timelines["rootlp"]
+        .assign(
+            Type=lambda df: df["Type"].replace("crossover", "simplex"),
+            Model=lambda df: df["Model"].apply(lambda p: p.split(".")[0]),
+        )
+        .sort_values(["LogFilePath", "Time"])
+    ).drop(columns="Indicator")
     _, timelines = glt.get_dataframe([glob_files], timelines=True)
     rootlog = normalize(timelines["rootlp"].sort_values(["LogFilePath", "Time"]))
     assert_frame_equal(rootlog[expected.columns], expected)
