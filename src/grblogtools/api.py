@@ -23,29 +23,38 @@ from grblogtools.parsers.single_log import SingleLogParser
 class ParseResult:
     def __init__(self):
         self.parsers = []
+        self._common = None
 
     def progress(self, section="nodelog") -> dict:
-        """Return the optimization search progress of the given section in the log.
+        """Return the search progress for the given section in the log.
 
         Args:
             section (str): Possible values are norel, rootlp, and nodelog. Defaults
                 to nodelog.
 
         Returns:
-            pf.DataFrame: A data frame representing the progress of the given section
+            pd.DataFrame: A data frame representing the progress of the given section
                 in the log.
         """
-        return pd.DataFrame(
-            [
-                dict(row, LogFilePath=logfile, LogNumber=lognumber)
-                for logfile, lognumber, parser in self.parsers
-                for row in {
-                    "nodelog": parser.nodelog_parser.get_progress(),
-                    "rootlp": parser.continuous_parser.get_progress(),
-                    "norel": parser.norel_parser.get_progress(),
-                }[section]
-            ]
-        )
+        progress = []
+        for logfile, lognumber, parser in self.parsers:
+            runner = {
+                "nodelog": parser.nodelog_parser.get_progress,
+                "rootlp": parser.continuous_parser.get_progress,
+                "norel": parser.norel_parser.get_progress,
+            }[section]
+
+            if self._common is not None:
+                query = self._common.query(
+                    f"LogNumber == {lognumber} & LogFilePath == '{logfile}'"
+                ).iloc[0]
+            for row in runner():
+                extended_row = dict(row, LogFilePath=logfile, LogNumber=lognumber)
+                if self._common is not None:
+                    extended_row.update({key: query[key] for key in query.index})
+                progress.append(extended_row)
+
+        return pd.DataFrame(progress)
 
     def summary(self):
         """Construct and return a summary dataframe for all parsed logs."""
@@ -75,6 +84,23 @@ class ParseResult:
                 Log=lambda df: df.apply(strip_model_and_seed, axis=1),
             )
         )
+
+        # The columns to save in the progress dataframes if exists
+        self._common = summary[
+            [
+                col
+                for col in [
+                    "ModelFile",
+                    "Model",
+                    "Log",
+                    "LogFilePath",
+                    "LogNumber",
+                    "Seed",
+                    "Version",
+                ]
+                if col in summary.columns
+            ]
+        ]
         return summary
 
     def parse(self, logfile: str) -> None:
