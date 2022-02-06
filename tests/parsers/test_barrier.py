@@ -38,6 +38,7 @@ expected_summary_barrier = {
 }
 expected_progress_barrier = [
     {
+        "Type": "barrier",
         "Iteration": 0,
         "Indicator": " ",
         "PObj": 45643508.5,
@@ -48,6 +49,7 @@ expected_progress_barrier = [
         "Time": 2,
     },
     {
+        "Type": "barrier",
         "Iteration": 1,
         "Indicator": " ",
         "PObj": 37672227.6,
@@ -58,6 +60,7 @@ expected_progress_barrier = [
         "Time": 2,
     },
     {
+        "Type": "barrier",
         "Iteration": 17,
         "Indicator": " ",
         "PObj": 217.403572,
