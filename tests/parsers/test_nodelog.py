@@ -18,6 +18,7 @@ H    0     0                    2.200019e+09 8.0000e+08  63.6%     -    0s
 *187499 14704             320    1.350013e+09 1.2000e+09  11.1%   7.3   35s
 
 Explored 188145 nodes (1383139 simplex iterations) in 35.66 seconds
+Best objective 1.200012600000e+09, best bound 1.200003400000e+09, gap 0.0008%
 """
 
 
@@ -34,6 +35,7 @@ Cutting planes:
   Relax-and-lift: 8
 
 Explored 188 nodes (1389 simplex iterations) in 5.2 seconds
+Best objective 5.0000e+08, best bound 5.0000e+08, gap 0.0008%
 """
 
 
@@ -48,19 +50,24 @@ def test_nodelog_parser_withcuts():
         "NodeCount": 188,
         "IterCount": 1389,
         "Runtime": 5.2,
+        "MIPGap": 8e-06,
+        "ObjBound": 5e8,
+        "ObjVal": 5e8,
     }
-    assert len(parser.get_progress()) == 1
+    assert len(parser.get_progress()) == 2
 
 
 def test_nodelog_parser():
     """Pass all test lines in sequence and test timeline."""
     parser = NodeLogParser()
     parse_block(parser, nodelog_section_test_data)
-    # 'Explored' line ends parsing so future lines are not passed at all.
     assert parser.get_summary() == {
         "NodeCount": 188145,
         "IterCount": 1383139,
         "Runtime": 35.66,
+        "MIPGap": 8e-06,
+        "ObjBound": 1200003400.0,
+        "ObjVal": 1200012600.0,
     }
     assert parser.get_progress() == [
         {
@@ -130,5 +137,12 @@ def test_nodelog_parser():
             "Gap": 0.111,
             "ItPerNode": 7.3,
             "Time": 35.0,
+        },
+        {
+            "CurrentNode": 188145,
+            "Incumbent": 1200012600.0,
+            "BestBd": 1200003400.0,
+            "Gap": 8e-06,
+            "Time": 35.66,
         },
     ]
