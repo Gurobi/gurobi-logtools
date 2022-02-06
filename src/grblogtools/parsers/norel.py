@@ -17,14 +17,15 @@ class NoRelParser:
     ]
 
     def __init__(self):
-        self._progress: List[Dict[str, Any]] = []
+        self._progress = []
         self._incumbent = None
         self._started = False
 
-    def get_summary(self) -> Dict[str, Any]:
-        """Return summary dataframe based on the timeline information. Assumes
-        that the best bound is always found in the last line (if one was found
-        at all)."""
+    def get_summary(self) -> dict:
+        """Return the summary based on the timeline information.
+
+        It assumes that the best bound is always found in the last line, if exists.
+        """
         if not self._progress:
             return {}
         last_log = self._progress[-1]
@@ -44,7 +45,6 @@ class NoRelParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-
         if not self._started:
             match = self.norel_log_start.match(line)
             if match:
