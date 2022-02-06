@@ -11,7 +11,7 @@ date_time_regex = re.compile(r"\D+\s\D+\s\d+\s\d+:\d+:\d+\s\d{4}")
 def convert_data_types(value):
     """Convert the given value string to the type it matches."""
     if value == "-":
-        # Commonly used sentinel for a missing value in log tables.
+        # Commonly used sentinel for a missing value in log tables
         return None
     elif int_regex.match(value):
         return int(value)
