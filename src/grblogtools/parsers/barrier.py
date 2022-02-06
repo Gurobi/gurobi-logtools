@@ -60,7 +60,9 @@ class BarrierParser:
 
         progress_match = BarrierParser.barrier_progress_pattern.match(line)
         if progress_match:
-            self._progress.append(typeconvert_groupdict(progress_match))
+            entry = {"Type": "barrier"}
+            entry.update(typeconvert_groupdict(progress_match))
+            self._progress.append(entry)
             return True
 
         for barrier_termination_pattern in BarrierParser.barrier_termination_patterns:

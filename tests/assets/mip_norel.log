@@ -1,12 +1,12 @@
 Gurobi 9.2.2 (mac64, gurobi_cl) logging started Tue Oct  5 09:11:51 2021
 
 Set parameter NoRelHeurWork to value 60
-Set parameter LogFile to value norel.log
+Set parameter LogFile to value 912-NoRelHeurWork60-glass4-0.log
 
 Gurobi Optimizer version 9.1.2 build v9.1.2rc0 (mac64)
 Copyright (c) 2021, Gurobi Optimization, LLC
 
-Read MPS format model from file x.mps
+Read MPS format model from file /data/glass4.mps
 Reading time = 0.00 seconds
 glass4: 396 rows, 322 columns, 1815 nonzeros
 Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
