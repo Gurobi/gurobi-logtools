@@ -85,7 +85,7 @@ def fill_for_version_nosuffix(group):
 
 
 def fill_default_parameters_nosuffix(parameters):
-    """Fill defaults for a dataframe with Version and parameter cols with no (Parameter) suffix."""
+    """Fill defaults for Version and parameter cols with no (Parameter) suffix."""
     return parameters.groupby("Version").apply(fill_for_version_nosuffix)
 
 
