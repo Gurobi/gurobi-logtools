@@ -9,9 +9,9 @@ Using license file /Users/x/gurobi.lic
 Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])
 Copyright (c) 2021, Gurobi Optimization, LLC
 
-Read LP format model from file x.lp.bz2
+Read LP format model from file nonconvex.lp.bz2
 Reading time = 0.01 seconds
-x21: 3 rows, 21 columns, 40 nonzeros
+nonconvex.lp: 3 rows, 21 columns, 40 nonzeros
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 Optimize a model with 3 rows, 21 columns and 40 nonzeros
 Model fingerprint: 0x549a449e

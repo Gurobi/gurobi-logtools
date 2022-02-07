@@ -17,10 +17,6 @@ class ContinuousParser:
         r"Barrier solve interrupted - model solved by another algorithm"
     )
 
-    barrier_extra_simplex_pattern = re.compile(
-        r"Extra simplex iterations after uncrush"
-    )
-
     continuous_termination_patterns = [
         re.compile(
             r"(?P<SUBOPTIMAL>Sub-optimal termination)(?: - objective (?P<ObjVal>.*))$"
@@ -78,14 +74,14 @@ class ContinuousParser:
         if self._current_pattern == "barrier":
             matched = self._barrier_parser.parse(line)
             # If the barrier gets interrupted during the concurrent or there are
-            # extra simplex iterations after uncrush, switch to simplex
+            # extra simplex iterations, switch to simplex
             if not matched and (
                 ContinuousParser.barrier_interruption_pattern.match(line)
-                or ContinuousParser.barrier_extra_simplex_pattern.match(line)
+                or SimplexParser.simplex_start_pattern.match(line)
             ):
                 self._current_pattern = "simplex"
+                self._simplex_parser._started = True
                 return True
-
             return matched
 
         if self._current_pattern == "simplex":

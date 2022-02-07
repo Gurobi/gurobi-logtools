@@ -61,7 +61,7 @@ def fill_for_version(group, parameter_columns):
 
 
 def fill_default_parameters(summary):
-    """Fill Nan parameter values with the actual default value."""
+    """Fill NaN parameter values with the actual default value."""
     parameter_columns = [
         column
         for column, series in summary.items()

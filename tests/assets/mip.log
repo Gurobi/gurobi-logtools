@@ -10,9 +10,9 @@ Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])
 Copyright (c) 2021, Gurobi Optimization, LLC
 
 Warning: mps file contains small (< 1e-13) coefficients, ignored
-Read MPS format model from file x.mps.gz
+Read MPS format model from file momentum3.mps.gz
 Reading time = 0.17 seconds
-momentum3: 56822 rows, 13532 columns, 588073 nonzeros
+momentum3.mps: 56822 rows, 13532 columns, 588073 nonzeros
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 Optimize a model with 56822 rows, 13532 columns and 588073 nonzeros
 Model fingerprint: 0xcf3efdd8

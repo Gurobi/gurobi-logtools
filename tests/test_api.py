@@ -75,7 +75,7 @@ def test_progress(testlog_progress):
     assert set(testlog_progress["norel"].columns).issuperset(
         {"Time", "BestBd", "Incumbent"}
     )
-    assert len(testlog_progress["rootlp"]) == 406
+    assert len(testlog_progress["rootlp"]) == 409
     assert set(testlog_progress["rootlp"].columns).issuperset(
         {"Iteration", "PInf", "DInf", "PObj", "DObj"}
     )

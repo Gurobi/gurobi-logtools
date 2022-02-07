@@ -7,9 +7,9 @@ Using license file /Users/x/gurobi.lic
 Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])
 Copyright (c) 2021, Gurobi Optimization, LLC
 
-Read MPS format model from file x.mps.bz2
+Read MPS format model from file qp.mps.bz2
 Reading time = 0.14 seconds
-(null): 27894 rows, 20393 columns, 86264 nonzeros
+qp.mps: 27894 rows, 20393 columns, 86264 nonzeros
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 Optimize a model with 27894 rows, 20393 columns and 86264 nonzeros
 Model fingerprint: 0xfa8e74cc
