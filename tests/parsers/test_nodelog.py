@@ -39,6 +39,44 @@ Best objective 5.0000e+08, best bound 5.0000e+08, gap 0.0008%
 """
 
 
+nodelog_section_test_data_statsonly = """
+Cutting planes:
+  Gomory: 13
+  Implied bound: 5
+  MIR: 20
+  Relax-and-lift: 8
+
+Explored 188 nodes (1389 simplex iterations) in 5.2 seconds
+Best objective 5.0000e+08, best bound 5.0000e+08, gap 0.0008%
+"""
+
+
+def test_nodelog_parser_statsonly():
+    parser = NodeLogParser()
+    parse_block(parser, nodelog_section_test_data_statsonly)
+    assert parser.get_summary() == {
+        "Cuts: Gomory": 13,
+        "Cuts: Implied bound": 5,
+        "Cuts: MIR": 20,
+        "Cuts: Relax-and-lift": 8,
+        "NodeCount": 188,
+        "IterCount": 1389,
+        "Runtime": 5.2,
+        "MIPGap": 8e-06,
+        "ObjBound": 5e8,
+        "ObjVal": 5e8,
+    }
+    assert parser.get_progress() == [
+        {
+            "Incumbent": 5e8,
+            "BestBd": 5e8,
+            "Gap": 8e-06,
+            "CurrentNode": 188,
+            "Time": 5.2,
+        }
+    ]
+
+
 def test_nodelog_parser_withcuts():
     parser = NodeLogParser()
     parse_block(parser, nodelog_section_test_data_withcuts)

@@ -7,12 +7,15 @@ float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
 
 class NodeLogParser:
     tree_search_start = re.compile(r" Expl Unexpl(.*)It/Node Time$")
-    tree_search_explored = re.compile(
-        r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>[^\s]+) seconds"
-    )
-    tree_search_termination = re.compile(
-        r"Best objective (?P<ObjVal>[^,]+), best bound (?P<ObjBound>[^,]+), gap (?P<MIPGap>.*)$"
-    )
+
+    tree_search_final_stats = [
+        re.compile(
+            r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>[^\s]+) seconds"
+        ),
+        re.compile(
+            r"Best objective (?P<ObjVal>[^,]+), best bound (?P<ObjBound>[^,]+), gap (?P<MIPGap>.*)$"
+        ),
+    ]
 
     line_types = [
         # tree_search_full_log_line_regex
@@ -57,8 +60,6 @@ class NodeLogParser:
         self._progress = []
         self._in_cut_report = False
         self._started = False
-        # Used to store the data for the last entry of the progress list
-        self._progress_last_entry = {}
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""
@@ -75,44 +76,13 @@ class NodeLogParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-        if not self._started:
-            match = self.tree_search_start.match(line)
-            if match:
-                self._started = True
-                return True
-            return False
 
-        for regex in self.line_types:
+        for regex in self.tree_search_final_stats:
             match = regex.match(line)
             if match:
-                self._progress.append(typeconvert_groupdict(match))
+                entry = typeconvert_groupdict(match)
+                self._summary.update(entry)
                 return True
-
-        match = self.tree_search_explored.match(line)
-        if match:
-            entry = typeconvert_groupdict(match)
-            self._summary.update(entry)
-            self._progress_last_entry.update(
-                {
-                    "CurrentNode": entry["NodeCount"],
-                    "Time": entry["Runtime"],
-                }
-            )
-            return True
-
-        match = self.tree_search_termination.match(line)
-        if match:
-            entry = typeconvert_groupdict(match)
-            self._summary.update(entry)
-            self._progress_last_entry.update(
-                {
-                    "Incumbent": entry["ObjVal"],
-                    "BestBd": entry["ObjBound"],
-                    "Gap": entry["MIPGap"],
-                }
-            )
-            self._progress.append(self._progress_last_entry)
-            return True
 
         match = self.cut_report_start.match(line)
         if match:
@@ -126,8 +96,36 @@ class NodeLogParser:
                     match.group("Count")
                 )
                 return True
+
+        # Wait for the header before matching any log lines.
+        if not self._started:
+            match = self.tree_search_start.match(line)
+            if match:
+                self._started = True
+                return True
+            return False
+
+        # Match log lines.
+        for regex in self.line_types:
+            match = regex.match(line)
+            if match:
+                self._progress.append(typeconvert_groupdict(match))
+                return True
+
         return False
 
     def get_progress(self) -> list:
         """Return the progress of the search tree."""
-        return self._progress
+        result = list(self._progress)
+        if "Runtime" in self._summary:
+            # Final statistics are added as a final tracked line.
+            result.append(
+                {
+                    "Incumbent": self._summary.get("ObjVal"),
+                    "BestBd": self._summary.get("ObjBound"),
+                    "Gap": self._summary.get("MIPGap"),
+                    "CurrentNode": self._summary.get("NodeCount"),
+                    "Time": self._summary.get("Runtime"),
+                }
+            )
+        return result

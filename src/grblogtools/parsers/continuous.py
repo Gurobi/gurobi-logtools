@@ -30,7 +30,6 @@ class ContinuousParser:
         self._simplex_parser = SimplexParser()
 
         self._summary = {}
-        self._progress = []
 
         self._current_pattern = None
 
@@ -77,10 +76,9 @@ class ContinuousParser:
             # extra simplex iterations, switch to simplex
             if not matched and (
                 ContinuousParser.barrier_interruption_pattern.match(line)
-                or SimplexParser.simplex_start_pattern.match(line)
+                or self._simplex_parser.parse(line)
             ):
                 self._current_pattern = "simplex"
-                self._simplex_parser._started = True
                 return True
             return matched
 
@@ -98,8 +96,4 @@ class ContinuousParser:
 
     def get_progress(self) -> list:
         """Return the detailed progress in the continuous method."""
-        return (
-            self._barrier_parser.get_progress()
-            + self._simplex_parser.get_progress()
-            + self._progress
-        )
+        return self._barrier_parser.get_progress() + self._simplex_parser.get_progress()
