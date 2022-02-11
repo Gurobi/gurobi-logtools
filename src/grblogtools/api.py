@@ -16,7 +16,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from grblogtools.helpers import fill_default_parameters_nosuffix, strip_model_and_seed
+from grblogtools.helpers import (
+    add_categorical_descriptions,
+    fill_default_parameters_nosuffix,
+    strip_model_and_seed,
+)
 from grblogtools.parsers.single_log import SingleLogParser
 
 
@@ -79,7 +83,7 @@ class ParseResult:
         summary = self.summary()
         return summary.loc[:, summary.columns.isin(common_columns)]
 
-    def summary(self):
+    def summary(self, prettyparams=False):
         """Construct and return a summary dataframe for all parsed logs."""
         summary = pd.DataFrame(
             [
@@ -96,6 +100,9 @@ class ParseResult:
             .drop(columns="Version")
             .rename(columns=lambda c: c if c == "Seed" else c + " (Parameter)")
         )
+        # Convert parameters to categorical if required.
+        if prettyparams:
+            parameters = add_categorical_descriptions(parameters)
         summary = (
             summary.rename(columns={"ReadingTime": "ReadTime"})
             .join(parameters)
@@ -144,7 +151,7 @@ def parse(arg: str) -> ParseResult:
     return result
 
 
-def get_dataframe(logfiles, timelines=False):
+def get_dataframe(logfiles, timelines=False, prettyparams=False):
     """Compatibility function for the legacy API.
 
     If one log file contains more than one run, all runs are parsed, each reported
@@ -156,9 +163,10 @@ def get_dataframe(logfiles, timelines=False):
             search tree progress if set to True. Defaults to False.
     """
     result = parse(*logfiles)
+    summary = result.summary(prettyparams=prettyparams)
     if not timelines:
-        return result.summary()
-    return result.summary(), dict(
+        return summary
+    return summary, dict(
         norel=result.progress("norel"),
         rootlp=result.progress("rootlp"),
         nodelog=result.progress("nodelog"),
