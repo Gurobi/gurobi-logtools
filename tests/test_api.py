@@ -81,7 +81,7 @@ def test_progress(testlog_progress):
     )
     assert len(testlog_progress["nodelog"]) == 133
     assert set(testlog_progress["nodelog"].columns).issuperset(
-        {"Depth", "IntInf", "Incumbent", "BestBd", "ItPerNode"}
+        {"Depth", "IntInf", "Incumbent", "BestBd", "ItPerNode", "ModelFile", "Version"}
     )
 
 

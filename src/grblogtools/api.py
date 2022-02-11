@@ -38,23 +38,45 @@ class ParseResult:
         """
         progress = []
         for logfile, lognumber, parser in self.parsers:
-            runner = {
-                "nodelog": parser.nodelog_parser.get_progress,
-                "rootlp": parser.continuous_parser.get_progress,
-                "norel": parser.norel_parser.get_progress,
-            }[section]
 
-            if self._common is not None:
-                query = self._common.query(
-                    f"LogNumber == {lognumber} & LogFilePath == '{logfile}'"
-                ).iloc[0]
-            for row in runner():
-                extended_row = dict(row, LogFilePath=logfile, LogNumber=lognumber)
-                if self._common is not None:
-                    extended_row.update({key: query[key] for key in query.index})
-                progress.append(extended_row)
+            if section == "nodelog":
+                log = parser.nodelog_parser.get_progress()
+            elif section == "rootlp":
+                log = parser.continuous_parser.get_progress()
+            elif section == "norel":
+                log = parser.norel_parser.get_progress()
+            else:
+                raise ValueError(f"Unknown section '{section}'")
 
-        return pd.DataFrame(progress)
+            progress.append(
+                pd.DataFrame(log).assign(LogFilePath=logfile, LogNumber=lognumber)
+            )
+
+        return pd.merge(
+            left=pd.concat(progress),
+            right=self.common_log_data(),
+            how="left",
+            on=["LogFilePath", "LogNumber"],
+        )
+
+    def common_log_data(self):
+        """Extract summary data which should be joined to the progress logs
+        on LogFilePath + LogNumber. This ends up separately calling summary()
+        whenever a progress log is created, so perhaps it should be cached.
+        The cache would need to be invalidated if parse() is ever called again.
+        For now I'd say the overhead is ok."""
+        common_columns = [
+            "LogFilePath",
+            "LogNumber",
+            "Log",
+            "ModelFilePath",
+            "ModelFile",
+            "Model",
+            "Seed",
+            "Version",
+        ]
+        summary = self.summary()
+        return summary.loc[:, summary.columns.isin(common_columns)]
 
     def summary(self):
         """Construct and return a summary dataframe for all parsed logs."""
@@ -84,23 +106,6 @@ class ParseResult:
                 Log=lambda df: df.apply(strip_model_and_seed, axis=1),
             )
         )
-
-        # The columns to save in the progress dataframes if exists
-        self._common = summary[
-            [
-                col
-                for col in [
-                    "ModelFile",
-                    "Model",
-                    "Log",
-                    "LogFilePath",
-                    "LogNumber",
-                    "Seed",
-                    "Version",
-                ]
-                if col in summary.columns
-            ]
-        ]
         return summary
 
     def parse(self, logfile: str) -> None:
