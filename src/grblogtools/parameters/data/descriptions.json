@@ -1,0 +1,90 @@
+{
+    "Cuts": [
+        {
+            "description": "Automatic",
+            "value": -1
+        },
+        {
+            "description": "Off",
+            "value": 0
+        },
+        {
+            "description": "Moderate",
+            "value": 1
+        },
+        {
+            "description": "Aggressive",
+            "value": 2
+        },
+        {
+            "description": "Very aggressive",
+            "value": 3
+        }
+    ],
+    "MIPFocus": [
+        {
+            "description": "Balanced",
+            "value": 0
+        },
+        {
+            "description": "Feasibility",
+            "value": 1
+        },
+        {
+            "description": "Optimality",
+            "value": 2
+        },
+        {
+            "description": "Bound",
+            "value": 3
+        }
+    ],
+    "Method": [
+        {
+            "description": "Default",
+            "value": -1
+        },
+        {
+            "description": "Primal Simplex",
+            "value": 0
+        },
+        {
+            "description": "Dual Simplex",
+            "value": 1
+        },
+        {
+            "description": "Barrier",
+            "value": 2
+        },
+        {
+            "description": "Nondeterministic Concurrent",
+            "value": 3
+        },
+        {
+            "description": "Deterministic Concurrent",
+            "value": 4
+        },
+        {
+            "description": "Deterministic Concurrent Simplex",
+            "value": 5
+        }
+    ],
+    "Presolve": [
+        {
+            "description": "Automatic",
+            "value": -1
+        },
+        {
+            "description": "Off",
+            "value": 0
+        },
+        {
+            "description": "Conservative",
+            "value": 1
+        },
+        {
+            "description": "Aggressive",
+            "value": 2
+        }
+    ]
+}

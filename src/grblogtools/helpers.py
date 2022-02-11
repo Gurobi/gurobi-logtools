@@ -1,52 +1,10 @@
-import json
 import re
-from functools import lru_cache, partial
+from functools import partial
 from pathlib import Path
 
-defaults_dir = Path(__file__).parent.joinpath("defaults")
+from grblogtools.parameters import load_defaults, load_descriptions
 
 re_parameter_column = re.compile(r"(.*) \(Parameter\)")
-
-PARAMETER_DESCRIPTIONS = {
-    "Method (Parameter)": {
-        -1: "-1: Default",
-        0: "0: Primal Simplex",
-        1: "1: Dual Simplex",
-        2: "2: Barrier",
-        3: "3: Nondeterministic Concurrent",
-        4: "4: Deterministic Concurrent",
-        5: "5: Deterministic Concurrent Simplex",
-    },
-    "Presolve (Parameter)": {
-        -1: "-1: Automatic",
-        0: "0: Off",
-        1: "1: Conservative",
-        2: "2: Aggressive",
-    },
-    "Cuts (Parameter)": {
-        -1: "-1: Automatic",
-        0: "0: Off",
-        1: "1: Moderate",
-        2: "2: Aggressive",
-        3: "3: Very aggressive",
-    },
-    "MIPFocus (Parameter)": {
-        0: "0: Balanced",
-        1: "1: Feasibility",
-        2: "2: Optimality",
-        3: "3: Bound",
-    },
-}
-
-
-@lru_cache()
-def load_defaults(version):
-    version_file = defaults_dir.joinpath(f"{version}.json")
-    if not version_file.exists():
-        # Fall back to 950 defaults
-        version_file = defaults_dir.joinpath("950.json")
-    with version_file.open() as infile:
-        return json.load(infile)
 
 
 def fill_for_version(group, parameter_columns):
@@ -94,13 +52,10 @@ def add_categorical_descriptions(summary):
 
     It modifies the summary dict in place.
     """
-    parameter_columns = [
-        column for column in summary.columns if column in PARAMETER_DESCRIPTIONS
-    ]
+    descriptions = load_descriptions()
+    parameter_columns = [column for column in summary.columns if column in descriptions]
     for column in parameter_columns:
-        summary[column] = (
-            summary[column].map(PARAMETER_DESCRIPTIONS[column]).astype("category")
-        )
+        summary[column] = summary[column].map(descriptions[column]).astype("category")
     return summary
 
 
