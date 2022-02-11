@@ -29,6 +29,8 @@ def test_norel_timeline():
         "Model",
         "ModelFile",
         "Version",
+        "LogNumber",
+        "ModelFilePath",
     }
     assert norel.shape[0] == 15
     assert len(norel["LogFilePath"].unique()) == 1
