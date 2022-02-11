@@ -18,22 +18,19 @@ def cli(get_dataframe, argparse_kwargs):
     )
     parser.add_argument(
         "-m",
-        "--mergedlogs",
         action="store_true",
         help="log files contain multiple logs to be extracted",
     )
     args = parser.parse_args()
 
     if args.timelines:
-        summary, timelines = get_dataframe(
-            args.logfiles, timelines=True, merged_logs=args.mergedlogs
-        )
+        summary, timelines = get_dataframe(args.logfiles, timelines=True)
         with pd.ExcelWriter(args.outfile) as writer:
             summary.to_excel(writer, sheet_name="Summary")
             for tl in timelines:
                 timelines[tl].to_excel(writer, sheet_name=tl)
     else:
-        summary = get_dataframe(args.logfiles, merged_logs=args.mergedlogs)
+        summary = get_dataframe(args.logfiles)
         with pd.ExcelWriter(args.outfile) as writer:
             summary.to_excel(writer, sheet_name="Summary")
 
