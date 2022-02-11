@@ -143,3 +143,17 @@ def test_legacy_api(glass4_summary):
     glass4_summary = glt.get_dataframe(["data/*.log"])
     assert glass4_summary.shape[0] == 63
     assert set(glass4_summary.columns).issuperset({"Status", "ObjVal"})
+
+
+def test_legacy_api_twopattern(glass4_summary):
+    """Check multiple file patterns can be passed and duplicate files are
+    filtered out."""
+    glass4_summary = glt.get_dataframe(
+        [
+            "data/912-glass4-*.log",
+            "data/912-Cuts0-glass4-*.log",
+            "data/912-Cuts0-glass4-*.log",
+        ]
+    )
+    assert glass4_summary.shape[0] == 6
+    assert set(glass4_summary.columns).issuperset({"Status", "ObjVal"})

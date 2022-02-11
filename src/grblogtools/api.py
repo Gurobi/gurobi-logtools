@@ -12,6 +12,7 @@ OR, use
 """
 
 import glob
+import itertools
 from pathlib import Path
 
 import pandas as pd
@@ -137,16 +138,16 @@ class ParseResult:
         self.parsers.append((logfile, lognumber, parser))
 
 
-def parse(arg: str) -> ParseResult:
+def parse(*patterns: str) -> ParseResult:
     """Main entry point function.
 
     Args:
-        arg (str): A glob pattern matchine log files.
+        patterns (str): glob pattern(s) matching log files.
 
-    TODO extend this, a list of patterns, or a vararg of patterns, should also work.
     """
     result = ParseResult()
-    for logfile in glob.glob(arg):
+    logfiles = itertools.chain(*(glob.glob(pattern) for pattern in patterns))
+    for logfile in sorted(set(logfiles)):
         result.parse(logfile)
     return result
 
@@ -159,7 +160,7 @@ def get_dataframe(logfiles, timelines=False, prettyparams=False):
 
     Args:
         logfiles (str): A glob pattern of the log files.
-        timeliens (bool, optional): Return the norel, the relaxation, and the
+        timelines (bool, optional): Return the norel, the relaxation, and the
             search tree progress if set to True. Defaults to False.
     """
     result = parse(*logfiles)
