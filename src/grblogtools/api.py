@@ -60,11 +60,12 @@ class ParseResult:
         )
 
     def common_log_data(self):
-        """Extract summary data which should be joined to the progress logs
-        on LogFilePath + LogNumber. This ends up separately calling summary()
-        whenever a progress log is created, so perhaps it should be cached.
-        The cache would need to be invalidated if parse() is ever called again.
-        For now I'd say the overhead is ok."""
+        """Extract summary data to be joined to progress logs."""
+
+        # The summary data is joined to progress log on LogFilePath + LogNumber.
+        # This method separately calls summary() whenever a progress log is created,
+        # so perhaps it should be cached. The cache would need to be invalidated
+        # if parse() is ever called again.
         common_columns = [
             "LogFilePath",
             "LogNumber",
