@@ -65,24 +65,32 @@ class ParseResult:
         )
 
     def common_log_data(self):
-        """Extract summary data to be joined to progress logs."""
-
-        # The summary data is joined to progress log on LogFilePath + LogNumber.
-        # This method separately calls summary() whenever a progress log is created,
-        # so perhaps it should be cached. The cache would need to be invalidated
-        # if parse() is ever called again.
-        common_columns = [
-            "LogFilePath",
-            "LogNumber",
-            "Log",
-            "ModelFilePath",
-            "ModelFile",
-            "Model",
-            "Seed",
-            "Version",
-        ]
-        summary = self.summary()
-        return summary.loc[:, summary.columns.isin(common_columns)]
+        """Extract common data to be joined to progress and summary dataframes.
+        This could be cached in future and invalidated by .parse()"""
+        common = pd.DataFrame(
+            [
+                {
+                    "LogFilePath": logfile,
+                    "LogNumber": lognumber,
+                    "ModelFilePath": parser.header_parser.get_summary().get(
+                        "ModelFilePath"
+                    ),
+                    "Seed": parser.header_parser.get_parameters().get("Seed", 0),
+                    "Version": parser.header_parser.get_summary().get("Version"),
+                }
+                for logfile, lognumber, parser in self.parsers
+            ]
+        )
+        common = common.dropna(axis="columns", how="all")
+        # FIXME might not have some required columns for the below assignments
+        common = common.assign(
+            ModelFile=lambda df: df["ModelFilePath"].apply(
+                lambda p: Path(p).parts[-1].partition(".")[0]
+            ),
+            Model=lambda df: df["ModelFile"],
+            Log=lambda df: df.apply(strip_model_and_seed, axis=1),
+        )
+        return common
 
     def summary(self, prettyparams=False):
         """Construct and return a summary dataframe for all parsed logs."""
@@ -98,23 +106,22 @@ class ParseResult:
         # Fill defaults and add suffix to parameter columns.
         parameters = (
             fill_default_parameters_nosuffix(parameters.join(summary["Version"]))
-            .drop(columns="Version")
-            .rename(columns=lambda c: c if c == "Seed" else c + " (Parameter)")
+            .drop(columns=["Version", "Seed"], errors="ignore")
+            .rename(columns=lambda c: c + " (Parameter)")
         )
         # Convert parameters to categorical if required.
         if prettyparams:
             parameters = add_categorical_descriptions(parameters)
-        summary = (
-            summary.rename(columns={"ReadingTime": "ReadTime"})
-            .join(parameters)
-            .assign(
-                ModelFile=lambda df: df["ModelFilePath"].apply(
-                    lambda p: Path(p).parts[-1].partition(".")[0]
-                ),
-                Model=lambda df: df["ModelFile"],
-                Log=lambda df: df.apply(strip_model_and_seed, axis=1),
-            )
+        # FIXME this renaming is unnecessary
+        summary = summary.rename(columns={"ReadingTime": "ReadTime"}).join(parameters)
+        summary = pd.merge(
+            left=summary.drop(columns=["ModelFilePath", "Version"], errors="ignore"),
+            right=self.common_log_data(),
+            how="left",
+            on=["LogFilePath", "LogNumber"],
+            suffixes=(None, "_dupe"),
         )
+        assert not [c for c in summary.columns if "_dupe" in c]
         return summary
 
     def parse(self, logfile: str) -> None:
