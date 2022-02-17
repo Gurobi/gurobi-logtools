@@ -65,7 +65,7 @@ def test_merged_log(merged_log):
 def test_summary(testlog_summary):
     assert len(testlog_summary) == 7
     assert set(testlog_summary.columns).issuperset(
-        {"Status", "ObjVal", "ReadTime", "RelaxObj"}
+        {"Status", "ObjVal", "ReadingTime", "RelaxObj"}
     )
 
 
@@ -88,7 +88,7 @@ def test_progress(testlog_progress):
 def test_summary_glass4(glass4_summary):
     assert len(glass4_summary) == 63
     assert set(glass4_summary.columns).issuperset(
-        {"Status", "ObjVal", "ReadTime", "RelaxObj", "Seed"}
+        {"Status", "ObjVal", "ReadingTime", "RelaxObj", "Seed"}
     )
 
 

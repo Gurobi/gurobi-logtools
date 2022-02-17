@@ -113,7 +113,7 @@ class ParseResult:
         if prettyparams:
             parameters = add_categorical_descriptions(parameters)
         # FIXME this renaming is unnecessary
-        summary = summary.rename(columns={"ReadingTime": "ReadTime"}).join(parameters)
+        summary = summary.join(parameters)
         summary = pd.merge(
             left=summary.drop(columns=["ModelFilePath", "Version"], errors="ignore"),
             right=self.common_log_data(),

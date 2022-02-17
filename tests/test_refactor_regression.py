@@ -44,6 +44,7 @@ def test_summary():
     glob_files = "data/*.log"
     expected = normalize(
         glt_legacy.get_dataframe([glob_files])
+        .rename(columns={"ReadTime": "ReadingTime"})
         .assign(
             Time=lambda df: pd.to_datetime(df["Time"]),
             Seed=lambda df: df["Seed"].astype(int),
