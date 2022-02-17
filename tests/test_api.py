@@ -157,3 +157,12 @@ def test_legacy_api_twopattern(glass4_summary):
     )
     assert glass4_summary.shape[0] == 6
     assert set(glass4_summary.columns).issuperset({"Status", "ObjVal"})
+
+
+def test_gurobipy_logs():
+    """API logs differ in some cases: sometimes no model file is read, and
+    parameter settings may appear before the header. At the moment this test
+    just asserts no errors."""
+    glt.parse("tests/assets/gurobipy/empty.log").summary()
+    glt.parse("tests/assets/gurobipy/read.log").summary()
+    glt.parse("tests/assets/gurobipy/*.log").summary()

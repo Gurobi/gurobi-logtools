@@ -69,6 +69,8 @@ def strip_model_and_seed(row):
         data/912-Cuts0-glass4-0.log -> 912-Cuts0
         data/some-log.log -> some-log
     """
+    if row["Model"] is None:
+        return None
     log_stem = Path(row["LogFilePath"]).stem
     run, mid, _ = log_stem.partition(row["Model"])
     if mid and run:

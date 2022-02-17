@@ -82,14 +82,14 @@ class ParseResult:
             ]
         )
         common = common.dropna(axis="columns", how="all")
-        # FIXME might not have some required columns for the below assignments
-        common = common.assign(
-            ModelFile=lambda df: df["ModelFilePath"].apply(
-                lambda p: Path(p).parts[-1].partition(".")[0]
-            ),
-            Model=lambda df: df["ModelFile"],
-            Log=lambda df: df.apply(strip_model_and_seed, axis=1),
-        )
+        if "ModelFilePath" in common:
+            common = common.assign(
+                ModelFile=lambda df: df["ModelFilePath"].apply(
+                    lambda p: None if p is None else Path(p).parts[-1].partition(".")[0]
+                ),
+                Model=lambda df: df["ModelFile"],
+                Log=lambda df: df.apply(strip_model_and_seed, axis=1),
+            )
         return common
 
     def summary(self, prettyparams=False):
