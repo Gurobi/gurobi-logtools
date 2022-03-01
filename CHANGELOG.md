@@ -5,6 +5,14 @@
 ### Changed
 ### Removed
 
+Refactor changes (see test_refactor_regression.py):
+
+- Seed column always gets an integer type (not object)
+- Time always gets a pandas datetime type (not a string)
+- Removed merged_logs flag for get_dataframe. Added LogNumber column to
+  disambiguate different logs in a single file
+- Added parse(...).summary() API
+
 ## 1.3.2 - 2022-01-12
 ### Fixed
 - fix error when log contains cuts with the name containing a hyphen
