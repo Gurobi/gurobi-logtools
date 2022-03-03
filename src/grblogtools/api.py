@@ -66,7 +66,9 @@ class ParseResult:
 
     def common_log_data(self):
         """Extract common data to be joined to progress and summary dataframes.
-        This could be cached in future and invalidated by .parse()"""
+
+        This could be cached in future and invalidated by .parse().
+        """
         common = pd.DataFrame(
             [
                 {
@@ -112,16 +114,13 @@ class ParseResult:
         # Convert parameters to categorical if required.
         if prettyparams:
             parameters = add_categorical_descriptions(parameters)
-        # FIXME this renaming is unnecessary
         summary = summary.join(parameters)
         summary = pd.merge(
             left=summary.drop(columns=["ModelFilePath", "Version"], errors="ignore"),
             right=self.common_log_data(),
             how="left",
             on=["LogFilePath", "LogNumber"],
-            suffixes=(None, "_dupe"),
         )
-        assert not [c for c in summary.columns if "_dupe" in c]
         return summary
 
     def parse(self, logfile: str) -> None:
@@ -149,7 +148,8 @@ def parse(*patterns: str) -> ParseResult:
     """Main entry point function.
 
     Args:
-        patterns (str): glob pattern(s) matching log files.
+        patterns (str): glob pattern(s) matching log files. Multiple patterns
+        can be passed as separate positional arguments.
 
     """
     result = ParseResult()
@@ -166,9 +166,11 @@ def get_dataframe(logfiles, timelines=False, prettyparams=False):
     as a separate row in the summay and timelines dataframes.
 
     Args:
-        logfiles (str): A glob pattern of the log files.
+        logfiles (str): A list of glob patterns of log files to be parsed.
         timelines (bool, optional): Return the norel, the relaxation, and the
             search tree progress if set to True. Defaults to False.
+        prettyparams (bool, optional): Replace some parameter values with
+            categorical labels.
     """
     result = parse(*logfiles)
     summary = result.summary(prettyparams=prettyparams)
