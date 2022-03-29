@@ -4,7 +4,7 @@ from grblogtools.parsers.util import convert_data_types, typeconvert_groupdict
 
 
 class HeaderParser:
-    header_patterns = [
+    header_start_patterns = [
         re.compile(
             r"Gurobi (?P<Version>\d{1,2}\.[^\s]+) \((?P<Platform>[^\)]+)\) logging started (?P<Time>.*)$"
         ),
@@ -19,6 +19,9 @@ class HeaderParser:
         ),
         re.compile(r"Compute Server job ID: (?P<JobID>.*)$"),
         re.compile(r"Gurobi Optimizer version (?P<Version>\d{1,2}\.[^\s]+)"),
+    ]
+
+    header_other_patterns = [
         re.compile(r"Read (MPS|LP) format model from file (?P<ModelFilePath>.*)$"),
         re.compile(r"Reading time = (?P<ReadingTime>[\d\.]+) seconds"),
         re.compile(
@@ -42,6 +45,7 @@ class HeaderParser:
         """
         self._summary = {}
         self._parameters = {}
+        self._started = False
 
     def parse(self, line: str) -> bool:
         """Parse the given log line to populate summary data.
@@ -59,11 +63,19 @@ class HeaderParser:
             )
             return True
 
-        for pattern in HeaderParser.header_patterns:
+        for pattern in HeaderParser.header_start_patterns:
             match = pattern.match(line)
             if match:
+                self._started = True
                 self._summary.update(typeconvert_groupdict(match))
                 return True
+
+        if self._started:
+            for pattern in HeaderParser.header_other_patterns:
+                match = pattern.match(line)
+                if match:
+                    self._summary.update(typeconvert_groupdict(match))
+                    return True
 
         return False
 

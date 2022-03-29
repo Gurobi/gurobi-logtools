@@ -121,6 +121,19 @@ class TestHeader(TestCase):
                 self.assertEqual(header_parser.get_summary(), expected_summary)
                 self.assertEqual(header_parser.get_parameters(), expected_parameters)
 
+    def test_start_patterns(self):
+        """Check the header parser properly guards later patterns. This is
+        important so that when parsing multiple logs, the header parser does
+        not interrupt.
+
+        The below presolve line can be caught by the model name/size parser
+        in the header, but it should only be picked up if the HeaderParser
+        has seen a proper log start line."""
+
+        parser = HeaderParser()
+        parse_lines(parser, ["Presolved: 390 rows, 316 columns, 1803 nonzeros"])
+        assert not parser.get_summary()
+
 
 if __name__ == "__main__":
     main()
