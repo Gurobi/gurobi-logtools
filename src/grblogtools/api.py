@@ -14,6 +14,7 @@ OR, use
 import glob
 import itertools
 from pathlib import Path
+from typing import List, Union
 
 import pandas as pd
 
@@ -144,26 +145,28 @@ class ParseResult:
         self.parsers.append((logfile, lognumber, parser))
 
 
-def parse(*patterns: str) -> ParseResult:
+def parse(patterns: Union[str, List[str]]) -> ParseResult:
     """Main entry point function.
 
     Args:
-        patterns (str): glob pattern(s) matching log files. Multiple patterns
-        can be passed as separate positional arguments.
+        patterns (str): a single glob pattern, or list of patterns, matching
+        log files.
 
     """
     result = ParseResult()
+    if type(patterns) is str:
+        patterns = [patterns]
     logfiles = itertools.chain(*(glob.glob(pattern) for pattern in patterns))
     for logfile in sorted(set(logfiles)):
         result.parse(logfile)
     return result
 
 
-def get_dataframe(logfiles, timelines=False, prettyparams=False):
+def get_dataframe(logfiles: List[str], timelines=False, prettyparams=False):
     """Compatibility function for the legacy API.
 
     If one log file contains more than one run, all runs are parsed, each reported
-    as a separate row in the summay and timelines dataframes.
+    as a separate row in the summary and timelines dataframes.
 
     Args:
         logfiles (str): A list of glob patterns of log files to be parsed.
@@ -172,7 +175,7 @@ def get_dataframe(logfiles, timelines=False, prettyparams=False):
         prettyparams (bool, optional): Replace some parameter values with
             categorical labels.
     """
-    result = parse(*logfiles)
+    result = parse(logfiles)
     summary = result.summary(prettyparams=prettyparams)
     if not timelines:
         return summary

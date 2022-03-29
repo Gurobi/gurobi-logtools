@@ -1,7 +1,7 @@
-from . import __version__, get_dataframe
-from .cli import cli
+from grblogtools import __version__, parse
+from grblogtools.cli import cli
 
 cli(
-    get_dataframe=get_dataframe,
+    glt_parse=parse,
     argparse_kwargs=dict(description="grblogtools " + __version__, prog="grblogtools"),
 )
