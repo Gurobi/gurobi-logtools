@@ -1,3 +1,3 @@
-__version__ = "1.3.2"
+__version__ = "2.0.0"
 
 from grblogtools.api import get_dataframe, parse
