@@ -42,13 +42,6 @@ class NodeLogParser:
                 float_pattern
             )
         ),
-        # tree_search_status_line_regex
-        # not sure what this one is for, nothing in testing?
-        # re.compile(
-        #     r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>-)\s+(?P<Depth>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
-        #         float_pattern
-        #     )
-        # ),
     ]
     cut_report_start = re.compile(r"Cutting planes:")
     cut_report_line = re.compile(r"  (?P<Name>[\w\- ]+): (?P<Count>\d+)")
