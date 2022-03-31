@@ -4,7 +4,7 @@ cff-version: "1.1.0"
 message: "If you use this software, please cite it using these metadata."
 title: grblogtools
 abstract: "Tools to extract and explore information from Gurobi log files."
-authors: 
+authors:
   - affiliation: "Gurobi Optimization"
     family-names: Miltenberger
     given-names: Matthias
@@ -16,5 +16,12 @@ authors:
   - affiliation: "Gurobi Optimization"
     family-names: Siefen
     given-names: Kostja
+  - affiliation: "Gurobi Optimization"
+    family-names: Aramon
+    given-names: Maliheh
+  - affiliation: "Gurobi Optimization"
+    family-names: Bowly
+    given-names: Simon
+    -orcid: https://orcid.org/0000-0002-2070-1440
 license: MIT
 repository-code: "https://github.com/Gurobi/grblogtools"

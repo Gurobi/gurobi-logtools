@@ -15,13 +15,26 @@ def test_read_with_timelines():
 def test_norel_timeline():
     """Check norel logs before the root node. Note that this reports norel's
     clock, so read + presolve time would need to be added for 'real' time."""
-    summary, timelines = glt.get_dataframe(
-        ["data/912-NoRelHeurWork60-glass4-0.log"],
+    _, timelines = glt.get_dataframe(
+        ["tests/assets/mip_norel.log"],
         timelines=True,
     )
     norel = timelines["norel"]
+    assert set(norel.columns) == {
+        "Time",
+        "BestBd",
+        "Incumbent",
+        "Log",
+        "LogFilePath",
+        "Model",
+        "ModelFile",
+        "Version",
+        "LogNumber",
+        "ModelFilePath",
+        "Seed",
+    }
     assert norel.shape[0] == 15
-    assert norel["Log"].unique()[0] == "912-NoRelHeurWork60"
+    assert len(norel["LogFilePath"].unique()) == 1
     assert norel["Time"].min() == 5.0
     assert norel["Time"].max() == 93.0
     assert (norel["Incumbent"].max() - 1.450014e09) <= 1e05

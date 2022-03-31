@@ -1,0 +1,23 @@
+Restricted license - for non-production use only - expires 2023-10-25
+Read MPS format model from file /tmp/afiro.mps
+Reading time = 0.00 seconds
+AFIRO: 27 rows, 32 columns, 83 nonzeros
+Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[x86])
+Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
+Optimize a model with 27 rows, 32 columns and 83 nonzeros
+Model fingerprint: 0x092217cc
+Coefficient statistics:
+  Matrix range     [1e-01, 2e+00]
+  Objective range  [3e-01, 1e+01]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [4e+01, 5e+02]
+Presolve removed 18 rows and 20 columns
+Presolve time: 0.00s
+Presolved: 9 rows, 12 columns, 32 nonzeros
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0   -5.9751945e+02   5.541356e+01   0.000000e+00      0s
+       6   -4.6475314e+02   0.000000e+00   0.000000e+00      0s
+
+Solved in 6 iterations and 0.00 seconds (0.00 work units)
+Optimal objective -4.647531429e+02

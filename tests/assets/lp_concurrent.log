@@ -1,0 +1,56 @@
+
+Gurobi 9.5.0 (mac64[arm], gurobi_cl) logging started Thu Jan  6 17:18:22 2022
+
+Set parameter TimeLimit to value 300
+Set parameter Method to value 3
+Set parameter LogFile to value "concurrent.log"
+Using license file /Users/aramon/gurobi_named_user_0.lic
+
+Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])
+Copyright (c) 2021, Gurobi Optimization, LLC
+
+Read MPS format model from file examples/savsched1.mps.bz2
+Reading time = 0.80 seconds
+savsched1.mps: 295989 rows, 328575 columns, 1770507 nonzeros
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+Optimize a model with 295989 rows, 328575 columns and 1770507 nonzeros
+Model fingerprint: 0x7926122d
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e-01, 1e+01]
+  Bounds range     [1e+00, 8e+00]
+  RHS range        [1e+00, 2e+02]
+
+Concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Presolve removed 6996 rows and 18897 columns
+Presolve time: 0.76s
+Presolved: 288993 rows, 309678 columns, 1744764 nonzeros
+
+Ordering time: 0.53s
+
+Barrier statistics:
+ AA' NZ     : 4.465e+06
+ Factor NZ  : 1.784e+07 (roughly 400 MB of memory)
+ Factor Ops : 5.403e+09 (less than 1 second per iteration)
+ Threads    : 6
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   4.56435085e+07  1.53061018e+04  1.69e+05 8.58e+00  1.59e+03     2s
+   1   3.76722276e+07 -5.41297282e+05  8.07e+04 9.12e+00  8.17e+02     2s
+   2   3.14922356e+07 -1.01224789e+06  3.38e+04 6.54e+00  3.99e+02     3s
+   3   1.21152751e+07 -1.49525364e+06  4.37e+03 2.73e+00  8.92e+01     3s
+   4   1.86897763e+06 -1.72557346e+06  1.72e+02 9.69e-01  8.85e+00     3s
+   5   4.40699989e+05 -6.85397384e+05  6.07e+00 9.67e-02  1.69e+00     4s
+   6   1.30285684e+05 -2.46488270e+05  5.20e+00 3.12e-02  5.01e-01     4s
+   7   7.18485003e+04 -1.34436525e+05  2.73e+00 1.53e-02  2.67e-01     4s
+
+Barrier performed 7 iterations in 4.02 seconds (4.19 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+
+Solved with dual simplex
+Solved in 69986 iterations and 4.03 seconds (3.91 work units)
+Optimal objective  2.174035714e+02
