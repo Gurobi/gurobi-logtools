@@ -5,13 +5,12 @@
 ### Changed
 ### Removed
 
-Refactor changes (see test_refactor_regression.py):
-
-- Seed column always gets an integer type (not object)
-- Time always gets a pandas datetime type (not a string)
-- Removed merged_logs flag for get_dataframe. Added LogNumber column to
-  disambiguate different logs in a single file
-- Added parse(...).summary() API
+## 2.0.0 - 2022-04-04
+### Changed
+- The code went through a refactoring while it remains backward compatible.
+- Seed and Time columns in the DataFrame are reported as integer and datetime types, respectively
+- The `get_dataframe(logfiles, timelines=False, prettyparams=False)` API has a new signature
+- A new API `parse(patterns)` is added that returns a `ParseResult()` object with `summary()` and `progress(section)` methods (see README.md for an example usage)
 
 ## 1.3.2 - 2022-01-12
 ### Fixed
