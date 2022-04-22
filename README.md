@@ -56,7 +56,7 @@ Additionally, there is a [Gurobi TechTalk demonstrating how to use grblogtools (
 
     - progress of the norel heuristic (note, the time recorded here is since the start of norel, and does not include presolve + read time):
     ```Python
-    glt.plot(result.progress("norel"), x="Time", y="Incumbent", color="Log", type="line")
+    glt.plot(results.progress("norel"), x="Time", y="Incumbent", color="Log", type="line")
     ```
 
     These are just examples using the [Plotly Python library](https://plotly.com/python/) - of course, any other plotting library of your choice can be used to work with these DataFrames.
