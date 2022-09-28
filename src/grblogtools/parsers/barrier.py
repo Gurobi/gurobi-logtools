@@ -1,6 +1,6 @@
 import re
 
-from grblogtools.parsers.util import typeconvert_groupdict
+from grblogtools.parsers.util import typeconvert_groupdict, float_pattern
 
 
 class BarrierParser:
@@ -24,10 +24,14 @@ class BarrierParser:
     # The pattern indicating the termination of the barrier algorithm
     barrier_termination_patterns = [
         re.compile(
-            r"Barrier solved model in (?P<BarIterCount>[^\s]+) iterations and (?P<Runtime>[^\s]+) seconds"
+            r"Barrier solved model in (?P<BarIterCount>[^\s]+) iterations and (?P<Runtime>{0}) seconds \((?P<Work>{0}) work units\)".format(
+                float_pattern
+            )
         ),
         re.compile(
-            r"Barrier performed (?P<BarIterCount>\d+) iterations in (?P<Runtime>[^\s]+) seconds"
+            r"Barrier performed (?P<BarIterCount>\d+) iterations in (?P<Runtime>{0}) seconds \((?P<Work>{0}) work units\)".format(
+                float_pattern
+            )
         ),
     ]
 

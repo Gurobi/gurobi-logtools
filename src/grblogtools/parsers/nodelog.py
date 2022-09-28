@@ -1,8 +1,10 @@
 import re
 
-from grblogtools.parsers.util import convert_data_types, typeconvert_groupdict
-
-float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
+from grblogtools.parsers.util import (
+    convert_data_types,
+    typeconvert_groupdict,
+    float_pattern,
+)
 
 
 class NodeLogParser:
@@ -10,7 +12,9 @@ class NodeLogParser:
 
     tree_search_final_stats = [
         re.compile(
-            r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>[^\s]+) seconds"
+            r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>{0}) seconds \((?P<Work>{0}) work units\)".format(
+                float_pattern
+            )
         ),
         re.compile(
             r"Best objective (?P<ObjVal>[^,]+), best bound (?P<ObjBound>[^,]+), gap (?P<MIPGap>.*)$"

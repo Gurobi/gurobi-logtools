@@ -2,6 +2,8 @@ import datetime
 import re
 from typing import Iterable
 
+float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
+
 int_regex = re.compile(r"[-+]?\d+$")
 float_regex = re.compile(r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?$")
 percentage_regex = re.compile(r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?%$")

@@ -1,6 +1,6 @@
 import re
 
-from grblogtools.parsers.util import typeconvert_groupdict
+from grblogtools.parsers.util import typeconvert_groupdict, float_pattern
 
 
 class SimplexParser:
@@ -16,7 +16,9 @@ class SimplexParser:
 
     # The pattern indicating the termination of the simplex method
     simplex_termination_pattern = re.compile(
-        r"(Solved|Stopped) in (?P<IterCount>[^\s]+) iterations and (?P<Runtime>[^\s]+) seconds"
+        r"(Solved|Stopped) in (?P<IterCount>[^\s]+) iterations and (?P<Runtime>{0}) seconds \((?P<Work>{0}) work units\)".format(
+            float_pattern
+        )
     )
 
     def __init__(self):
