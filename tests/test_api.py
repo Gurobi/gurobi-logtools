@@ -59,7 +59,6 @@ def test_merged_log(merged_log):
             {"Seed": 2, "Runtime": 11.37, "LogFilePath": merged_log, "LogNumber": 3},
         ]
     )
-    print(result)
     assert_frame_equal(result, expected)
 
 
