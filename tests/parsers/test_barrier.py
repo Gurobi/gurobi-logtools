@@ -25,6 +25,7 @@ Crossover log...
 expected_summary_barrier = {
     "BarIterCount": 17,
     "Runtime": 4.83,
+    "Work": 6.45,
     "PushPhasePInf": 0.0000000e00,
     "PushPhaseDInf": 1.8540725e-14,
     "PushPhaseEndTime": 9,

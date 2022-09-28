@@ -17,6 +17,9 @@ class NodeLogParser:
             )
         ),
         re.compile(
+            r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>[^\s]+) seconds"
+        ),
+        re.compile(
             r"Best objective (?P<ObjVal>[^,]+), best bound (?P<ObjBound>[^,]+), gap (?P<MIPGap>.*)$"
         ),
     ]

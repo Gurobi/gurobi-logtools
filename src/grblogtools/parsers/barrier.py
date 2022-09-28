@@ -33,6 +33,12 @@ class BarrierParser:
                 float_pattern
             )
         ),
+        re.compile(
+            r"Barrier solved model in (?P<BarIterCount>[^\s]+) iterations and (?P<Runtime>[^\s]+) seconds"
+        ),
+        re.compile(
+            r"Barrier performed (?P<BarIterCount>\d+) iterations in (?P<Runtime>[^\s]+) seconds"
+        ),
     ]
 
     def __init__(self):
