@@ -2,8 +2,8 @@ import re
 
 from grblogtools.parsers.util import (
     convert_data_types,
-    typeconvert_groupdict,
     float_pattern,
+    typeconvert_groupdict,
 )
 
 
