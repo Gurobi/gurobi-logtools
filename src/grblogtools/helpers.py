@@ -44,7 +44,9 @@ def fill_for_version_nosuffix(group):
 
 def fill_default_parameters_nosuffix(parameters):
     """Fill defaults for Version and parameter cols with no (Parameter) suffix."""
-    return parameters.groupby("Version", group_keys=False).apply(fill_for_version_nosuffix)
+    return parameters.groupby("Version", group_keys=False).apply(
+        fill_for_version_nosuffix
+    )
 
 
 def add_categorical_descriptions(summary):
