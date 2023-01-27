@@ -26,7 +26,7 @@ def fill_default_parameters(summary):
         if re_parameter_column.match(column) and series.isnull().any()
     ]
     # TODO test cases where there are different versions involved
-    return summary.groupby("Version").apply(
+    return summary.groupby("Version", group_keys=False).apply(
         partial(fill_for_version, parameter_columns=parameter_columns)
     )
 
@@ -44,7 +44,7 @@ def fill_for_version_nosuffix(group):
 
 def fill_default_parameters_nosuffix(parameters):
     """Fill defaults for Version and parameter cols with no (Parameter) suffix."""
-    return parameters.groupby("Version").apply(fill_for_version_nosuffix)
+    return parameters.groupby("Version", group_keys=False).apply(fill_for_version_nosuffix)
 
 
 def add_categorical_descriptions(summary):
