@@ -3,6 +3,7 @@
 ### Added
 - Parsing of deterministic work metric in nodelog, barrier, and simplex (#27).
 ### Fixed
+- Handle pandas warning related to groupy()
 ### Changed
 ### Removed
 
