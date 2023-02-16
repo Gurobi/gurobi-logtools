@@ -57,6 +57,7 @@ expected_summary_concurrent = {
     "BarIterCount": 7,
     "IterCount": 69986,
     "Runtime": 4.03,
+    "Work": 3.91,
 }
 expected_progress_concurrent = [
     {

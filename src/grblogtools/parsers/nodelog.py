@@ -1,14 +1,21 @@
 import re
 
-from grblogtools.parsers.util import convert_data_types, typeconvert_groupdict
-
-float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
+from grblogtools.parsers.util import (
+    convert_data_types,
+    float_pattern,
+    typeconvert_groupdict,
+)
 
 
 class NodeLogParser:
     tree_search_start = re.compile(r" Expl Unexpl(.*)It/Node Time$")
 
     tree_search_final_stats = [
+        re.compile(
+            r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>{0}) seconds \((?P<Work>{0}) work units\)".format(
+                float_pattern
+            )
+        ),
         re.compile(
             r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>[^\s]+) seconds"
         ),

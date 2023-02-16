@@ -1,6 +1,6 @@
 import re
 
-from grblogtools.parsers.util import typeconvert_groupdict
+from grblogtools.parsers.util import float_pattern, typeconvert_groupdict
 
 
 class SimplexParser:
@@ -15,9 +15,16 @@ class SimplexParser:
     )
 
     # The pattern indicating the termination of the simplex method
-    simplex_termination_pattern = re.compile(
-        r"(Solved|Stopped) in (?P<IterCount>[^\s]+) iterations and (?P<Runtime>[^\s]+) seconds"
-    )
+    simplex_termination_patterns = [
+        re.compile(
+            r"(Solved|Stopped) in (?P<IterCount>[^\s]+) iterations and (?P<Runtime>{0}) seconds \((?P<Work>{0}) work units\)".format(
+                float_pattern
+            )
+        ),
+        re.compile(
+            r"(Solved|Stopped) in (?P<IterCount>[^\s]+) iterations and (?P<Runtime>[^\s]+) seconds"
+        ),
+    ]
 
     def __init__(self):
         """Initialize the Simplex parser."""
@@ -36,10 +43,13 @@ class SimplexParser:
         """
         # Check this first since the termination line might appear
         # without any progress log in the concurrent case.
-        match = SimplexParser.simplex_termination_pattern.match(line)
-        if match:
-            self._summary.update(typeconvert_groupdict(match))
-            return True
+
+        for regex in self.simplex_termination_patterns:
+            match = regex.match(line)
+            if match:
+                entry = typeconvert_groupdict(match)
+                self._summary.update(entry)
+                return True
 
         if not self._started:
             match = SimplexParser.simplex_start_pattern.match(line)

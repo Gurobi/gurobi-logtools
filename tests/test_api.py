@@ -179,3 +179,16 @@ def test_gurobipy_logs():
     glt.parse("tests/assets/gurobipy/empty.log").summary()
     glt.parse("tests/assets/gurobipy/read.log").summary()
     glt.parse("tests/assets/gurobipy/*.log").summary()
+
+
+def test_work():
+    """Check if work is correctly parsed for different log files."""
+    result = glt.parse("tests/assets/*.log")
+    summary = result.summary()
+
+    # Check if work column present
+    assert len(summary.columns) == 88
+    assert set(summary.columns).issuperset({"Work"})
+
+    # Check if Runtime and Work found
+    assert summary["Work"].count() == 6
