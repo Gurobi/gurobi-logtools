@@ -44,7 +44,6 @@ class ParseResult:
         """
         progress = []
         for logfile, lognumber, parser in self.parsers:
-
             if section == "nodelog":
                 log = parser.nodelog_parser.get_progress()
             elif section == "rootlp":
