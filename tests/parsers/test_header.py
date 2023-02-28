@@ -142,6 +142,11 @@ class TestHeader(TestCase):
         parser.parse("Set parameter Seed to value 238476")
         assert parser.label() == "Method2-Threads4"
 
+    def test_label_default(self):
+        parser = HeaderParser()
+        parser.parse("Set parameter Seed to value 238476")
+        assert parser.label() == "Default"
+
     def test_changed_params(self):
         """Test non-default parameter count (ignore seed)"""
         parser = HeaderParser()

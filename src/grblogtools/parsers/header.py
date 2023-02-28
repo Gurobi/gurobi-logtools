@@ -96,6 +96,8 @@ class HeaderParser:
                 if param not in omit_params
             ]
         )
+        if len(parts) == 0:
+            return "Default"
         return "-".join(parts)
 
     def changed_params(self) -> int:
