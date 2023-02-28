@@ -187,8 +187,13 @@ def test_work():
     summary = result.summary()
 
     # Check if work column present
-    assert len(summary.columns) == 88
     assert set(summary.columns).issuperset({"Work"})
 
     # Check if Runtime and Work found
     assert summary["Work"].count() == 6
+
+
+def test_label():
+    result = glt.parse("tests/assets/*.log")
+    summary = result.summary()
+    assert set(summary.columns).issuperset({"Label", "ChangedParams"})

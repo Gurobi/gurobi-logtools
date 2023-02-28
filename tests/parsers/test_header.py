@@ -134,6 +134,22 @@ class TestHeader(TestCase):
         parse_lines(parser, ["Presolved: 390 rows, 316 columns, 1803 nonzeros"])
         assert not parser.get_summary()
 
+    def test_label(self):
+        """Test labelling based on parameters and version (ignore seed)"""
+        parser = HeaderParser()
+        parser.parse("Set parameter Method to value 2")
+        parser.parse("Set parameter Threads to value 4")
+        parser.parse("Set parameter Seed to value 238476")
+        assert parser.label() == "Method2-Threads4"
+
+    def test_changed_params(self):
+        """Test non-default parameter count (ignore seed)"""
+        parser = HeaderParser()
+        parser.parse("Set parameter Method to value 2")
+        parser.parse("Set parameter Threads to value 4")
+        parser.parse("Set parameter Seed to value 238476")
+        assert parser.changed_params() == 2
+
 
 if __name__ == "__main__":
     main()

@@ -49,6 +49,8 @@ class SingleLogParser:
             quad_nonzeros=summary.get("NumQNZs", 0),
             quad_constrs=summary.get("NumQConstrs", 0),
         )
+        summary["Label"] = self.header_parser.label()
+        summary["ChangedParams"] = self.header_parser.changed_params()
         return summary
 
     def parse(self, line: str) -> bool:
