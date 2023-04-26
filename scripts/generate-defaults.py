@@ -41,7 +41,9 @@ default_parameter_values = {
 }
 
 # Store parameter defaults in a file tagged with the release version.
-defaults_dir = pathlib.Path(__file__).parent.parent.joinpath("src/grblogtools/defaults")
+defaults_dir = pathlib.Path(__file__).parent.parent.joinpath(
+    "src/grblogtools/parameters/data"
+)
 target_file = defaults_dir.joinpath(
     f"{gp.GRB.VERSION_MAJOR}{gp.GRB.VERSION_MINOR}{gp.GRB.VERSION_TECHNICAL}.json"
 )
