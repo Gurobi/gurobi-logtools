@@ -87,3 +87,7 @@ class HeaderParser:
     def get_parameters(self) -> dict:
         """Return all changed parameters detected in the header."""
         return self._parameters
+
+    def changed_params(self) -> int:
+        omit_params = {"Seed", "LogFile"}
+        return {k: v for k, v in self._parameters.items() if k not in omit_params}

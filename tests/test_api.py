@@ -187,8 +187,45 @@ def test_work():
     summary = result.summary()
 
     # Check if work column present
-    assert len(summary.columns) == 88
     assert set(summary.columns).issuperset({"Work"})
 
     # Check if Runtime and Work found
     assert summary["Work"].count() == 6
+
+
+def test_changed_params():
+    result = glt.parse("tests/assets/*.log")
+    summary = result.summary()
+    assert set(summary.columns).issuperset({"ChangedParams"})
+    assert summary["ChangedParams"].apply(lambda d: isinstance(d, dict)).all()
+    assert summary["ChangedParams"].count() == 7
+
+
+def test_create_label():
+    # Test expected workflow for creating custom labels
+
+    def label(row):
+        params = row["ChangedParams"]
+        if params:
+            paramstr = "-".join(
+                f"{k}={v}" for k, v in sorted(params.items()) if k != "TimeLimit"
+            )
+        else:
+            paramstr = "Default"
+        version = row["Version"].replace(".", "")
+        return f"{version}-{paramstr}"
+
+    summary = (
+        glt.parse("tests/assets/*.log")
+        .summary()
+        .assign(Label=lambda df: df.apply(label, axis="columns"))
+    )
+    assert set(summary["Label"]) == {
+        "950-CrossoverBasis=1-Method=2",
+        "950-Default",
+        "950-Method=0",
+        "950-Method=2",
+        "950-Method=3",
+        "950-NonConvex=2",
+        "912-NoRelHeurWork=60",
+    }

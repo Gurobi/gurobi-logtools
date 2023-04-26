@@ -1,9 +1,10 @@
 # CHANGELOG
 ## Unreleased
 ### Added
-- Parsing of deterministic work metric in nodelog, barrier, and simplex (#27).
+- Parsing of deterministic work metric in nodelog, barrier, and simplex (#27)
+- Add a ChangedParams summary column with parameters as a dictionary (#21)
 ### Fixed
-- Handle pandas warning related to groupy()
+- Handle pandas warning related to groupby()
 ### Changed
 ### Removed
 

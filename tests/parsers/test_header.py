@@ -139,6 +139,16 @@ class TestHeader(TestCase):
         parse_lines(parser, ["Solving model misc07"])
         assert parser.get_summary() == {"ModelName": "misc07"}
 
+    def test_changed_params(self):
+        """Test non-default algorithm parameters (ignore seed and logfile)"""
+        parser = HeaderParser()
+        parser.parse("Set parameter Method to value 2")
+        parser.parse("Set parameter Threads to value 4")
+        parser.parse("Set parameter Seed to value 238476")
+        parser.parse("Set parameter LogFile to value log.log")
+        parser.parse("Set parameter TimeLimit to value 60")
+        assert parser.changed_params() == {"Method": 2, "Threads": 4, "TimeLimit": 60}
+
 
 if __name__ == "__main__":
     main()
