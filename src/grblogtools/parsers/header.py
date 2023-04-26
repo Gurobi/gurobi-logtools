@@ -19,6 +19,7 @@ class HeaderParser:
         ),
         re.compile(r"Compute Server job ID: (?P<JobID>.*)$"),
         re.compile(r"Gurobi Optimizer version (?P<Version>\d{1,2}\.[^\s]+)"),
+        re.compile(r"Solving model (?P<ModelName>.*)$"),
     ]
 
     header_other_patterns = [

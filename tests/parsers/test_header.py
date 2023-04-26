@@ -134,6 +134,11 @@ class TestHeader(TestCase):
         parse_lines(parser, ["Presolved: 390 rows, 316 columns, 1803 nonzeros"])
         assert not parser.get_summary()
 
+    def test_tuner_log(self):
+        parser = HeaderParser()
+        parse_lines(parser, ["Solving model misc07"])
+        assert parser.get_summary() == {"ModelName": "misc07"}
+
 
 if __name__ == "__main__":
     main()
