@@ -1,12 +1,16 @@
 # CHANGELOG
 ## Unreleased
 ### Added
+### Fixed
+### Changed
+### Removed
+
+## 2.1.0 - 2023-04-27
+### Added
 - Parsing of deterministic work metric in nodelog, barrier, and simplex (#27)
 - Add a ChangedParams summary column with parameters as a dictionary (#21)
 ### Fixed
-- Handle pandas warning related to groupby()
-### Changed
-### Removed
+- Handle pandas warning related to groupby(); fix join issue in pandas2 (#29,#33)
 
 ## 2.0.0 - 2022-04-04
 ### Changed
