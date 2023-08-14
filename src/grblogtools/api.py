@@ -11,6 +11,7 @@ OR, use
     summary, timeline = glt.get_dataframe("data/*.log", timeline=True)
 """
 
+import functools
 import glob
 import itertools
 from pathlib import Path
@@ -125,8 +126,11 @@ class ParseResult:
 
     def parse(self, logfile: str) -> None:
         """Parse a single file. The log file may contain multiple run logs."""
-        parser = SingleLogParser()
-        subsequent = SingleLogParser()
+
+        new_parser = functools.partial(SingleLogParser)
+
+        parser = new_parser()
+        subsequent = new_parser()
         lognumber = 1
         with open(logfile) as infile:
             lines = iter(infile)
@@ -136,12 +140,16 @@ class ParseResult:
                     if subsequent.parse(line):
                         # The current parser did not match but an empty parser
                         # matched a header line.
+                        parser.close()
                         self.parsers.append((logfile, lognumber, parser))
                         lognumber += 1
                         parser = subsequent
-                        subsequent = SingleLogParser()
+                        subsequent = new_parser()
 
+        parser.close()
         self.parsers.append((logfile, lognumber, parser))
+
+        assert all(parser.closed for _, _, parser in self.parsers)
 
 
 def parse(patterns: Union[str, List[str]]) -> ParseResult:
