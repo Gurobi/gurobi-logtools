@@ -22,9 +22,10 @@ def cli(glt_parse, argparse_kwargs):
         action="store_true",
         help="also store timelines (root LP, node log, and NoRel log) in separate sheets",
     )
+    parser.add_argument("--write-to-dir", help="rewrite logs to the given directory")
     args = parser.parse_args()
 
-    result = glt_parse(args.logfiles)
+    result = glt_parse(args.logfiles, write_to_dir=args.write_to_dir)
     summary = result.summary()
 
     with pd.ExcelWriter(args.outfile) as writer:
