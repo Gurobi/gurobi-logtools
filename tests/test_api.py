@@ -1,4 +1,5 @@
 import glob
+import pathlib
 import tempfile
 
 import pandas as pd
@@ -229,3 +230,41 @@ def test_create_label():
         "950-NonConvex=2",
         "912-NoRelHeurWork=60",
     }
+
+
+def test_tee():
+    # Test workflow for rewriting file names
+
+    with tempfile.TemporaryDirectory() as tempdirname:
+        results = glt.parse(
+            "tests/assets/combined/*.log", write_to_dir=f"{tempdirname}/logs"
+        )
+        split_log_files = sorted(
+            pathlib.Path(tempdirname).joinpath("logs").glob("*.log")
+        )
+        expected_names = [
+            "912-MIPFocus1-Presolve1-TimeLimit600-glass4-0",
+            "912-MIPFocus1-Presolve1-TimeLimit600-glass4-1",
+            "912-MIPFocus1-Presolve1-TimeLimit600-glass4-2",
+            "912-MIPFocus2-Presolve1-TimeLimit600-glass4-0",
+            "912-MIPFocus2-Presolve1-TimeLimit600-glass4-1",
+            "912-MIPFocus2-Presolve1-TimeLimit600-glass4-2",
+            "912-Presolve1-TimeLimit600-glass4-0",
+            "912-Presolve1-TimeLimit600-glass4-1",
+            "912-Presolve1-TimeLimit600-glass4-2",
+        ]
+        assert len(split_log_files) == len(expected_names)
+
+        for log_file, expected_name in zip(split_log_files, expected_names):
+            lines = log_file.read_text().split("\n")
+            start_lines = [
+                line
+                for line in lines
+                if line.startswith("Gurobi Optimizer version 9.1.2")
+            ]
+            end_lines = [line for line in lines if line.startswith("Best objective")]
+
+            # Log file has expected name and contains exactly one complete run
+            assert log_file.stem == expected_name
+            assert len(start_lines) == 1
+            assert len(end_lines) == 1
