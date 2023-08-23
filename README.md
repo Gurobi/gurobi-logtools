@@ -73,3 +73,27 @@ List all available options and how to use the command-line tool:
 ```
 python -m grblogtools --help
 ```
+
+## Rename log files
+The command line tool can also rename log files according to the parameters set and model solved in a given run. This is useful if your log files do not have a consistent naming scheme, or if multiple runs are logged per file and you want to extract the individual runs.
+
+For example:
+
+```
+python -m grblogtools --write-to-dir nicenames summary.xlsx tests/assets/combined/*.log
+```
+
+separates logs for individual runs in the input files and writes copies to the 'nicenames' folder with a consistent naming scheme:
+
+```
+> ls nicenames
+912-MIPFocus1-Presolve1-TimeLimit600-glass4-0.log
+912-MIPFocus1-Presolve1-TimeLimit600-glass4-1.log
+912-MIPFocus1-Presolve1-TimeLimit600-glass4-2.log
+912-MIPFocus2-Presolve1-TimeLimit600-glass4-0.log
+912-MIPFocus2-Presolve1-TimeLimit600-glass4-1.log
+912-MIPFocus2-Presolve1-TimeLimit600-glass4-2.log
+912-Presolve1-TimeLimit600-glass4-0.log
+912-Presolve1-TimeLimit600-glass4-1.log
+912-Presolve1-TimeLimit600-glass4-2.log
+```
