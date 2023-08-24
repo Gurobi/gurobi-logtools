@@ -5,6 +5,10 @@
 ### Changed
 ### Removed
 
+## 2.2.0 - 2023-08-25
+### Added
+- Command line option to copy/rename log files according to parameter settings (#34)
+
 ## 2.1.0 - 2023-04-27
 ### Added
 - Parsing of deterministic work metric in nodelog, barrier, and simplex (#27)
