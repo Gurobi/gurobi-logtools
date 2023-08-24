@@ -51,7 +51,7 @@ class SingleLogParser:
             if paramstr:
                 file_name = f"{version}-{paramstr}-{model_name}-{seed}.log"
             else:
-                file_name = f"{version}-{model_name}-s{seed}.log"
+                file_name = f"{version}-{model_name}-{seed}.log"
             with self.write_to_dir.joinpath(file_name).open("w") as outfile:
                 outfile.writelines(self.lines)
 
