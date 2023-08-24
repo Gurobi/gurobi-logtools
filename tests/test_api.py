@@ -232,7 +232,7 @@ def test_create_label():
     }
 
 
-def test_tee():
+def test_rewrite_filenames():
     # Test workflow for rewriting file names
 
     with tempfile.TemporaryDirectory() as tempdirname:
@@ -249,9 +249,12 @@ def test_tee():
             "912-MIPFocus2-Presolve1-TimeLimit600-glass4-0",
             "912-MIPFocus2-Presolve1-TimeLimit600-glass4-1",
             "912-MIPFocus2-Presolve1-TimeLimit600-glass4-2",
-            "912-Presolve1-TimeLimit600-glass4-0",
-            "912-Presolve1-TimeLimit600-glass4-1",
-            "912-Presolve1-TimeLimit600-glass4-2",
+            "912-Presolve1-glass4-0",
+            "912-Presolve1-glass4-1",
+            "912-Presolve1-glass4-2",
+            "912-glass4-0",
+            "912-glass4-1",
+            "912-glass4-2",
         ]
         assert len(split_log_files) == len(expected_names)
 
