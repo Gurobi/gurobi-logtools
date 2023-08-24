@@ -11,8 +11,10 @@ OR, use
     summary, timeline = glt.get_dataframe("data/*.log", timeline=True)
 """
 
+import functools
 import glob
 import itertools
+import os
 from pathlib import Path
 from typing import List, Union
 
@@ -27,7 +29,8 @@ from grblogtools.parsers.single_log import SingleLogParser
 
 
 class ParseResult:
-    def __init__(self):
+    def __init__(self, write_to_dir):
+        self.write_to_dir = write_to_dir
         self.parsers = []
         self._common = None
 
@@ -125,8 +128,11 @@ class ParseResult:
 
     def parse(self, logfile: str) -> None:
         """Parse a single file. The log file may contain multiple run logs."""
-        parser = SingleLogParser()
-        subsequent = SingleLogParser()
+
+        new_parser = functools.partial(SingleLogParser, write_to_dir=self.write_to_dir)
+
+        parser = new_parser()
+        subsequent = new_parser()
         lognumber = 1
         with open(logfile) as infile:
             lines = iter(infile)
@@ -136,15 +142,19 @@ class ParseResult:
                     if subsequent.parse(line):
                         # The current parser did not match but an empty parser
                         # matched a header line.
+                        parser.close()
                         self.parsers.append((logfile, lognumber, parser))
                         lognumber += 1
                         parser = subsequent
-                        subsequent = SingleLogParser()
+                        subsequent = new_parser()
 
+        parser.close()
         self.parsers.append((logfile, lognumber, parser))
 
+        assert all(parser.closed for _, _, parser in self.parsers)
 
-def parse(patterns: Union[str, List[str]]) -> ParseResult:
+
+def parse(patterns: Union[str, List[str]], write_to_dir=None) -> ParseResult:
     """Main entry point function.
 
     Args:
@@ -152,7 +162,9 @@ def parse(patterns: Union[str, List[str]]) -> ParseResult:
         log files.
 
     """
-    result = ParseResult()
+    if write_to_dir:
+        os.makedirs(write_to_dir, exist_ok=True)
+    result = ParseResult(write_to_dir=write_to_dir)
     if type(patterns) is str:
         patterns = [patterns]
     logfiles = itertools.chain(*(glob.glob(pattern) for pattern in patterns))
