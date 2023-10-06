@@ -2,7 +2,7 @@ import re
 from functools import partial
 from pathlib import Path
 
-from grblogtools.parameters import load_defaults, load_descriptions
+from gurobi_logtools.parameters import load_defaults, load_descriptions
 
 re_parameter_column = re.compile(r"(.*) \(Parameter\)")
 

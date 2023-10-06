@@ -1,12 +1,12 @@
 import pathlib
 
-from grblogtools.parsers.continuous import ContinuousParser
-from grblogtools.parsers.header import HeaderParser
-from grblogtools.parsers.nodelog import NodeLogParser
-from grblogtools.parsers.norel import NoRelParser
-from grblogtools.parsers.presolve import PresolveParser
-from grblogtools.parsers.termination import TerminationParser
-from grblogtools.parsers.util import model_type
+from gurobi_logtools.parsers.continuous import ContinuousParser
+from gurobi_logtools.parsers.header import HeaderParser
+from gurobi_logtools.parsers.nodelog import NodeLogParser
+from gurobi_logtools.parsers.norel import NoRelParser
+from gurobi_logtools.parsers.presolve import PresolveParser
+from gurobi_logtools.parsers.termination import TerminationParser
+from gurobi_logtools.parsers.util import model_type
 
 
 class SingleLogParser:

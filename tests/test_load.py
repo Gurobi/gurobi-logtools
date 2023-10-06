@@ -1,4 +1,4 @@
-import grblogtools as glt
+import gurobi_logtools as glt
 
 
 def test_get_dataframe():

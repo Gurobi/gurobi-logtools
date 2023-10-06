@@ -2,8 +2,8 @@ import pandas as pd
 from pandas.api.types import is_categorical_dtype, is_float_dtype, is_integer_dtype
 from pandas.testing import assert_frame_equal
 
-import grblogtools as glt
-from grblogtools.helpers import (
+import gurobi_logtools as glt
+from gurobi_logtools.helpers import (
     fill_default_parameters,
     fill_default_parameters_nosuffix,
 )

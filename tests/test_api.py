@@ -7,7 +7,7 @@ import pytest
 from pandas.api.types import is_integer_dtype
 from pandas.testing import assert_frame_equal, assert_series_equal
 
-import grblogtools as glt
+import gurobi_logtools as glt
 
 
 @pytest.fixture(scope="module")

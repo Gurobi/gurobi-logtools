@@ -1,6 +1,6 @@
 import pytest
 
-from grblogtools.parsers.util import model_type
+from gurobi_logtools.parsers.util import model_type
 
 
 @pytest.mark.parametrize(

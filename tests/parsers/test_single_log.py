@@ -1,5 +1,5 @@
-from grblogtools.parsers.single_log import SingleLogParser
-from grblogtools.parsers.util import parse_lines
+from gurobi_logtools.parsers.single_log import SingleLogParser
+from gurobi_logtools.parsers.util import parse_lines
 
 
 def test_mip_norel_log():

@@ -7,7 +7,7 @@ def cli(glt_parse, argparse_kwargs):
     """Entry point function for command line interface
 
     Args:
-        glt_parse: the parse function from grblogtools (in case overloads are needed)
+        glt_parse: the parse function from gurobi_logtools (in case overloads are needed)
         argparse_kwargs: extra info to pass to argparse
 
     """
