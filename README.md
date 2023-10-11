@@ -6,6 +6,11 @@
 
 Extract information from Gurobi log files and generate [pandas DataFrames](https://pandas.pydata.org/) or Excel worksheets for further processing. Also includes a wrapper for out-of-the-box interactive visualizations using the plotting library [Plotly](https://plotly.com/python/).
 
+> [!NOTE]
+> We have renamed the project to `gurobi-logtools`, so please also adapt the import statement accordingly:
+> 
+> `import gurobi_logtools as glt`
+
 ![performance plot](https://github.com/Gurobi/gurobi-logtools/raw/master/assets/performance-plot.png)
 
 # Installation
