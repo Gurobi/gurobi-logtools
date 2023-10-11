@@ -1,13 +1,14 @@
 # CHANGELOG
 ## Unreleased
-- rename project to gurobi-logtools for consistency with other Gurobi projects
-
-### Added
-- add Python 3.11 tests
-
 ### Fixed
 ### Changed
 ### Removed
+
+## 3.0.0 - 2023-10-11
+### Changed
+- rename project to gurobi-logtools for consistency with other Gurobi projects
+### Added
+- add Python 3.11 tests
 
 ## 2.2.0 - 2023-08-25
 ### Added
