@@ -1,6 +1,6 @@
 import re
 
-from grblogtools.parsers.util import typeconvert_groupdict
+from gurobi_logtools.parsers.util import typeconvert_groupdict
 
 
 class PresolveParser:

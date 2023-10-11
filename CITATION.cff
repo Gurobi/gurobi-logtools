@@ -2,7 +2,7 @@
 ---
 cff-version: "1.1.0"
 message: "If you use this software, please cite it using these metadata."
-title: grblogtools
+title: gurobi-logtools
 abstract: "Tools to extract and explore information from Gurobi log files."
 authors:
   - affiliation: "Gurobi Optimization"
@@ -24,4 +24,4 @@ authors:
     given-names: Simon
     -orcid: https://orcid.org/0000-0002-2070-1440
 license: MIT
-repository-code: "https://github.com/Gurobi/grblogtools"
+repository-code: "https://github.com/Gurobi/gurobi-logtools"

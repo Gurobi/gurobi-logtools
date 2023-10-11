@@ -1,6 +1,6 @@
 import pytest
 
-import grblogtools as glt
+import gurobi_logtools as glt
 
 
 @pytest.fixture

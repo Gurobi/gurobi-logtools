@@ -1,7 +1,7 @@
 from unittest import TestCase, main
 
-from grblogtools.parsers.presolve import PresolveParser
-from grblogtools.parsers.util import parse_lines
+from gurobi_logtools.parsers.presolve import PresolveParser
+from gurobi_logtools.parsers.util import parse_lines
 
 example_log_0 = """
 Optimize a model with 396 rows, 322 columns and 1815 nonzeros

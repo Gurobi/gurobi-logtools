@@ -1,8 +1,8 @@
 """
-Kept in scripts as we do not want grblogtools to depend on gurobipy (since it
+Kept in scripts as we do not want gurobi-logtools to depend on gurobipy (since it
 would then require a license/consume a token/open a compute server session in
 order to look up basic parameter information). This script can instead be used
-to generate a default parameters file grblogtools can read from.
+to generate a default parameters file gurobi-logtools can read from.
 
 If all past gurobi versions and a python3.6 binary are all available,
 generate all defaults files using :
@@ -42,7 +42,7 @@ default_parameter_values = {
 
 # Store parameter defaults in a file tagged with the release version.
 defaults_dir = pathlib.Path(__file__).parent.parent.joinpath(
-    "src/grblogtools/parameters/data"
+    "src/gurobi-logtools/parameters/data"
 )
 target_file = defaults_dir.joinpath(
     f"{gp.GRB.VERSION_MAJOR}{gp.GRB.VERSION_MINOR}{gp.GRB.VERSION_TECHNICAL}.json"

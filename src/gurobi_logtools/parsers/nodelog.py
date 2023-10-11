@@ -1,6 +1,6 @@
 import re
 
-from grblogtools.parsers.util import (
+from gurobi_logtools.parsers.util import (
     convert_data_types,
     float_pattern,
     typeconvert_groupdict,

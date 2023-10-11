@@ -1,7 +1,7 @@
 """Top level API for parsing log files.
 
 Usage example:
-    import grblogtools.api as glt
+    import gurobi_logtools.api as glt
     result = glt.parse("data/*.log")
     result.summary()
     result.progress(section="nodelog")
@@ -20,12 +20,12 @@ from typing import List, Union
 
 import pandas as pd
 
-from grblogtools.helpers import (
+from gurobi_logtools.helpers import (
     add_categorical_descriptions,
     fill_default_parameters_nosuffix,
     strip_model_and_seed,
 )
-from grblogtools.parsers.single_log import SingleLogParser
+from gurobi_logtools.parsers.single_log import SingleLogParser
 
 
 class ParseResult:

@@ -1,7 +1,7 @@
 from unittest import TestCase, main
 
-from grblogtools.parsers.barrier import BarrierParser
-from grblogtools.parsers.util import parse_block
+from gurobi_logtools.parsers.barrier import BarrierParser
+from gurobi_logtools.parsers.util import parse_block
 
 example_log_barrier = """
 Iter       Primal          Dual         Primal    Dual     Compl     Time

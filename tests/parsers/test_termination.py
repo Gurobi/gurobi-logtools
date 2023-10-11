@@ -1,7 +1,7 @@
 from unittest import TestCase, main
 
-from grblogtools.parsers.termination import TerminationParser
-from grblogtools.parsers.util import parse_block
+from gurobi_logtools.parsers.termination import TerminationParser
+from gurobi_logtools.parsers.util import parse_block
 
 example_log = """
 Barrier solved model in 17 iterations and 4.83 seconds (6.45 work units)

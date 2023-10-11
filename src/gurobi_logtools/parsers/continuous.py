@@ -1,8 +1,8 @@
 import re
 
-from grblogtools.parsers.barrier import BarrierParser
-from grblogtools.parsers.simplex import SimplexParser
-from grblogtools.parsers.util import typeconvert_groupdict
+from gurobi_logtools.parsers.barrier import BarrierParser
+from gurobi_logtools.parsers.simplex import SimplexParser
+from gurobi_logtools.parsers.util import typeconvert_groupdict
 
 
 class ContinuousParser:

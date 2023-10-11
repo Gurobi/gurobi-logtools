@@ -1,23 +1,23 @@
-# Contributing to grblogtools
+# Contributing to gurobi-logtools
 
-Welcome to Gurobi grblogtools!
+Welcome to Gurobi gurobi-logtools!
 
-We value your experience in using grblogtools and would like to encourage you to
+We value your experience in using gurobi-logtools and would like to encourage you to
 contribute directly to this project.
 
 ## How to report bugs or submit feature requests
 If you encounter a bug, or you think there is a need for a new feature, we recommend to
-first add the bug report or feature request to the grblogtools' [GitHub issue
-tracker](https://github.com/Gurobi/grblogtools/issues).
+first add the bug report or feature request to the gurobi-logtools' [GitHub issue
+tracker](https://github.com/Gurobi/gurobi-logtools/issues).
 
 It would be great if you add a minimal reproducible example when reporting a bug, or
-include reasoning on how the new requested feature improves the grblogtools.
+include reasoning on how the new requested feature improves the gurobi-logtools.
 
 ## Submitting changes
 We welcome your contribution in directly tackling some of the issues.
 
 We use the GitHub pull request workflow. Once your pull request is ready for review, one
-of the core maintainers of grblogtools will review your pull request.
+of the core maintainers of gurobi-logtools will review your pull request.
 
 A pull request should contain tests for the changes made to the code behavior, should
 include a clear message outlining the changes done, and should be linked to an existing
@@ -26,7 +26,7 @@ issue.
 Before submitting a pull request:
 - install the [pre-commit](https://pre-commit.com) package to enable the automatic
   running of the pre-commit hooks in the `.pre-commit-configuration.yaml` file,
-- make sure all tests pass by running `pytest` in the root folder of the `grblogtools`.
+- make sure all tests pass by running `pytest` in the root folder of the `gurobi-logtools`.
 
 After a pull request is submitted, the tests will be run automatically, and the status
 will appear on the pull request page. If the tests failed, there is a link which can be
