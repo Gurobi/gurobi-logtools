@@ -23,3 +23,5 @@ jobs:
         pip install tox tox-gh-actions
     - name: Test with tox
       run: tox
+    - name: Test example notebook with tox
+      run: tox -e testnb
