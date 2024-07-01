@@ -9,7 +9,7 @@ data_dir = Path(__file__).parent.joinpath("data")
 def load_defaults(version):
     version_file = data_dir.joinpath(f"{version}.json")
     if not version_file.exists():
-        # Fall back to 950 defaults
-        version_file = data_dir.joinpath("950.json")
+        # Fall back to 1102 defaults
+        version_file = data_dir.joinpath("1102.json")
     with version_file.open() as infile:
         return json.load(infile)
