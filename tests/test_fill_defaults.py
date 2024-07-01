@@ -1,5 +1,5 @@
 import pandas as pd
-from pandas.api.types import is_categorical_dtype, is_float_dtype, is_integer_dtype
+from pandas.api.types import is_float_dtype, is_integer_dtype
 from pandas.testing import assert_frame_equal
 
 import gurobi_logtools as glt
@@ -20,7 +20,7 @@ def test_parameter_values():
 def test_pretty_parameters():
     summary = glt.get_dataframe(["data/*.log"], prettyparams=True)
     presolve = summary["Presolve (Parameter)"]
-    assert is_categorical_dtype(presolve)
+    assert isinstance(presolve.dtype, pd.CategoricalDtype)
     assert set(presolve.unique()) == {
         "-1: Automatic",
         "1: Conservative",
