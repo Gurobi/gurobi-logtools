@@ -37,16 +37,16 @@ default_parameter_values = {
     if type(default) is not str
     and not parameter.startswith("CS")
     and not parameter.startswith("Tune")
-    and abs(default) < float("inf")
 }
 
 # Store parameter defaults in a file tagged with the release version.
 defaults_dir = pathlib.Path(__file__).parent.parent.joinpath(
-    "src/gurobi-logtools/parameters/data"
+    "src/gurobi_logtools/parameters/data"
 )
 target_file = defaults_dir.joinpath(
     f"{gp.GRB.VERSION_MAJOR}{gp.GRB.VERSION_MINOR}{gp.GRB.VERSION_TECHNICAL}.json"
 )
+print(target_file)
 os.makedirs(defaults_dir, exist_ok=True)
 with target_file.open("w") as outfile:
     json.dump(default_parameter_values, outfile, indent=4, sort_keys=True)
