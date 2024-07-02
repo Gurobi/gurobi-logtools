@@ -11,7 +11,7 @@ class NoRelParser:
     # Order is important in this list as regexes are checked in order
     norel_elapsed = [
         re.compile(
-            r"Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s\s\(best\sbound\s(?P<BestBd>[^\s]+)\)"
+            r"Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s\s\(best\sbound\s(?P<BestBd>[^\s]+)[\)|,.*]"
         ),
         re.compile(r"Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s"),
     ]
