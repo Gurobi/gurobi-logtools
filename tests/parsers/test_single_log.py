@@ -82,3 +82,31 @@ def test_lp_simplex():
 
     rootlp_progress = parser.continuous_parser.get_progress()
     assert len(rootlp_progress) == 60
+
+
+def test_multiknapsack():
+    parser = SingleLogParser()
+    with open("tests/assets/multiknapsack.log") as infile:
+        parse_lines(parser, infile)
+    # Test relevant bits are populated.
+    assert parser.header_parser.get_summary()
+    assert parser.presolve_parser.get_summary()
+    assert parser.norel_parser.get_summary()
+    assert parser.norel_parser.get_progress()
+    assert parser.continuous_parser.get_summary()
+    assert not parser.continuous_parser.get_progress()
+    assert parser.pretree_solution_parser.get_summary()
+    assert parser.pretree_solution_parser.get_progress()
+    assert parser.nodelog_parser.get_summary()
+    assert parser.nodelog_parser.get_progress()
+    assert parser.termination_parser.get_summary()
+    # Combined summary data.
+    summary = parser.get_summary()
+    assert summary["Version"] == "9.5.0"
+    assert summary["IterCount"] == 2566
+    assert summary["Runtime"] == 1.27
+    assert summary["Status"] == "OPTIMAL"
+    assert summary["ModelType"] == "MIP"
+
+    pretreesols_progress = parser.pretree_solution_parser.get_progress()
+    assert len(pretreesols_progress) == 2
