@@ -53,6 +53,8 @@ class ParseResult:
                 log = parser.continuous_parser.get_progress()
             elif section == "norel":
                 log = parser.norel_parser.get_progress()
+            elif section == "pretreesols":
+                log = parser.pretree_solution_parser.get_progress()
             else:
                 raise ValueError(f"Unknown section '{section}'")
 
@@ -194,4 +196,5 @@ def get_dataframe(logfiles: List[str], timelines=False, prettyparams=False):
         norel=result.progress("norel"),
         rootlp=result.progress("rootlp"),
         nodelog=result.progress("nodelog"),
+        pretreesols=result.progress("pretreesols"),
     )

@@ -5,6 +5,7 @@ from gurobi_logtools.parsers.header import HeaderParser
 from gurobi_logtools.parsers.nodelog import NodeLogParser
 from gurobi_logtools.parsers.norel import NoRelParser
 from gurobi_logtools.parsers.presolve import PresolveParser
+from gurobi_logtools.parsers.pretree_solutions import PretreeSolutionParser
 from gurobi_logtools.parsers.termination import TerminationParser
 from gurobi_logtools.parsers.util import model_type
 
@@ -16,11 +17,13 @@ class SingleLogParser:
     """
 
     def __init__(self, write_to_dir=None):
+        self.pretree_solution_parser = self.make_pretree_solution_parser()
+
         # Parsers in sequence
         self.header_parser = HeaderParser()
-        self.presolve_parser = PresolveParser()
+        self.presolve_parser = PresolveParser(self.pretree_solution_parser)
         self.norel_parser = NoRelParser()
-        self.continuous_parser = ContinuousParser()
+        self.continuous_parser = ContinuousParser(self.pretree_solution_parser)
         self.nodelog_parser = NodeLogParser()
         self.termination_parser = TerminationParser()
 
@@ -38,6 +41,9 @@ class SingleLogParser:
         # Capture lines *if* we plan to write them elsewhere
         self.write_to_dir = pathlib.Path(write_to_dir) if write_to_dir else None
         self.lines = [] if self.write_to_dir else None
+
+    def make_pretree_solution_parser(self):
+        return PretreeSolutionParser()
 
     def close(self):
         if self.write_to_dir:
@@ -66,6 +72,7 @@ class SingleLogParser:
         summary.update(self.presolve_parser.get_summary())
         summary.update(self.norel_parser.get_summary())
         summary.update(self.continuous_parser.get_summary())
+        summary.update(self.pretree_solution_parser.get_summary())
         summary.update(self.nodelog_parser.get_summary())
         summary.update(self.termination_parser.get_summary())
         summary["ModelType"] = model_type(
