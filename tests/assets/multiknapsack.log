@@ -1,0 +1,71 @@
+
+Gurobi 9.5.0 (mac64[x86], gurobi_cl) logging started Fri Jul  5 19:18:47 2024
+
+Set parameter LogFile to value "multiknapsack.log"
+Using license file /Users/riley.clement/gurobi.lic
+
+Gurobi Optimizer version 9.5.0 build v11.0.2rc0 (mac64[x86] - Darwin 23.5.0 23F79)
+Copyright (c) 2021, Gurobi Optimization, LLC
+
+Read MPS format model from file multiknapsack.mps.bz2
+Reading time = 2.31 seconds
+: 1000 rows, 1000 columns, 1000000 nonzeros
+
+CPU model: Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz
+Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 1000 rows, 1000 columns and 1000000 nonzeros
+Model fingerprint: 0x1dcb478a
+Variable types: 0 continuous, 1000 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [8e-07, 1e+00]
+  Objective range  [3e-04, 1e+00]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [2e+00, 1e+04]
+Found heuristic solution: objective 2.6508070
+Presolve removed 751 rows and 0 columns
+Presolve time: 0.63s
+Presolved: 249 rows, 1000 columns, 249000 nonzeros
+Variable types: 0 continuous, 1000 integer (0 binary)
+
+Starting NoRel heuristic
+Found heuristic solution: objective 15.6561779
+Found heuristic solution: objective 20.2661725
+Found heuristic solution: objective 21.6309598
+Found heuristic solution: objective 23.7055101
+Found heuristic solution: objective 24.1081356
+Elapsed time for NoRel heuristic: 8s (best bound 24.6734)
+Elapsed time for NoRel heuristic: 15s (best bound 24.6734)
+Elapsed time for NoRel heuristic: 21s (best bound 24.6734)
+Elapsed time for NoRel heuristic: 29s (best bound 24.6734)
+
+Root relaxation: objective 2.467344e+01, 32 iterations, 0.02 seconds (0.01 work units)
+
+Found heuristic solution: objective 15.5735142
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   24.67344    0    5   15.57351   24.67344  58.4%     -    0s
+H    0     0                      23.8510977   24.67344  3.45%     -    0s
+H    0     0                      24.1081356   24.67344  2.34%     -    0s
+     0     0   24.54405    0    7   24.10814   24.54405  1.81%     -    1s
+     0     0   24.54405    0    5   24.10814   24.54405  1.81%     -    1s
+     0     0   24.54405    0    7   24.10814   24.54405  1.81%     -    1s
+     0     0   24.49025    0    6   24.10814   24.49025  1.59%     -    1s
+     0     0   24.48961    0    7   24.10814   24.48961  1.58%     -    1s
+     0     0   24.45227    0    8   24.10814   24.45227  1.43%     -    1s
+     0     0   24.40551    0    8   24.10814   24.40551  1.23%     -    1s
+     0     2   24.40551    0    8   24.10814   24.40551  1.23%     -    1s
+
+Cutting planes:
+  Gomory: 8
+  Lift-and-project: 1
+
+Explored 838 nodes (2566 simplex iterations) in 1.27 seconds (0.53 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 5: 24.1081 23.8511 15.5735 ... 2.65081
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.410813557868e+01, best bound 2.410813557868e+01, gap 0.0000%

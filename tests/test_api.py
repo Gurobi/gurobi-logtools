@@ -13,7 +13,7 @@ import gurobi_logtools as glt
 @pytest.fixture(scope="module")
 def glass4_summary():
     """Summary data from API call."""
-    return glt.parse("data/*.log").summary()
+    return glt.parse("data/*glass4*.log").summary()
 
 
 @pytest.fixture(scope="module")
@@ -23,6 +23,7 @@ def glass4_progress():
         "norel": glt.parse("data/*.log").progress("norel"),
         "rootlp": glt.parse("data/*.log").progress("rootlp"),
         "nodelog": glt.parse("data/*.log").progress("nodelog"),
+        "pretreesols": glt.parse("data/*.log").progress("pretreesols"),
     }
 
 
@@ -37,6 +38,7 @@ def testlog_progress():
         "norel": glt.parse("tests/assets/*.log").progress("norel"),
         "rootlp": glt.parse("tests/assets/*.log").progress("rootlp"),
         "nodelog": glt.parse("tests/assets/*.log").progress("nodelog"),
+        "pretreesols": glt.parse("tests/assets/*.log").progress("pretreesols"),
     }
 
 
@@ -64,15 +66,15 @@ def test_merged_log(merged_log):
 
 
 def test_summary(testlog_summary):
-    assert len(testlog_summary) == 7
+    assert len(testlog_summary) == 8
     assert set(testlog_summary.columns).issuperset(
         {"Status", "ObjVal", "ReadingTime", "RelaxObj"}
     )
 
 
 def test_progress(testlog_progress):
-    assert len(testlog_progress) == 3
-    assert len(testlog_progress["norel"]) == 15
+    assert len(testlog_progress) == 4
+    assert len(testlog_progress["norel"]) == 19
     assert set(testlog_progress["norel"].columns).issuperset(
         {"Time", "BestBd", "Incumbent"}
     )
@@ -80,9 +82,13 @@ def test_progress(testlog_progress):
     assert set(testlog_progress["rootlp"].columns).issuperset(
         {"Iteration", "PInf", "DInf", "PObj", "DObj"}
     )
-    assert len(testlog_progress["nodelog"]) == 133
+    assert len(testlog_progress["nodelog"]) == 145
     assert set(testlog_progress["nodelog"].columns).issuperset(
         {"Depth", "IntInf", "Incumbent", "BestBd", "ItPerNode", "ModelFile", "Version"}
+    )
+    assert len(testlog_progress["pretreesols"]) == 4
+    assert set(testlog_progress["pretreesols"].columns).issuperset(
+        {"Incumbent", "ModelFile", "Version"}
     )
 
 
@@ -94,12 +100,16 @@ def test_summary_glass4(glass4_summary):
 
 
 def test_progress_glass4(glass4_progress):
-    assert len(glass4_progress) == 3
+    assert len(glass4_progress) == 4
     assert len(glass4_progress["norel"]) == 0
     assert len(glass4_progress["rootlp"]) == 0
 
     assert set(glass4_progress["nodelog"].columns).issuperset(
         {"Depth", "IntInf", "Incumbent", "BestBd", "ItPerNode"}
+    )
+    assert len(glass4_progress["pretreesols"]) == 51
+    assert set(glass4_progress["pretreesols"].columns).issuperset(
+        {"Incumbent", "ModelFile", "Version"}
     )
 
 
@@ -191,7 +201,7 @@ def test_work():
     assert set(summary.columns).issuperset({"Work"})
 
     # Check if Runtime and Work found
-    assert summary["Work"].count() == 6
+    assert summary["Work"].count() == 7
 
 
 def test_changed_params():
@@ -199,7 +209,7 @@ def test_changed_params():
     summary = result.summary()
     assert set(summary.columns).issuperset({"ChangedParams"})
     assert summary["ChangedParams"].apply(lambda d: isinstance(d, dict)).all()
-    assert summary["ChangedParams"].count() == 7
+    assert summary["ChangedParams"].count() == 8
 
 
 def test_create_label():

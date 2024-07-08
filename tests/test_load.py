@@ -9,7 +9,7 @@ def test_get_dataframe():
 def test_read_with_timelines():
     """Check timelines argument."""
     summary, timelines = glt.get_dataframe(["data/*.log"], timelines=True)
-    assert set(timelines.keys()) == {"norel", "rootlp", "nodelog"}
+    assert set(timelines.keys()) == {"norel", "rootlp", "nodelog", "pretreesols"}
 
 
 def test_norel_timeline():
