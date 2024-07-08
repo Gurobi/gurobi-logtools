@@ -2,8 +2,8 @@ import re
 
 from gurobi_logtools.parsers.util import typeconvert_groupdict
 
-class PretreeSolutionParser:
 
+class PretreeSolutionParser:
     pretree_solution_regex = re.compile(
         r"Found heuristic solution:\sobjective\s(?P<Incumbent>[^\s]+)"
     )
@@ -17,7 +17,7 @@ class PretreeSolutionParser:
         """
         self._progress = []
         self._summary = {}
-        #self._started = False
+        # self._started = False
 
     def parse(self, line: str) -> bool:
         """Parse the given log line to populate summary data.
@@ -36,10 +36,8 @@ class PretreeSolutionParser:
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""
-        return {
-            "PreTreeSolutions": len(self._progress)
-        }
-    
+        return {"PreTreeSolutions": len(self._progress)}
+
     def get_progress(self) -> list:
         """Return the progress of the search tree."""
         return self._progress

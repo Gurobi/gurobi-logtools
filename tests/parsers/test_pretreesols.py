@@ -1,7 +1,7 @@
 from unittest import TestCase, main
 
-from gurobi_logtools.parsers.presolve import PresolveParser
 from gurobi_logtools.parsers.continuous import ContinuousParser
+from gurobi_logtools.parsers.presolve import PresolveParser
 from gurobi_logtools.parsers.pretree_solutions import PretreeSolutionParser
 from gurobi_logtools.parsers.util import parse_lines
 
@@ -25,10 +25,10 @@ Found heuristic solution: objective 3.133356e+09
 
 expected_summary = {"PreTreeSolutions": 3}
 
-expected_progress =     [
-    {'Incumbent': 1133356000.0},
-    {'Incumbent': 2133356000.0},
-    {'Incumbent': 3133356000.0},
+expected_progress = [
+    {"Incumbent": 1133356000.0},
+    {"Incumbent": 2133356000.0},
+    {"Incumbent": 3133356000.0},
 ]
 
 example_log_1 = """
@@ -63,8 +63,9 @@ Solved in 51765 iterations and 9.18 seconds (13.22 work units)
 Optimal objective  2.174035714e+02
 """
 
-example_logs = (example_log_0,example_log_1)
+example_logs = (example_log_0, example_log_1)
 parsers = (PresolveParser, ContinuousParser)
+
 
 class TestPresolve(TestCase):
     def setUp(self):
