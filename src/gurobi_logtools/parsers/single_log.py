@@ -22,7 +22,6 @@ class SingleLogParser:
     _PreTreeSolutionParser = PreTreeSolutionParser
 
     def __init__(self, write_to_dir=None):
-
         self.pretree_solution_parser = self._PreTreeSolutionParser()
 
         # Parsers in sequence
