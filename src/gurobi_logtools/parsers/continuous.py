@@ -1,7 +1,7 @@
 import re
 
 from gurobi_logtools.parsers.barrier import BarrierParser
-from gurobi_logtools.parsers.pretree_solutions import PretreeSolutionParser
+from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.simplex import SimplexParser
 from gurobi_logtools.parsers.util import typeconvert_groupdict
 
@@ -25,7 +25,7 @@ class ContinuousParser:
         re.compile(r"(?P<OPTIMAL>Optimal objective\s+(?P<ObjVal>.*))$"),
     ]
 
-    def __init__(self, pre_tree_solution_parser: PretreeSolutionParser):
+    def __init__(self, pretree_solution_parser: PreTreeSolutionParser):
         """Initialize the Continuous parser."""
         self._barrier_parser = BarrierParser()
         self._simplex_parser = SimplexParser()
@@ -34,7 +34,7 @@ class ContinuousParser:
 
         self._current_pattern = None
 
-        self._pre_tree_solution_parser = pre_tree_solution_parser
+        self._pretree_solution_parser = pretree_solution_parser
 
     def parse(self, line: str) -> bool:
         """Parse the given log line to populate summary and progress data.
@@ -48,7 +48,7 @@ class ContinuousParser:
             bool: Return True if the given line is matched by some pattern.
         """
 
-        if self._pre_tree_solution_parser.parse(line):
+        if self._pretree_solution_parser.parse(line):
             return True
 
         mip_relaxation_match = ContinuousParser.mip_relaxation_pattern.match(line)

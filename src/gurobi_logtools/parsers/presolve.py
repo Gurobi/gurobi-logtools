@@ -1,6 +1,6 @@
 import re
 
-from gurobi_logtools.parsers.pretree_solutions import PretreeSolutionParser
+from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.util import typeconvert_groupdict
 
 
@@ -67,7 +67,7 @@ class PresolveParser:
     # Special case: model solved by presolve
     presolve_all_removed = re.compile(r"Presolve: All rows and columns removed")
 
-    def __init__(self, pre_tree_solution_parser: PretreeSolutionParser):
+    def __init__(self, pretree_solution_parser: PreTreeSolutionParser):
         """Initialize the Presolve parser.
 
         The PresolveParser extends beyond the lines associated with the presolved
@@ -76,7 +76,7 @@ class PresolveParser:
         """
         self._summary = {}
         self._started = False
-        self._pre_tree_solution_parser = pre_tree_solution_parser
+        self._pretree_solution_parser = pretree_solution_parser
 
     def parse(self, line: str) -> bool:
         """Parse the given log line to populate summary data.
@@ -96,7 +96,7 @@ class PresolveParser:
                 return True
             return False
 
-        if self._pre_tree_solution_parser.parse(line):
+        if self._pretree_solution_parser.parse(line):
             return True
 
         for pattern in PresolveParser.presolve_intermediate_patterns:

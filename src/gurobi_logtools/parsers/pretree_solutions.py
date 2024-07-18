@@ -3,7 +3,7 @@ import re
 from gurobi_logtools.parsers.util import typeconvert_groupdict
 
 
-class PretreeSolutionParser:
+class PreTreeSolutionParser:
     pretree_solution_regex = re.compile(
         r"Found heuristic solution:\sobjective\s(?P<Incumbent>[^\s]+)"
     )
