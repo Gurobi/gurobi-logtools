@@ -5,7 +5,7 @@ from gurobi_logtools.parsers.header import HeaderParser
 from gurobi_logtools.parsers.nodelog import NodeLogParser
 from gurobi_logtools.parsers.norel import NoRelParser
 from gurobi_logtools.parsers.presolve import PresolveParser
-from gurobi_logtools.parsers.pretree_solutions import PretreeSolutionParser
+from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.termination import TerminationParser
 from gurobi_logtools.parsers.util import model_type
 
@@ -16,16 +16,21 @@ class SingleLogParser:
     It expects parse to be called once for each line in a log file.
     """
 
+    _NoRelParser = NoRelParser
+    _NodeLogParser = NodeLogParser
+    _TerminationParser = TerminationParser
+    _PreTreeSolutionParser = PreTreeSolutionParser
+
     def __init__(self, write_to_dir=None):
-        self.pretree_solution_parser = self.make_pretree_solution_parser()
+        self.pretree_solution_parser = self._PreTreeSolutionParser()
 
         # Parsers in sequence
         self.header_parser = HeaderParser()
         self.presolve_parser = PresolveParser(self.pretree_solution_parser)
-        self.norel_parser = NoRelParser()
+        self.norel_parser = self._NoRelParser()
         self.continuous_parser = ContinuousParser(self.pretree_solution_parser)
-        self.nodelog_parser = NodeLogParser()
-        self.termination_parser = TerminationParser()
+        self.nodelog_parser = self._NodeLogParser()
+        self.termination_parser = self._TerminationParser()
 
         # State
         self.started = False
@@ -41,9 +46,6 @@ class SingleLogParser:
         # Capture lines *if* we plan to write them elsewhere
         self.write_to_dir = pathlib.Path(write_to_dir) if write_to_dir else None
         self.lines = [] if self.write_to_dir else None
-
-    def make_pretree_solution_parser(self):
-        return PretreeSolutionParser()
 
     def close(self):
         if self.write_to_dir:
