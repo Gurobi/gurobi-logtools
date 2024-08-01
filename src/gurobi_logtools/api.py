@@ -169,8 +169,12 @@ def parse(patterns: Union[str, List[str]], write_to_dir=None) -> ParseResult:
     result = ParseResult(write_to_dir=write_to_dir)
     if type(patterns) is str:
         patterns = [patterns]
-    logfiles = itertools.chain(*(glob.glob(pattern) for pattern in patterns))
-    for logfile in sorted(set(logfiles)):
+    logfiles = sorted(
+        set(itertools.chain(*(glob.glob(pattern) for pattern in patterns)))
+    )
+    if not len(logfiles):
+        raise FileNotFoundError(f"No logfiles found in patterns: {patterns}")
+    for logfile in logfiles:
         result.parse(logfile)
     return result
 
@@ -190,8 +194,10 @@ def get_dataframe(logfiles: List[str], timelines=False, prettyparams=False):
     """
     result = parse(logfiles)
     summary = result.summary(prettyparams=prettyparams)
+
     if not timelines:
         return summary
+
     return summary, dict(
         norel=result.progress("norel"),
         rootlp=result.progress("rootlp"),
