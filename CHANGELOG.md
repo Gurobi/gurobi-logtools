@@ -2,8 +2,13 @@
 ## Unreleased
 ### Fixed
 ### Changed
-- Parsing of heuristic solutions found prior to nodelog (but not found by NoRel) (#51)
 ### Removed
+
+## 3.1.0 - 2024-07-25
+### Changed
+- Parsing of heuristic solutions found prior to nodelog (but not found by NoRel) (#51)
+- slightly reorganized parsers
+- better parsing of early solutions (pre-tree and norel)
 
 ## 3.0.0 - 2023-10-11
 ### Changed
