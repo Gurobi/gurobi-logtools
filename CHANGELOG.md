@@ -2,6 +2,7 @@
 ## Unreleased
 ### Fixed
 ### Changed
+- If logfiles are not found when parsing then a FileNotFoundError is raised
 ### Removed
 
 ## 3.1.0 - 2024-07-25

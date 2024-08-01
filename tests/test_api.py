@@ -281,3 +281,8 @@ def test_rewrite_filenames():
             assert log_file.stem == expected_name
             assert len(start_lines) == 1
             assert len(end_lines) == 1
+
+
+def test_no_logfile_error():
+    with pytest.raises(FileNotFoundError):
+        glt.parse("/file/with/a/tyop")
