@@ -78,6 +78,7 @@ worklimit_summary = {
     "Cores": 8,
 }
 
+
 class TestTermination(TestCase):
     def setUp(self):
         pass

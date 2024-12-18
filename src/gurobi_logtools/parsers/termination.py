@@ -48,7 +48,7 @@ class TerminationParser:
         "USER_OBJ_LIMIT",
         "INTERRUPTED",
         "MEM_LIMIT",
-        "WORK_LIMIT"
+        "WORK_LIMIT",
     ]
 
     def __init__(self):
