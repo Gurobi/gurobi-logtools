@@ -31,6 +31,8 @@ class TerminationParser:
         re.compile(
             r"Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
         ),
+        re.compile(r"(?P<WORK_LIMIT>Work limit reached)"),
+        re.compile(r"(?P<MEM_LIMIT>Memory limit reached)"),
     ]
 
     status = [
@@ -45,6 +47,8 @@ class TerminationParser:
         "CUTOFF",
         "USER_OBJ_LIMIT",
         "INTERRUPTED",
+        "MEM_LIMIT",
+        "WORK_LIMIT"
     ]
 
     def __init__(self):

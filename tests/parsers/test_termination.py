@@ -55,7 +55,10 @@ Best objective 1.500012100000e+09, best bound 1.000006566284e+09, gap 33.3334%
 """
 
 memlimit_summary = {
-    "Status": "MEM_LIMIT"
+    "Status": "MEM_LIMIT",
+    "SolCount": 10,
+    "Threads": 8,
+    "Cores": 8,
 }
 
 worklimit_log = """
@@ -69,7 +72,10 @@ Best objective 1.500012100000e+09, best bound 8.997791698421e+08, gap 40.0152%
 """
 
 worklimit_summary = {
-    "Status": "WORK_LIMIT"
+    "Status": "WORK_LIMIT",
+    "SolCount": 10,
+    "Threads": 8,
+    "Cores": 8,
 }
 
 class TestTermination(TestCase):
