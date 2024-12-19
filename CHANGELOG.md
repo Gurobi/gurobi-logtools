@@ -1,6 +1,7 @@
 # CHANGELOG
 ## Unreleased
 ### Fixed
+- Logs ending with memory or work limit reached, will now return a corresponding status
 ### Changed
 - If logfiles are not found when parsing then a FileNotFoundError is raised
 ### Removed

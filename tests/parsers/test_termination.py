@@ -44,6 +44,40 @@ interrupted_summary = {
     "ErrorCode": None,
 }
 
+memlimit_log = """
+Explored 66258 nodes (470922 simplex iterations) in 18.39 seconds (16.82 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 10: 1.50001e+09 1.50001e+09 1.50001e+09 ... 1.66668e+09
+
+Memory limit reached
+Best objective 1.500012100000e+09, best bound 1.000006566284e+09, gap 33.3334%
+"""
+
+memlimit_summary = {
+    "Status": "MEM_LIMIT",
+    "SolCount": 10,
+    "Threads": 8,
+    "Cores": 8,
+}
+
+worklimit_log = """
+Explored 30881 nodes (135045 simplex iterations) in 19.60 seconds (10.00 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 10: 1.50001e+09 1.50001e+09 1.50001e+09 ... 1.66668e+09
+
+Work limit reached
+Best objective 1.500012100000e+09, best bound 8.997791698421e+08, gap 40.0152%
+"""
+
+worklimit_summary = {
+    "Status": "WORK_LIMIT",
+    "SolCount": 10,
+    "Threads": 8,
+    "Cores": 8,
+}
+
 
 class TestTermination(TestCase):
     def setUp(self):
@@ -60,6 +94,16 @@ class TestTermination(TestCase):
         parser = TerminationParser()
         parse_block(parser, interrupted_log)
         self.assertEqual(parser.get_summary(), interrupted_summary)
+
+    def test_memlimit(self):
+        parser = TerminationParser()
+        parse_block(parser, memlimit_log)
+        self.assertEqual(parser.get_summary(), memlimit_summary)
+
+    def test_worklimit(self):
+        parser = TerminationParser()
+        parse_block(parser, worklimit_log)
+        self.assertEqual(parser.get_summary(), worklimit_summary)
 
 
 if __name__ == "__main__":
