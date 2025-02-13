@@ -57,14 +57,14 @@ class HeaderParser:
         Returns:
             bool: Return True if the given line is matched by some pattern.
         """
-        match = HeaderParser.parameter_change_pattern.match(line)
+        match = self.parameter_change_pattern.match(line)
         if match:
             self._parameters[match.group("ParamName")] = convert_data_types(
                 match.group("ParamValue")
             )
             return True
 
-        for pattern in HeaderParser.header_start_patterns:
+        for pattern in self.header_start_patterns:
             match = pattern.match(line)
             if match:
                 self._started = True
@@ -72,7 +72,7 @@ class HeaderParser:
                 return True
 
         if self._started:
-            for pattern in HeaderParser.header_other_patterns:
+            for pattern in self.header_other_patterns:
                 match = pattern.match(line)
                 if match:
                     self._summary.update(typeconvert_groupdict(match))
