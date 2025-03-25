@@ -1,14 +1,13 @@
 import glob
-from pathlib import Path
 import os
 import tempfile
+from pathlib import Path
 
+import gurobi_logtools as glt
 import pandas as pd
 import pytest
 from pandas.api.types import is_integer_dtype
 from pandas.testing import assert_frame_equal, assert_series_equal
-
-import gurobi_logtools as glt
 
 
 @pytest.fixture(scope="module")
@@ -118,7 +117,7 @@ def test_progress_glass4(glass4_progress):
 def test_logfile(glass4_summary):
     logfiles = glass4_summary["LogFilePath"]
     assert len(logfiles.unique()) == len(logfiles)
-    assert logfiles.apply(lambda path: Path(path).is_relative_to(Path("data"))).all()
+    assert logfiles.str.startswith("data" + os.sep).all()
     assert logfiles.str.endswith(".log").all()
     assert_series_equal(
         glass4_summary["LogFile (Parameter)"].apply(lambda l: Path("data") / l),
@@ -251,9 +250,7 @@ def test_rewrite_filenames():
         results = glt.parse(
             "tests/assets/combined/*.log", write_to_dir=Path(tempdirname) / "logs"
         )
-        split_log_files = sorted(
-            Path(tempdirname).joinpath("logs").glob("*.log")
-        )
+        split_log_files = sorted(Path(tempdirname).joinpath("logs").glob("*.log"))
         expected_names = [
             "912-MIPFocus1-Presolve1-TimeLimit600-glass4-0",
             "912-MIPFocus1-Presolve1-TimeLimit600-glass4-1",
