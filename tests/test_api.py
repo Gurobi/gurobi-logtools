@@ -3,11 +3,12 @@ import os
 import tempfile
 from pathlib import Path
 
-import gurobi_logtools as glt
 import pandas as pd
 import pytest
 from pandas.api.types import is_integer_dtype
 from pandas.testing import assert_frame_equal, assert_series_equal
+
+import gurobi_logtools as glt
 
 
 @pytest.fixture(scope="module")
