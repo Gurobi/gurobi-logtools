@@ -1,10 +1,10 @@
+from dataclasses import dataclass, fields
+from typing import Dict, List, Optional, Tuple
+
 import ipywidgets as widgets
 import pandas as pd
 import plotly.express as px
 from IPython.display import display
-
-from dataclasses import dataclass, fields
-from typing import Optional, Dict, Tuple, List
 
 
 @dataclass
@@ -83,8 +83,14 @@ def _add_pretty_param_labels(df: pd.DataFrame, ignored_params: Tuple) -> pd.Data
     return df.assign(Parameters=pretty_params)
 
 
-def _make_plot_function(df: pd.DataFrame, points, barmode, **kwargs):
+_fig = None
 
+
+def get_plotly_fig():
+    return _fig
+
+
+def _make_plot_function(df: pd.DataFrame, points, barmode, **kwargs):
     def _plot(
         x,
         y,
@@ -94,6 +100,7 @@ def _make_plot_function(df: pd.DataFrame, points, barmode, **kwargs):
         log_x,
         log_y,
     ):
+        global _fig
         common_kwargs = dict(
             x=x,
             y=y,
@@ -102,17 +109,17 @@ def _make_plot_function(df: pd.DataFrame, points, barmode, **kwargs):
             log_y=log_y,
         )
 
-        fig = None
+        _fig = None
         if type == "box":
-            fig = px.box(df, **common_kwargs, points=points, **kwargs)
+            _fig = px.box(df, **common_kwargs, points=points, **kwargs)
         elif type == "bar":
-            fig = px.bar(df, **common_kwargs, barmode=barmode, **kwargs)
+            _fig = px.bar(df, **common_kwargs, barmode=barmode, **kwargs)
         elif type == "scatter":
-            fig = px.scatter(df, **common_kwargs, symbol=symbol, **kwargs)
+            _fig = px.scatter(df, **common_kwargs, symbol=symbol, **kwargs)
         elif type == "line":
-            fig = px.line(df, **common_kwargs, symbol=symbol, **kwargs)
-        if fig:
-            fig.show()
+            _fig = px.line(df, **common_kwargs, symbol=symbol, **kwargs)
+        if _fig:
+            _fig.show()
 
     return _plot
 
