@@ -16,6 +16,8 @@ class InitialWidgetValues:
     symbol: Optional[str] = None
     log_x: bool = False
     log_y: bool = False
+    points: str = "all"
+    barmode: str = "group"
 
 
 def _get_initial_widget_values(user_kwargs: Dict):
@@ -59,11 +61,25 @@ def _make_widgets(options: List, user_kwargs: Dict) -> Dict:
         ),
         log_x=widgets.Checkbox(value=widget_defaults.log_x, description="log(x)"),
         log_y=widgets.Checkbox(value=widget_defaults.log_y, description="log(y)"),
+        points=widgets.Dropdown(
+            options=("outliers", "suspectedoutliers", "all", False),
+            value=widget_defaults.points,
+            description="points",
+            disabled=widget_defaults.type != "box",
+        ),
+        barmode=widgets.Dropdown(
+            options=("group", "overlay", "relative"),
+            value=widget_defaults.barmode,
+            description="barmode",
+            disabled=widget_defaults.type != "bar",
+        ),
     )
 
     # used to disable one widget based on the value of another
     def type_change(change):
         widget_dict["symbol"].disabled = change["new"] not in ("scatter", "line")
+        widget_dict["points"].disabled = change["new"] != "box"
+        widget_dict["barmode"].disabled = change["new"] != "bar"
 
     widget_dict["type"].observe(type_change, names="value")
 
@@ -90,7 +106,7 @@ def get_plotly_fig():
     return _fig
 
 
-def _make_plot_function(df: pd.DataFrame, points, barmode, **kwargs):
+def _make_plot_function(df: pd.DataFrame, **kwargs):
     def _plot(
         x,
         y,
@@ -99,6 +115,8 @@ def _make_plot_function(df: pd.DataFrame, points, barmode, **kwargs):
         symbol,
         log_x,
         log_y,
+        points,
+        barmode,
     ):
         global _fig
         common_kwargs = dict(
@@ -126,8 +144,6 @@ def _make_plot_function(df: pd.DataFrame, points, barmode, **kwargs):
 
 def plot(
     df: pd.DataFrame,
-    points="all",
-    barmode="group",
     ignored_params=("TimeLimit", "SoftMemLimit"),
     **kwargs,
 ):
@@ -142,12 +158,22 @@ def plot(
     ui = widgets.VBox(
         [
             widget_dict[key]
-            for key in ("x", "y", "color", "type", "symbol", "log_x", "log_y")
+            for key in (
+                "x",
+                "y",
+                "color",
+                "type",
+                "points",
+                "barmode",
+                "symbol",
+                "log_x",
+                "log_y",
+            )
         ]
     )
 
     output = widgets.interactive_output(
-        _make_plot_function(df, points, barmode, **kwargs),
+        _make_plot_function(df, **kwargs),
         widget_dict,
     )
 
