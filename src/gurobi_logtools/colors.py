@@ -1,11 +1,13 @@
 import plotly.express as px
 
+from gurobi_logtools import constants
+
 
 def _get_palette(palette_type, palette):
     family = {
-        "Sequential": px.colors.sequential,
-        "Diverging": px.colors.diverging,
-        "Qualitative": px.colors.qualitative,
+        constants.PaletteType.SEQUENTIAL: px.colors.sequential,
+        constants.PaletteType.DIVERGING: px.colors.diverging,
+        constants.PaletteType.QUALITATIVE: px.colors.qualitative,
     }[palette_type]
     try:
         return getattr(family, palette)
@@ -15,17 +17,17 @@ def _get_palette(palette_type, palette):
 
 def _get_palettes(type_name):
     return {
-        "Sequential": _sequential_plotly_palettes,
-        "Diverging": _diverging_plotly_palettes,
-        "Qualitative": _qualitative_plotly_palettes,
+        constants.PaletteType.SEQUENTIAL: _sequential_plotly_palettes,
+        constants.PaletteType.DIVERGING: _diverging_plotly_palettes,
+        constants.PaletteType.QUALITATIVE: _qualitative_plotly_palettes,
     }[type_name]
 
 
 def _get_default_palette(type_name):
     return {
-        "Sequential": "Plotly3",
-        "Diverging": "Picnic",
-        "Qualitative": "Plotly",
+        constants.PaletteType.SEQUENTIAL: "Plotly3",
+        constants.PaletteType.DIVERGING: "Picnic",
+        constants.PaletteType.QUALITATIVE: "Plotly",
     }[type_name]
 
 

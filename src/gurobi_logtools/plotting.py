@@ -7,6 +7,7 @@ import pandas as pd
 import plotly.express as px
 from IPython.display import display
 
+from gurobi_logtools import constants
 from gurobi_logtools.colors import (  # _diverging_plotly_palettes,; _qualitative_plotly_palettes,; _sequential_plotly_palettes,
     _get_default_palette,
     _get_palette,
@@ -19,18 +20,18 @@ class InitialWidgetValues:
     x: str = "Runtime"
     y: str = "Parameters"
     color: str = "Parameters"
-    type: str = "box"
+    type: constants.PlotType = constants.PlotType.BOX.value
     symbol: Optional[str] = None
     log_x: bool = False
     log_y: bool = False
-    points: str = "all"
-    barmode: str = "group"
+    points: constants.Points = constants.Points.ALL.value
+    barmode: constants.BarMode = constants.BarMode.GROUP.value
     show_legend: bool = False
-    sort_metric: Optional[str] = None
+    sort_metric: Optional[constants.SortMetric] = constants.SortMetric.NONE.value
     boxmean: bool = False
     notched: bool = False
     reverse_ecdf: bool = False
-    palette_type: str = "Qualitative"
+    palette_type: constants.PaletteType = constants.PaletteType.QUALITATIVE.value
 
 
 def _get_initial_widget_values(user_kwargs: Dict):
@@ -43,26 +44,36 @@ def _get_initial_widget_values(user_kwargs: Dict):
     return InitialWidgetValues()
 
 
-def _make_widgets(options: List, user_kwargs: Dict) -> Dict:
+def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
     widget_defaults = _get_initial_widget_values(user_kwargs)
 
     # check wether selected keys are available in DataFrame
-    widget_defaults.x = widget_defaults.x if widget_defaults.x in options else None
-    widget_defaults.y = widget_defaults.y if widget_defaults.y in options else None
+    widget_defaults.x = widget_defaults.x if widget_defaults.x in column_names else None
+    widget_defaults.y = widget_defaults.y if widget_defaults.y in column_names else None
     widget_defaults.color = (
-        widget_defaults.color if widget_defaults.color in options else None
+        widget_defaults.color if widget_defaults.color in column_names else None
     )
 
-    options = sorted(options) + [None]
+    column_names = sorted(column_names) + [None]
+
+    discrete_color_scale_plot_types = (
+        constants.PlotType.BOX,
+        constants.PlotType.LINE,
+        constants.PlotType.ECDF,
+    )
 
     widget_dict = dict(
-        x=widgets.Dropdown(options=options, value=widget_defaults.x, description="x"),
-        y=widgets.Dropdown(options=options, value=widget_defaults.y, description="y"),
+        x=widgets.Dropdown(
+            options=column_names, value=widget_defaults.x, description="x"
+        ),
+        y=widgets.Dropdown(
+            options=column_names, value=widget_defaults.y, description="y"
+        ),
         color=widgets.Dropdown(
-            options=options, value=widget_defaults.color, description="color"
+            options=column_names, value=widget_defaults.color, description="color"
         ),
         type=widgets.Dropdown(
-            options=["box", "bar", "scatter", "line", "ecdf"],
+            options=[member.value for member in constants.PlotType],
             value=widget_defaults.type,
             description="type",
         ),
@@ -73,24 +84,25 @@ def _make_widgets(options: List, user_kwargs: Dict) -> Dict:
             value=widget_defaults.notched, description="boxplot: notched"
         ),
         symbol=widgets.Dropdown(
-            options=options,
+            options=column_names,
             value=widget_defaults.symbol,
             description="symbol",
-            disabled=widget_defaults.type not in ("scatter", "line"),
+            disabled=widget_defaults.type
+            not in (constants.PlotType.SCATTER, constants.PlotType.LINE),
         ),
         log_x=widgets.Checkbox(value=widget_defaults.log_x, description="log(x)"),
         log_y=widgets.Checkbox(value=widget_defaults.log_y, description="log(y)"),
         points=widgets.Dropdown(
-            options=("outliers", "suspectedoutliers", "all", False),
+            options=[member.value for member in constants.Points],
             value=widget_defaults.points,
             description="points",
-            disabled=widget_defaults.type != "box",
+            disabled=widget_defaults.type != constants.PlotType.BOX,
         ),
         barmode=widgets.Dropdown(
-            options=("group", "overlay", "relative"),
+            options=[member.value for member in constants.BarMode],
             value=widget_defaults.barmode,
             description="barmode",
-            disabled=widget_defaults.type != "bar",
+            disabled=widget_defaults.type != constants.PlotType.BAR,
         ),
         title=widgets.Text(value="", description="title"),
         y_axis_title=widgets.Text(value="", description="y axis label"),
@@ -110,10 +122,11 @@ def _make_widgets(options: List, user_kwargs: Dict) -> Dict:
             description="Width:",
         ),
         sort_axis=widgets.ToggleButtons(
-            options=["Sort x", "Sort y"], style={"button_width": "auto"}
+            options=[member.value for member in constants.SortAxis],
+            style={"button_width": "auto"},
         ),
         sort_metric=widgets.Dropdown(
-            options=(None, "mean", "median", "min", "max", "std"),
+            options=[member.value for member in constants.SortMetric],
             value=widget_defaults.sort_metric,
             description="sort metric",
         ),
@@ -122,11 +135,11 @@ def _make_widgets(options: List, user_kwargs: Dict) -> Dict:
         ),
         reverse_ecdf=widgets.Checkbox(
             value=widget_defaults.reverse_ecdf,
-            disabled=widget_defaults.type != "ecdf",
+            disabled=widget_defaults.type != constants.PlotType.ECDF,
             description="reverse ecdf",
         ),
         palette_type=widgets.Dropdown(
-            options=("Qualitative", "Sequential", "Diverging"),
+            options=[member.value for member in constants.PaletteType],
             value=widget_defaults.palette_type,
             description="Palette type",
         ),
@@ -136,27 +149,32 @@ def _make_widgets(options: List, user_kwargs: Dict) -> Dict:
             description="Palette",
         ),
         color_scale=widgets.ToggleButtons(
-            options=["discrete", "continuous"],
-            value="discrete",
-            disabled=widget_defaults.type in ("box", "line", "ecdf"),
+            options=[member.value for member in constants.ColorScale],
+            value=constants.ColorScale.DISCRETE,
+            disabled=widget_defaults.type in discrete_color_scale_plot_types,
             style={"button_width": "auto"},
         ),
     )
 
     # used to disable one widget based on the value of another
     def type_change(change):
-        if change["new"] in ("box", "line", "ecdf"):
-            widget_dict["color_scale"].value = "discrete"
-        widget_dict["color_scale"].disabled = change["new"] in ("box", "line", "ecdf")
-        widget_dict["symbol"].disabled = change["new"] not in ("scatter", "line")
-        widget_dict["points"].disabled = change["new"] != "box"
-        widget_dict["barmode"].disabled = change["new"] != "bar"
-        widget_dict["boxmean"].disabled = change["new"] != "box"
-        widget_dict["notched"].disabled = change["new"] != "box"
-        widget_dict["reverse_ecdf"].disabled = change["new"] != "ecdf"
-        widget_dict["y"].disabled = change["new"] == "ecdf"
-        widget_dict["sort_axis"].disabled = change["new"] == "ecdf"
-        widget_dict["sort_metric"].disabled = change["new"] == "ecdf"
+        if change["new"] in discrete_color_scale_plot_types:
+            widget_dict["color_scale"].value = constants.ColorScale.DISCRETE
+        widget_dict["color_scale"].disabled = (
+            change["new"] in discrete_color_scale_plot_types
+        )
+        widget_dict["symbol"].disabled = change["new"] not in (
+            constants.PlotType.SCATTER,
+            constants.PlotType.LINE,
+        )
+        widget_dict["points"].disabled = change["new"] != constants.PlotType.BOX
+        widget_dict["barmode"].disabled = change["new"] != constants.PlotType.BAR
+        widget_dict["boxmean"].disabled = change["new"] != constants.PlotType.BOX
+        widget_dict["notched"].disabled = change["new"] != constants.PlotType.BOX
+        widget_dict["reverse_ecdf"].disabled = change["new"] != constants.PlotType.ECDF
+        widget_dict["y"].disabled = change["new"] == constants.PlotType.ECDF
+        widget_dict["sort_axis"].disabled = change["new"] == constants.PlotType.ECDF
+        widget_dict["sort_metric"].disabled = change["new"] == constants.PlotType.ECDF
 
     widget_dict["type"].observe(type_change, names="value")
 
@@ -190,7 +208,7 @@ def get_plotly_fig():
 
 
 def _get_category_orders(df, x, y, sort_axis, sort_metric):
-    group_col, value_col = (y, x) if sort_axis == "Sort x" else (x, y)
+    group_col, value_col = (y, x) if sort_axis == constants.SortAxis.SORT_X else (x, y)
     return {
         group_col: df.groupby(group_col)[value_col]
         .apply(sort_metric)
@@ -236,7 +254,7 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
             log_y=log_y,
             title=title,
         )
-        if color_scale == "discrete":
+        if color_scale == constants.ColorScale.DISCRETE:
             common_kwargs["color_discrete_sequence"] = palette
         else:
             common_kwargs["color_continuous_scale"] = palette
