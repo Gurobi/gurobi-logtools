@@ -7,6 +7,12 @@ import pandas as pd
 import plotly.express as px
 from IPython.display import display
 
+from gurobi_logtools.colors import (  # _diverging_plotly_palettes,; _qualitative_plotly_palettes,; _sequential_plotly_palettes,
+    _get_default_palette,
+    _get_palette,
+    _get_palettes,
+)
+
 
 @dataclass
 class InitialWidgetValues:
@@ -24,6 +30,7 @@ class InitialWidgetValues:
     boxmean: bool = False
     notched: bool = False
     reverse_ecdf: bool = False
+    palette_type: str = "Qualitative"
 
 
 def _get_initial_widget_values(user_kwargs: Dict):
@@ -114,12 +121,33 @@ def _make_widgets(options: List, user_kwargs: Dict) -> Dict:
             value=widget_defaults.show_legend, description="legend"
         ),
         reverse_ecdf=widgets.Checkbox(
-            value=widget_defaults.reverse_ecdf, description="reverse ecdf"
+            value=widget_defaults.reverse_ecdf,
+            disabled=widget_defaults.type != "ecdf",
+            description="reverse ecdf",
+        ),
+        palette_type=widgets.Dropdown(
+            options=("Qualitative", "Sequential", "Diverging"),
+            value=widget_defaults.palette_type,
+            description="Palette type",
+        ),
+        palette_name=widgets.Dropdown(
+            options=_get_palettes(widget_defaults.palette_type),
+            value=_get_default_palette(widget_defaults.palette_type),
+            description="Palette",
+        ),
+        color_scale=widgets.ToggleButtons(
+            options=["discrete", "continuous"],
+            value="discrete",
+            disabled=widget_defaults.type in ("box", "line", "ecdf"),
+            style={"button_width": "auto"},
         ),
     )
 
     # used to disable one widget based on the value of another
     def type_change(change):
+        if change["new"] in ("box", "line", "ecdf"):
+            widget_dict["color_scale"].value = "discrete"
+        widget_dict["color_scale"].disabled = change["new"] in ("box", "line", "ecdf")
         widget_dict["symbol"].disabled = change["new"] not in ("scatter", "line")
         widget_dict["points"].disabled = change["new"] != "box"
         widget_dict["barmode"].disabled = change["new"] != "bar"
@@ -131,6 +159,12 @@ def _make_widgets(options: List, user_kwargs: Dict) -> Dict:
         widget_dict["sort_metric"].disabled = change["new"] == "ecdf"
 
     widget_dict["type"].observe(type_change, names="value")
+
+    def palette_type_change(change):
+        print("new val", change["new"], "first", _get_palettes(change["new"])[0])
+        widget_dict["palette_name"].options = _get_palettes(change["new"])
+
+    widget_dict["palette_type"].observe(palette_type_change, names="value")
 
     return widget_dict
 
@@ -187,9 +221,13 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
         boxmean,
         notched,
         reverse_ecdf,
+        palette_type,
+        palette_name,
+        color_scale,
     ):
         global _fig
 
+        palette = _get_palette(palette_type, palette_name)
         common_kwargs = dict(
             x=x,
             y=y,
@@ -198,6 +236,10 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
             log_y=log_y,
             title=title,
         )
+        if color_scale == "discrete":
+            common_kwargs["color_discrete_sequence"] = palette
+        else:
+            common_kwargs["color_continuous_scale"] = palette
         data = df
         if sort_metric:
             with contextlib.suppress(Exception):
@@ -268,6 +310,7 @@ def plot(
     parameters_header = _make_heading("Parameters")
     layout_header = _make_heading("Layout Controls")
     toggles_header = _make_heading("Toggles")
+    palette_header = _make_heading("Palette")
 
     left_col_widgets = widgets.VBox(
         [
@@ -282,8 +325,12 @@ def plot(
         ]
     )
 
-    centered_sort_axis_buttons = widgets.HBox([widget_dict["sort_axis"]])
-    centered_sort_axis_buttons.layout.justify_content = "center"
+    centered_sort_axis_buttons = widgets.HBox(
+        [widget_dict["sort_axis"]], layout=widgets.Layout(justify_content="center")
+    )
+    centered_color_scale_buttons = widgets.HBox(
+        [widget_dict["color_scale"]], layout=widgets.Layout(justify_content="center")
+    )
 
     right_col_widgets = widgets.VBox(
         [
@@ -310,10 +357,23 @@ def plot(
         ]
     )
 
-    ui = widgets.HBox(
-        [left_col_widgets, right_col_widgets, toggle_widgets],
+    palette_widgets = widgets.VBox(
+        [
+            palette_header,
+            widget_dict["palette_type"],
+            widget_dict["palette_name"],
+            centered_color_scale_buttons,
+        ]
     )
-    ui.layout.justify_content = "center"
+
+    ui = widgets.HBox(
+        [left_col_widgets, right_col_widgets, toggle_widgets, palette_widgets],
+        layout=widgets.Layout(
+            display="flex",
+            flex_flow="row wrap",  # key part: enables wrapping
+            justify_content="center",
+        ),
+    )
 
     output = widgets.interactive_output(
         _make_plot_function(df, **kwargs),
