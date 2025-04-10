@@ -23,6 +23,7 @@ class InitialWidgetValues:
     sort_metric: Optional[str] = None
     boxmean: bool = False
     notched: bool = False
+    reverse_ecdf: bool = False
 
 
 def _get_initial_widget_values(user_kwargs: Dict):
@@ -54,7 +55,7 @@ def _make_widgets(options: List, user_kwargs: Dict) -> Dict:
             options=options, value=widget_defaults.color, description="color"
         ),
         type=widgets.Dropdown(
-            options=["box", "bar", "scatter", "line"],
+            options=["box", "bar", "scatter", "line", "ecdf"],
             value=widget_defaults.type,
             description="type",
         ),
@@ -112,6 +113,9 @@ def _make_widgets(options: List, user_kwargs: Dict) -> Dict:
         show_legend=widgets.Checkbox(
             value=widget_defaults.show_legend, description="legend"
         ),
+        reverse_ecdf=widgets.Checkbox(
+            value=widget_defaults.reverse_ecdf, description="reverse ecdf"
+        ),
     )
 
     # used to disable one widget based on the value of another
@@ -121,6 +125,10 @@ def _make_widgets(options: List, user_kwargs: Dict) -> Dict:
         widget_dict["barmode"].disabled = change["new"] != "bar"
         widget_dict["boxmean"].disabled = change["new"] != "box"
         widget_dict["notched"].disabled = change["new"] != "box"
+        widget_dict["reverse_ecdf"].disabled = change["new"] != "ecdf"
+        widget_dict["y"].disabled = change["new"] == "ecdf"
+        widget_dict["sort_axis"].disabled = change["new"] == "ecdf"
+        widget_dict["sort_metric"].disabled = change["new"] == "ecdf"
 
     widget_dict["type"].observe(type_change, names="value")
 
@@ -178,6 +186,7 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
         show_legend,
         boxmean,
         notched,
+        reverse_ecdf,
     ):
         global _fig
 
@@ -209,6 +218,12 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
             _fig = px.scatter(data, **common_kwargs, symbol=symbol, **kwargs)
         elif type == "line":
             _fig = px.line(data, **common_kwargs, symbol=symbol, **kwargs)
+        elif type == "ecdf":
+            common_kwargs.pop("y", None)
+            ecdfmode = "complementary" if reverse_ecdf else "standard"
+            _fig = px.ecdf(
+                data, **common_kwargs, ecdfmode=ecdfmode, ecdfnorm="percent", **kwargs
+            )
         if _fig:
             updates = {}
             if x_axis_title:
@@ -288,6 +303,7 @@ def plot(
             toggles_header,
             widget_dict["boxmean"],
             widget_dict["notched"],
+            widget_dict["reverse_ecdf"],
             widget_dict["show_legend"],
             widget_dict["log_x"],
             widget_dict["log_y"],
