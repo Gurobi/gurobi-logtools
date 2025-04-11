@@ -154,6 +154,9 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             disabled=widget_defaults.type in discrete_color_scale_plot_types,
             style={"button_width": "auto"},
         ),
+        color_categorical=widgets.Checkbox(
+            value=False, description="Categorical color?"
+        ),
     )
 
     # used to disable one widget based on the value of another
@@ -242,6 +245,7 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
         palette_type,
         palette_name,
         color_scale,
+        color_categorical,
     ):
         global _fig
 
@@ -258,7 +262,13 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
             common_kwargs["color_discrete_sequence"] = palette
         else:
             common_kwargs["color_continuous_scale"] = palette
-        data = df
+        data = df.copy()
+        if color_categorical:
+            data[color] = pd.Categorical(
+                data[color],
+                categories=sorted(data[color].unique().tolist()),
+                ordered=True
+            )
         if sort_metric:
             with contextlib.suppress(Exception):
                 common_kwargs["category_orders"] = _get_category_orders(
@@ -316,7 +326,8 @@ def plot(
 
     uses Plotly express; all available keyword arguments can be passed through to px.bar(), px.scatter(), etc.
     """
-    df = _add_pretty_param_labels(df, ignored_params)
+    with contextlib.suppress(Exception):
+        df = _add_pretty_param_labels(df, ignored_params)
 
     widget_dict = _make_widgets(df.columns.tolist(), kwargs)
 
@@ -381,6 +392,7 @@ def plot(
             widget_dict["palette_type"],
             widget_dict["palette_name"],
             centered_color_scale_buttons,
+            widget_dict["color_categorical"],
         ]
     )
 
