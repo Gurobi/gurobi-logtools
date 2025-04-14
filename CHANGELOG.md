@@ -1,6 +1,7 @@
 # CHANGELOG
 ## Unreleased
 ### Fixed
+- fixed platform-specific issues in tests with file and path handling 
 ### Changed
 ### Removed
 
