@@ -36,7 +36,7 @@ class ContinuousParser:
 
         self._pretree_solution_parser = pretree_solution_parser
 
-    def parse(self, line: str) -> bool:
+    def parse(self, line: str) -> dict[str, str | float | int | None]:
         """Parse the given log line to populate summary and progress data.
 
         It defers to the simplex and the barrier parsers as needed.
@@ -45,37 +45,40 @@ class ContinuousParser:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line is matched by some pattern.
+            dict[str, str | None | int | float]: A dictionary containing the parsed data. Empty if the line does not
+            match any pattern.
         """
 
-        if self._pretree_solution_parser.parse(line):
-            return True
+        if parse_result := self._pretree_solution_parser.parse(line):
+            return parse_result.copy()
 
         mip_relaxation_match = ContinuousParser.mip_relaxation_pattern.match(line)
         if mip_relaxation_match:
             self._current_pattern = "relaxation"
-            self._summary.update(typeconvert_groupdict(mip_relaxation_match))
-            return True
+            parse_result = typeconvert_groupdict(mip_relaxation_match)
+            self._summary.update(parse_result)
+            return parse_result.copy()
 
         for pattern in ContinuousParser.continuous_termination_patterns:
-            match = pattern.match(line)
-            if match:
-                for key, value in typeconvert_groupdict(match).items():
+            parse_result = pattern.match(line)
+            if parse_result:
+                parse_result = typeconvert_groupdict(parse_result)
+                for key, value in parse_result.items():
                     if key in ["OPTIMAL", "SUBOPTIMAL"]:
                         self._summary.update({"Status": key})
                     else:
                         self._summary.update({key: value})
-                return True
+                return parse_result.copy()
 
         if self._current_pattern is None:
-            if self._barrier_parser.parse(line):
+            if parse_result := self._barrier_parser.parse(line):
                 self._current_pattern = "barrier"
-                return True
-            if self._simplex_parser.parse(line):
+                return parse_result.copy()
+            if parse_result := self._simplex_parser.parse(line):
                 self._current_pattern = "simplex"
-                return True
+                return parse_result.copy()
 
-            return False
+            return {}
 
         if self._current_pattern == "barrier":
             matched = self._barrier_parser.parse(line)
@@ -85,15 +88,16 @@ class ContinuousParser:
                 ContinuousParser.barrier_interruption_pattern.match(line)
                 or self._simplex_parser.parse(line)
             ):
+                parse_result = {"Init": "simplex"}
                 self._current_pattern = "simplex"
-                return True
-            return matched
+                return parse_result
+            return matched.copy()
 
         if self._current_pattern == "simplex":
-            match = self._simplex_parser.parse(line)
-            return match
+            parse_result = self._simplex_parser.parse(line)
+            return parse_result.copy()
 
-        return False
+        return {}
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""

@@ -67,27 +67,28 @@ class NodeLogParser:
         summary.update({f"Cuts: {name}": count for name, count in self._cuts.items()})
         return summary
 
-    def parse(self, line: str) -> bool:
+    def parse(self, line: str) -> dict[str, str | None | int | float]:
         """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line is matched by some pattern.
+            dict[str, str | None | int | float]: A dictionary containing the parsed data. Empty if the line does not
+            match any pattern.
         """
 
         for regex in self.tree_search_final_stats:
             match = regex.match(line)
             if match:
-                entry = typeconvert_groupdict(match)
-                self._summary.update(entry)
-                return True
+                parse_result = typeconvert_groupdict(match)
+                self._summary.update(parse_result)
+                return parse_result.copy()
 
         match = self.cut_report_start.match(line)
         if match:
             self._in_cut_report = True
-            return True
+            return {"Init": "cutreport"}
 
         if self._in_cut_report:
             match = self.cut_report_line.match(line)
@@ -95,24 +96,25 @@ class NodeLogParser:
                 self._cuts[match.group("Name")] = convert_data_types(
                     match.group("Count")
                 )
-                return True
+                return self._cuts.copy()
 
         # Wait for the header before matching any log lines.
         if not self._started:
             match = self.tree_search_start.match(line)
             if match:
                 self._started = True
-                return True
-            return False
+                return {"Init": "treesearch"}
+            return {}
 
         # Match log lines.
         for regex in self.line_types:
             match = regex.match(line)
             if match:
-                self._progress.append(typeconvert_groupdict(match))
-                return True
+                parse_result = typeconvert_groupdict(match)
+                self._progress.append(parse_result)
+                return parse_result.copy()
 
-        return False
+        return {}
 
     def get_progress(self) -> list:
         """Return the progress of the search tree."""

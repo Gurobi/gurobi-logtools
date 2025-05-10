@@ -5,6 +5,10 @@
 ### Removed
 
 ## 3.2.0 - 2024-12-19
+### Added
+- All parsers now additionally return the result of a parsed line. This enables live usage within a Gurobi Callback.
+
+## 3.2.0 - 2024-12-19
 ### Fixed
 - Logs ending with memory or work limit reached, will now return a corresponding status
 ### Changed

@@ -19,20 +19,21 @@ class PreTreeSolutionParser:
         self._summary = {}
         # self._started = False
 
-    def parse(self, line: str) -> bool:
+    def parse(self, line: str) -> dict[str, str | None | int | float]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line is matched by some pattern.
+            dict[str, str | None | int | float]: A dictionary containing the parsed data.
         """
         match = self.pretree_solution_regex.match(line)
         if match:
-            self._progress.append(typeconvert_groupdict(match))
-            return True
-        return False
+            parse_result = typeconvert_groupdict(match)
+            self._progress.append(parse_result)
+            return parse_result.copy()
+        return {}
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""
