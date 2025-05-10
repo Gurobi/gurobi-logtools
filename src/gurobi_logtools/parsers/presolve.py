@@ -78,32 +78,35 @@ class PresolveParser:
         self._started = False
         self._pretree_solution_parser = pretree_solution_parser
 
-    def parse(self, line: str) -> bool:
+    def parse(self, line: str) -> dict[str, str | None | int | float]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line is matched by some pattern.
+            dict[str, str | None | int | float]: A dictionary containing the parsed data. Empty if the line does not
+            match any pattern.
         """
         if not self._started:
             match = PresolveParser.presolve_start_pattern.match(line)
             if match:
                 # The start line encodes information that should be stored
                 self._started = True
-                self._summary.update(typeconvert_groupdict(match))
-                return True
-            return False
+                parse_result = typeconvert_groupdict(match)
+                self._summary.update(parse_result)
+                return parse_result.copy()
+            return {}
 
-        if self._pretree_solution_parser.parse(line):
-            return True
+        if parse_result := self._pretree_solution_parser.parse(line):
+            return parse_result.copy()
 
         for pattern in PresolveParser.presolve_intermediate_patterns:
             match = pattern.match(line)
             if match:
-                self._summary.update(typeconvert_groupdict(match))
-                return True
+                parse_result = typeconvert_groupdict(match)
+                self._summary.update(parse_result)
+                return parse_result.copy()
 
         match = PresolveParser.presolve_all_removed.match(line)
         if match:
@@ -114,9 +117,9 @@ class PresolveParser:
                     "PresolvedNumNZs": 0,
                 }
             )
-            return True
+            return self._summary.copy()
 
-        return False
+        return {}
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""

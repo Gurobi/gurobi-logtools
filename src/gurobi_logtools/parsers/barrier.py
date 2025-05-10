@@ -47,46 +47,50 @@ class BarrierParser:
         self._progress = []
         self._started = False
 
-    def parse(self, line: str) -> bool:
+    def parse(self, line: str) -> dict[str, str | None | int | float]:
         """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line is matched by some pattern.
+           dict[str, str | None | int | float]: A dictionary containing the parsed data. Empty if the line does not
+            match any pattern.
         """
         barrier_ordering_match = BarrierParser.barrier_ordering_pattern.match(line)
         if barrier_ordering_match:
-            self._summary.update(typeconvert_groupdict(barrier_ordering_match))
-            return True
+            parse_result = typeconvert_groupdict(barrier_ordering_match)
+            self._summary.update(parse_result)
+            return parse_result.copy()
 
         if not self._started:
             match = BarrierParser.barrier_start_pattern.match(line)
             if match:
                 self._started = True
-                return True
-            return False
+                return {"Init": "barrier"}
+            return {}
 
         progress_match = BarrierParser.barrier_progress_pattern.match(line)
         if progress_match:
             entry = {"Type": "barrier"}
             entry.update(typeconvert_groupdict(progress_match))
             self._progress.append(entry)
-            return True
+            return entry.copy()
 
         for barrier_termination_pattern in BarrierParser.barrier_termination_patterns:
             barrier_termination_match = barrier_termination_pattern.match(line)
             if barrier_termination_match:
-                self._summary.update(typeconvert_groupdict(barrier_termination_match))
-                return True
+                parse_result = typeconvert_groupdict(barrier_termination_match)
+                self._summary.update(parse_result)
+                return parse_result.copy()
 
         crossover_match = BarrierParser.barrier_crossover_pattern.match(line)
         if crossover_match:
-            self._summary.update(typeconvert_groupdict(crossover_match))
-            return True
+            parse_result = typeconvert_groupdict(crossover_match)
+            self._summary.update(parse_result)
+            return parse_result.copy()
 
-        return False
+        return {}
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""
