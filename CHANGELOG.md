@@ -4,6 +4,7 @@
 - fixed platform-specific issues in tests with file and path handling 
 ### Changed
 ### Removed
+- remove Python 3.8 support
 
 ## 3.2.0 - 2024-12-19
 ### Fixed
