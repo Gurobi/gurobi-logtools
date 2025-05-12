@@ -3,7 +3,9 @@
 ### Fixed
 - fixed platform-specific issues in tests with file and path handling 
 ### Changed
+- test Python versions in reverse chronological order
 ### Removed
+- remove Python 3.8 tests
 
 ## 3.2.0 - 2024-12-19
 ### Fixed
