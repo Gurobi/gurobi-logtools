@@ -1,7 +1,7 @@
 # CHANGELOG
 ## Unreleased
 ### Fixed
-- fixed platform-specific issues in tests with file and path handling 
+- fixed platform-specific issues in tests with file and path handling
 ### Changed
 ### Removed
 - remove Python 3.8 support
