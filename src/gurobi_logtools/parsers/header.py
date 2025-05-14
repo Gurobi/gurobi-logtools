@@ -1,4 +1,5 @@
 import re
+from typing import Union
 
 from gurobi_logtools.parsers.util import convert_data_types, typeconvert_groupdict
 
@@ -48,14 +49,14 @@ class HeaderParser:
         self._parameters = {}
         self._started = False
 
-    def parse(self, line: str) -> dict[str, str | float | int | None]:
+    def parse(self, line: str) -> dict[str, Union[str, float, int, None]]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, str | None | int | float]: A dictionary containing the parsed data. Empty if the line does not
+            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
         """
         match = self.parameter_change_pattern.match(line)

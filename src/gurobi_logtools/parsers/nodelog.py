@@ -1,4 +1,5 @@
 import re
+from typing import Union
 
 from gurobi_logtools.parsers.util import (
     convert_data_types,
@@ -67,14 +68,14 @@ class NodeLogParser:
         summary.update({f"Cuts: {name}": count for name, count in self._cuts.items()})
         return summary
 
-    def parse(self, line: str) -> dict[str, str | None | int | float]:
+    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, str | None | int | float]: A dictionary containing the parsed data. Empty if the line does not
+            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
         """
 

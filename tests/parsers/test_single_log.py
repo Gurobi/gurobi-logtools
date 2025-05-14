@@ -326,6 +326,5 @@ def test_multiknapsack_iter():
 
     with open("tests/assets/multiknapsack.log") as infile:
         lines = iter(infile)
-        for line, parse_result in zip(lines, parsed_lines, strict=True):
-            res = parser.parse(line)
-            assert res == parse_result
+        res = [parser.parse(line) for line in lines]
+        assert res == parsed_lines

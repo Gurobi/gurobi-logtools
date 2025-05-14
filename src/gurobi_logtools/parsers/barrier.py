@@ -1,4 +1,5 @@
 import re
+from typing import Union
 
 from gurobi_logtools.parsers.util import float_pattern, typeconvert_groupdict
 
@@ -47,14 +48,14 @@ class BarrierParser:
         self._progress = []
         self._started = False
 
-    def parse(self, line: str) -> dict[str, str | None | int | float]:
+    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-           dict[str, str | None | int | float]: A dictionary containing the parsed data. Empty if the line does not
+           dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
         """
         barrier_ordering_match = BarrierParser.barrier_ordering_pattern.match(line)

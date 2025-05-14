@@ -1,4 +1,5 @@
 import re
+from typing import Union
 
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.util import typeconvert_groupdict
@@ -78,14 +79,14 @@ class PresolveParser:
         self._started = False
         self._pretree_solution_parser = pretree_solution_parser
 
-    def parse(self, line: str) -> dict[str, str | None | int | float]:
+    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, str | None | int | float]: A dictionary containing the parsed data. Empty if the line does not
+            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
         """
         if not self._started:

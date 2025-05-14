@@ -1,4 +1,5 @@
 import re
+from typing import Union
 
 from gurobi_logtools.parsers.util import typeconvert_groupdict
 
@@ -19,14 +20,14 @@ class PreTreeSolutionParser:
         self._summary = {}
         # self._started = False
 
-    def parse(self, line: str) -> dict[str, str | None | int | float]:
+    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, str | None | int | float]: A dictionary containing the parsed data.
+            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data.
         """
         match = self.pretree_solution_regex.match(line)
         if match:

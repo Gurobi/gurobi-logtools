@@ -1,4 +1,5 @@
 import pathlib
+from typing import Union
 
 from gurobi_logtools.parsers.continuous import ContinuousParser
 from gurobi_logtools.parsers.header import HeaderParser
@@ -89,14 +90,14 @@ class SingleLogParser:
         summary["ChangedParams"] = self.header_parser.changed_params()
         return summary
 
-    def parse(self, line: str) -> dict[str, str | None | int | float]:
+    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate the component parsers in sequence.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, str | None | int | float]: A dictionary containing the parsed data. Empty if the line does not
+            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
         """
         # Initially, only check the header parser until started
