@@ -1,4 +1,5 @@
 import re
+from typing import Union
 
 from gurobi_logtools.parsers.util import convert_data_types, typeconvert_groupdict
 
@@ -48,37 +49,40 @@ class HeaderParser:
         self._parameters = {}
         self._started = False
 
-    def parse(self, line: str) -> bool:
+    def parse(self, line: str) -> dict[str, Union[str, float, int, None]]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line is matched by some pattern.
+            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+            match any pattern.
         """
         match = self.parameter_change_pattern.match(line)
         if match:
             self._parameters[match.group("ParamName")] = convert_data_types(
                 match.group("ParamValue")
             )
-            return True
+            return self._parameters.copy()
 
         for pattern in self.header_start_patterns:
             match = pattern.match(line)
             if match:
                 self._started = True
-                self._summary.update(typeconvert_groupdict(match))
-                return True
+                parse_result = typeconvert_groupdict(match)
+                self._summary.update(parse_result)
+                return parse_result
 
         if self._started:
             for pattern in self.header_other_patterns:
                 match = pattern.match(line)
                 if match:
-                    self._summary.update(typeconvert_groupdict(match))
-                    return True
+                    parse_result = typeconvert_groupdict(match)
+                    self._summary.update(parse_result)
+                    return parse_result
 
-        return False
+        return {}
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""

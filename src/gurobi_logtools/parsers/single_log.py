@@ -1,4 +1,5 @@
 import pathlib
+from typing import Union
 
 from gurobi_logtools.parsers.continuous import ContinuousParser
 from gurobi_logtools.parsers.header import HeaderParser
@@ -89,14 +90,15 @@ class SingleLogParser:
         summary["ChangedParams"] = self.header_parser.changed_params()
         return summary
 
-    def parse(self, line: str) -> bool:
+    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate the component parsers in sequence.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line is matched by some pattern.
+            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+            match any pattern.
         """
         # Initially, only check the header parser until started
         if not self.started:
@@ -106,26 +108,26 @@ class SingleLogParser:
                 self.started = True
                 if self.write_to_dir:
                     self.lines.append(line)
-            return matched
+            return matched.copy()
 
         if self.write_to_dir:
             self.lines.append(line)
 
         # First try the current parser
         assert self.current_parser not in self.future_parsers
-        if self.current_parser.parse(line):
-            return True
+        if parse_result := self.current_parser.parse(line):
+            return parse_result.copy()
 
         # Check if any future parsers should take over
         for i, parser in enumerate(self.future_parsers):
-            if parser.parse(line):
+            if parse_result := parser.parse(line):
                 self.current_parser = parser
                 self.future_parsers = self.future_parsers[i + 1 :]
-                return True
+                return parse_result
 
         # Check if the line matches any pattern of the termination parser
-        if self.termination_parser.parse(line):
-            return True
+        if parse_result := self.termination_parser.parse(line):
+            return parse_result
 
         # Nothing matched
-        return False
+        return {}
