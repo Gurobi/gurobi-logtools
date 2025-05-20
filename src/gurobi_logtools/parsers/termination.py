@@ -1,4 +1,5 @@
 import re
+from typing import Union
 
 from gurobi_logtools.parsers.util import typeconvert_groupdict
 
@@ -54,14 +55,15 @@ class TerminationParser:
     def __init__(self):
         self._summary = {}
 
-    def parse(self, line: str) -> bool:
+    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
         """Return True if the line is matched by some pattern.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            bool: Return True if the given line is matched by some pattern.
+            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+            match any pattern.
         """
         for pattern in TerminationParser.patterns:
             match = pattern.match(line)
@@ -71,8 +73,8 @@ class TerminationParser:
                         self._summary.update({"Status": key})
                     else:
                         self._summary.update({key: value})
-                return True
-        return False
+                return self._summary.copy()
+        return {}
 
     def get_summary(self) -> dict:
         """Return the current parsed summary."""
