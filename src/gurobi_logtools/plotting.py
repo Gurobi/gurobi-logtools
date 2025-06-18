@@ -28,6 +28,7 @@ class InitialWidgetValues:
     barmode: constants.BarMode = constants.BarMode.GROUP.value
     show_legend: bool = False
     sort_metric: Optional[constants.SortMetric] = constants.SortMetric.NONE.value
+    sort_field: Optional[str] = None
     boxmean: bool = False
     notched: bool = False
     reverse_ecdf: bool = False
@@ -131,6 +132,9 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             value=widget_defaults.sort_metric,
             description="sort metric",
         ),
+        sort_field=widgets.Dropdown(
+            options=column_names, value=widget_defaults.x, description="sort field"
+        ),
         show_legend=widgets.Checkbox(
             value=widget_defaults.show_legend, description="legend"
         ),
@@ -179,6 +183,7 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         widget_dict["y"].disabled = change["new"] == constants.PlotType.ECDF
         widget_dict["sort_axis"].disabled = change["new"] == constants.PlotType.ECDF
         widget_dict["sort_metric"].disabled = change["new"] == constants.PlotType.ECDF
+        widget_dict["sort_field"].disabled = change["new"] == constants.PlotType.ECDF
 
     widget_dict["type"].observe(type_change, names="value")
 
@@ -211,8 +216,20 @@ def get_plotly_fig():
     return _fig
 
 
-def _get_category_orders(df, x, y, sort_axis, sort_metric):
-    group_col, value_col = (y, x) if sort_axis == constants.SortAxis.SORT_X else (x, y)
+def _get_category_orders(df, x, y, sort_axis, sort_metric, sort_field):
+    if sort_field is None:
+        group_col, value_col = (
+            (x, y) if sort_axis == constants.SortAxis.SORT_X else (y, x)
+        )
+    else:
+        group_col, value_col = (
+            (x, sort_field)
+            if sort_axis == constants.SortAxis.SORT_X
+            else (y, sort_field)
+        )
+
+    if sort_metric is None:
+        sort_metric = constants.SortMetric.MEAN.value
     return {
         group_col: df.groupby(group_col)[value_col]
         .apply(sort_metric)
@@ -239,6 +256,7 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
         width,
         sort_axis,
         sort_metric,
+        sort_field,
         show_legend,
         boxmean,
         notched,
@@ -273,7 +291,12 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
         if sort_metric:
             with contextlib.suppress(Exception):
                 common_kwargs["category_orders"] = _get_category_orders(
-                    data, x, y, sort_axis, sort_metric
+                    data,
+                    x,
+                    y,
+                    sort_axis,
+                    sort_metric,
+                    sort_field,
                 )
 
         _fig = None
@@ -370,6 +393,7 @@ def plot(
             widget_dict["x_axis_title"],
             widget_dict["height"],
             widget_dict["width"],
+            widget_dict["sort_field"],
             widget_dict["sort_metric"],
             centered_sort_axis_buttons,
         ]

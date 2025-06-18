@@ -23,8 +23,8 @@ class BarMode(StrEnum):
 
 
 class SortAxis(StrEnum):
-    SORT_X = "Sort x"
-    SORT_Y = "Sort y"
+    SORT_Y = "Sort y axis"
+    SORT_X = "Sort x axis"
 
 
 class SortMetric(Enum):
