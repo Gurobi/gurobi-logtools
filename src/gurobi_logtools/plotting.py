@@ -36,12 +36,13 @@ class InitialWidgetValues:
 
 def _get_initial_widget_values(user_kwargs: Dict):
     field_names = {f.name for f in fields(InitialWidgetValues)}
-    user_kwargs = {k: v for k, v in user_kwargs.items() if k in field_names}
-    if user_kwargs:
-        return InitialWidgetValues(
-            {k: v for k, v in user_kwargs.items() if k in field_names}
-        )
-    return InitialWidgetValues()
+    init_user_kwargs = {k: v for k, v in user_kwargs.items() if k in field_names}
+
+    # remove any used keyword args from the original dictionary, otherwise we will run into an error
+    for k in init_user_kwargs.keys():
+        user_kwargs.pop(k)
+
+    return InitialWidgetValues(**init_user_kwargs)
 
 
 def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
@@ -267,7 +268,7 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
             data[color] = pd.Categorical(
                 data[color],
                 categories=sorted(data[color].unique().tolist()),
-                ordered=True
+                ordered=True,
             )
         if sort_metric:
             with contextlib.suppress(Exception):
