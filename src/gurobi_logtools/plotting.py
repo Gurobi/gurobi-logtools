@@ -56,7 +56,7 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         widget_defaults.color if widget_defaults.color in column_names else None
     )
 
-    column_names = sorted(column_names) + [None]
+    column_names = sorted(column_names, key=str.lower) + [None]
 
     discrete_color_scale_plot_types = (
         constants.PlotType.BOX,
