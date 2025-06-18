@@ -1,6 +1,7 @@
 import glob
-import pathlib
+import os
 import tempfile
+from pathlib import Path
 
 import pandas as pd
 import pytest
@@ -44,12 +45,13 @@ def testlog_progress():
 
 @pytest.fixture(scope="module")
 def merged_log():
-    with tempfile.NamedTemporaryFile("w") as fp:
+    with tempfile.NamedTemporaryFile("w", delete=False) as fp:
         for path in sorted(glob.glob("data/912-glass4-*.log")):
             with open(path) as infile:
                 fp.writelines(infile.readlines())
         fp.flush()
         yield fp.name
+    Path(fp.name).unlink()
 
 
 def test_merged_log(merged_log):
@@ -116,11 +118,11 @@ def test_progress_glass4(glass4_progress):
 def test_logfile(glass4_summary):
     logfiles = glass4_summary["LogFilePath"]
     assert len(logfiles.unique()) == len(logfiles)
-    assert logfiles.str.startswith("data/").all()
+    assert logfiles.str.startswith("data" + os.sep).all()
     assert logfiles.str.endswith(".log").all()
     assert_series_equal(
-        glass4_summary["LogFile (Parameter)"].apply(lambda l: "data/" + l),
-        logfiles,
+        glass4_summary["LogFile (Parameter)"].apply(lambda l: Path("data") / l),
+        logfiles.apply(Path),
         check_names=False,
     )
     # log names are stripped of the model name and seed
@@ -247,11 +249,9 @@ def test_rewrite_filenames():
 
     with tempfile.TemporaryDirectory() as tempdirname:
         results = glt.parse(
-            "tests/assets/combined/*.log", write_to_dir=f"{tempdirname}/logs"
+            "tests/assets/combined/*.log", write_to_dir=Path(tempdirname) / "logs"
         )
-        split_log_files = sorted(
-            pathlib.Path(tempdirname).joinpath("logs").glob("*.log")
-        )
+        split_log_files = sorted(Path(tempdirname).joinpath("logs").glob("*.log"))
         expected_names = [
             "912-MIPFocus1-Presolve1-TimeLimit600-glass4-0",
             "912-MIPFocus1-Presolve1-TimeLimit600-glass4-1",
