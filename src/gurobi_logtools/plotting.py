@@ -94,6 +94,10 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         ),
         log_x=widgets.Checkbox(value=widget_defaults.log_x, description="log(x)"),
         log_y=widgets.Checkbox(value=widget_defaults.log_y, description="log(y)"),
+        swap_axes=widgets.Button(
+            description="Swap axes",
+            disabled=False,
+        ),
         points=widgets.Dropdown(
             options=[member.value for member in constants.Points],
             value=widget_defaults.points,
@@ -188,10 +192,33 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
     widget_dict["type"].observe(type_change, names="value")
 
     def palette_type_change(change):
-        print("new val", change["new"], "first", _get_palettes(change["new"])[0])
+        # print("new val", change["new"], "first", _get_palettes(change["new"])[0])
         widget_dict["palette_name"].options = _get_palettes(change["new"])
 
     widget_dict["palette_type"].observe(palette_type_change, names="value")
+
+    def swap_axes_press(button_instance):
+        x_ = widget_dict["x"].value
+        y_ = widget_dict["y"].value
+        log_x_ = widget_dict["log_x"].value
+        log_y_ = widget_dict["log_y"].value
+        x_axis_title_ = widget_dict["x_axis_title"].value
+        y_axis_title_ = widget_dict["y_axis_title"].value
+        sort_axis_ = widget_dict["sort_axis"].value
+
+        widget_dict["x"].value = y_
+        widget_dict["y"].value = x_
+        widget_dict["log_x"].value = log_y_
+        widget_dict["log_y"].value = log_x_
+        widget_dict["x_axis_title"].value = y_axis_title_
+        widget_dict["y_axis_title"].value = x_axis_title_
+        widget_dict["sort_axis"].value = (
+            constants.SortAxis.SORT_X
+            if sort_axis_ == constants.SortAxis.SORT_Y
+            else constants.SortAxis.SORT_Y
+        )
+
+    widget_dict["swap_axes"].on_click(swap_axes_press)
 
     return widget_dict
 
@@ -382,7 +409,8 @@ def plot(
         [widget_dict["sort_axis"]], layout=widgets.Layout(justify_content="center")
     )
     centered_color_scale_buttons = widgets.HBox(
-        [widget_dict["color_scale"]], layout=widgets.Layout(justify_content="center")
+        [widget_dict["color_scale"]],
+        layout=widgets.Layout(display="flex", justify_content="center"),
     )
 
     right_col_widgets = widgets.VBox(
@@ -408,6 +436,13 @@ def plot(
             widget_dict["show_legend"],
             widget_dict["log_x"],
             widget_dict["log_y"],
+            widgets.HBox(
+                [widget_dict["swap_axes"]],
+                layout=widgets.Layout(
+                    display="flex",
+                    justify_content="center",
+                ),
+            ),
         ]
     )
 
@@ -430,6 +465,7 @@ def plot(
         ),
     )
 
+    widget_dict.pop("swap_axes")
     output = widgets.interactive_output(
         _make_plot_function(df, **kwargs),
         widget_dict,
