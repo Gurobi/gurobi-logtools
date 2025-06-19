@@ -166,6 +166,7 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         color_categorical=widgets.Checkbox(
             value=False, description="Categorical color?"
         ),
+        query=widgets.Textarea(description="", disabled=False),
     )
 
     # used to disable one widget based on the value of another
@@ -292,6 +293,7 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
         palette_name,
         color_scale,
         color_categorical,
+        query,
     ):
         global _fig
 
@@ -308,7 +310,12 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
             common_kwargs["color_discrete_sequence"] = palette
         else:
             common_kwargs["color_continuous_scale"] = palette
-        data = df.copy()
+
+        try:
+            data = df.query(query)
+        except:
+            data = df.copy()
+
         if color_categorical:
             data[color] = pd.Categorical(
                 data[color],
@@ -453,6 +460,8 @@ def plot(
             widget_dict["palette_name"],
             centered_color_scale_buttons,
             widget_dict["color_categorical"],
+            _make_heading("DataFrame query string"),
+            widget_dict["query"],
         ]
     )
 
