@@ -72,7 +72,7 @@ class HeaderParser:
                 self._started = True
                 parse_result = typeconvert_groupdict(match)
                 self._summary.update(parse_result)
-                return parse_result
+                return parse_result if parse_result else {"Init": "header"}
 
         if self._started:
             for pattern in self.header_other_patterns:
