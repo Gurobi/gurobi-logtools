@@ -1,4 +1,24 @@
-from enum import Enum, StrEnum
+from enum import Enum
+import sys
+
+
+class _StrEnum(str, Enum):
+    """Back-port of :pyclass:`enum.StrEnum` (Python ≥ 3.11)"""
+
+    def __new__(cls, value):
+        if not isinstance(value, str):
+            raise TypeError("StrEnum values must be str")
+        obj = str.__new__(cls, value)
+        obj._value_ = value
+        return obj
+
+    __module__ = __name__
+
+
+if sys.version_info >= (3, 11):
+    from enum import StrEnum
+else:
+    StrEnum = _StrEnum
 
 
 class PlotType(StrEnum):
