@@ -40,6 +40,7 @@ class PaletteType(StrEnum):
     QUALITATIVE = "Qualitative"
     SEQUENTIAL = "Sequential"
     DIVERGING = "Diverging"
+    GUROBI = "Gurobi"
 
 
 class ColorScale(StrEnum):

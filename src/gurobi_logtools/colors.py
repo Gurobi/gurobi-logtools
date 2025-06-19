@@ -1,6 +1,7 @@
 import plotly.express as px
 
 from gurobi_logtools import constants
+from gurobi_logtools import gurobi_colors
 
 
 def _get_palette(palette_type, palette):
@@ -8,6 +9,7 @@ def _get_palette(palette_type, palette):
         constants.PaletteType.SEQUENTIAL: px.colors.sequential,
         constants.PaletteType.DIVERGING: px.colors.diverging,
         constants.PaletteType.QUALITATIVE: px.colors.qualitative,
+        constants.PaletteType.GUROBI: gurobi_colors,
     }[palette_type]
     try:
         return getattr(family, palette)
@@ -20,6 +22,7 @@ def _get_palettes(type_name):
         constants.PaletteType.SEQUENTIAL: _sequential_plotly_palettes,
         constants.PaletteType.DIVERGING: _diverging_plotly_palettes,
         constants.PaletteType.QUALITATIVE: _qualitative_plotly_palettes,
+        constants.PaletteType.GUROBI: _gurobi_palettes,
     }[type_name]
 
 
@@ -28,6 +31,7 @@ def _get_default_palette(type_name):
         constants.PaletteType.SEQUENTIAL: "Plotly3",
         constants.PaletteType.DIVERGING: "Picnic",
         constants.PaletteType.QUALITATIVE: "Plotly",
+        constants.PaletteType.GUROBI: "Gurobi_0",
     }[type_name]
 
 
@@ -79,6 +83,7 @@ _diverging_plotly_palettes = [
 ]
 
 _qualitative_plotly_palettes = [
+    "Gurobi",
     "Alphabet",
     "Alphabet_r",
     "Antique",
@@ -254,6 +259,33 @@ _sequential_plotly_palettes = [
     "thermal_r",
     "turbid",
     "turbid_r",
+]
+
+_gurobi_palettes = [
+    "Gurobi_0",
+    "Gurobi_1",
+    "Gurobi_2",
+    "Gurobi_3",
+    "Gurobi_4",
+    "Gurobi_5",
+    "Gurobi_6",
+    "Gurobi_7",
+    "Gurobi_8",
+    "Gurobi_9",
+    "Gurobi_1",
+    "Gurobi_1",
+    "Gurobi_1",
+    "Gurobi_1",
+    "Gurobi_1",
+    "Gurobi_1",
+    "Gurobi_1",
+    "Gurobi_1",
+    "Gurobi_1",
+    "Gurobi_1",
+    "Gurobi_2",
+    "Gurobi_2",
+    "Gurobi_2",
+    "Gurobi_2",
 ]
 
 
