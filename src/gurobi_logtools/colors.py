@@ -1,7 +1,6 @@
 import plotly.express as px
 
-from gurobi_logtools import constants
-from gurobi_logtools import gurobi_colors
+from gurobi_logtools import constants, gurobi_colors
 
 
 def _get_palette(palette_type, palette):
