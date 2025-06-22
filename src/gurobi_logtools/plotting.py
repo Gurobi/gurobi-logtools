@@ -33,6 +33,7 @@ class InitialWidgetValues:
     notched: bool = False
     reverse_ecdf: bool = False
     palette_type: constants.PaletteType = constants.PaletteType.QUALITATIVE.value
+    ignore_params: str = "SoftMemLimit TimeLimit"
 
 
 def _get_initial_widget_values(user_kwargs: Dict):
@@ -49,6 +50,7 @@ def _get_initial_widget_values(user_kwargs: Dict):
 def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
     widget_defaults = _get_initial_widget_values(user_kwargs)
 
+    column_names.append("Parameters")
     # check wether selected keys are available in DataFrame
     widget_defaults.x = widget_defaults.x if widget_defaults.x in column_names else None
     widget_defaults.y = widget_defaults.y if widget_defaults.y in column_names else None
@@ -166,7 +168,15 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         color_categorical=widgets.Checkbox(
             value=False, description="Categorical color?"
         ),
-        query=widgets.Textarea(description="", disabled=False),
+        query=widgets.Textarea(
+            description="", disabled=False, rows=1, layout=widgets.Layout(padding="0em")
+        ),
+        ignore_params=widgets.Textarea(
+            description="",
+            value=widget_defaults.ignore_params,
+            disabled=False,
+            rows=1,
+        ),
     )
 
     # used to disable one widget based on the value of another
@@ -193,7 +203,6 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
     widget_dict["type"].observe(type_change, names="value")
 
     def palette_type_change(change):
-        # print("new val", change["new"], "first", _get_palettes(change["new"])[0])
         widget_dict["palette_name"].options = _get_palettes(change["new"])
 
     widget_dict["palette_type"].observe(palette_type_change, names="value")
@@ -224,12 +233,13 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
     return widget_dict
 
 
-def _add_pretty_param_labels(df: pd.DataFrame, ignored_params: Tuple) -> pd.DataFrame:
+def _add_pretty_param_labels(df: pd.DataFrame, ignored_params: str) -> pd.DataFrame:
+    ignored_params = ignored_params.lower().replace("\n", " ").replace(",", " ").split()
     pretty_params = (
         df["ChangedParams"]
         .map(
             lambda d: "<br>".join(
-                [f"{k}={v}" for k, v in d.items() if k not in ignored_params]
+                [f"{k}={v}" for k, v in d.items() if k.lower() not in ignored_params]
             )
         )
         .replace("", "Defaults")
@@ -294,6 +304,7 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
         color_scale,
         color_categorical,
         query,
+        ignore_params,
     ):
         global _fig
 
@@ -311,10 +322,10 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
         else:
             common_kwargs["color_continuous_scale"] = palette
 
-        try:
-            data = df.query(query)
-        except:
-            data = df.copy()
+        data = _add_pretty_param_labels(df, ignore_params)
+
+        with contextlib.suppress(Exception):
+            data = data.query(query)
 
         if color_categorical:
             data[color] = pd.Categorical(
@@ -377,15 +388,12 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
 
 def plot(
     df: pd.DataFrame,
-    ignored_params=("TimeLimit", "SoftMemLimit"),
     **kwargs,
 ):
     """plot different chart types to compare performance and see performance variability across random seeds
 
     uses Plotly express; all available keyword arguments can be passed through to px.bar(), px.scatter(), etc.
     """
-    with contextlib.suppress(Exception):
-        df = _add_pretty_param_labels(df, ignored_params)
 
     widget_dict = _make_widgets(df.columns.tolist(), kwargs)
 
@@ -460,8 +468,14 @@ def plot(
             widget_dict["palette_name"],
             centered_color_scale_buttons,
             widget_dict["color_categorical"],
-            _make_heading("DataFrame query string"),
+            widgets.HTML(
+                f"<h4 style='text-align:left; margin: 0px; padding: 0px;'>DataFrame query string</h4>",
+            ),
             widget_dict["query"],
+            widgets.HTML(
+                f"<h4 style='text-align:left;  margin: 0px; padding: 0px;'>Parameters to ignore</h4>",
+            ),
+            widget_dict["ignore_params"],
         ]
     )
 
