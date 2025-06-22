@@ -243,6 +243,8 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
 
 
 def _add_pretty_param_labels(df: pd.DataFrame, ignored_params: str) -> pd.DataFrame:
+    if "ChangedParams" not in df.columns:
+        return df.copy()
     ignored_params = ignored_params.lower().replace("\n", " ").replace(",", " ").split()
     pretty_params = (
         df["ChangedParams"]
