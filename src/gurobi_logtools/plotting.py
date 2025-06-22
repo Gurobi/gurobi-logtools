@@ -26,6 +26,11 @@ class InitialWidgetValues:
     log_y: bool = False
     points: constants.Points = constants.Points.ALL.value
     barmode: constants.BarMode = constants.BarMode.GROUP.value
+    title: str = ""
+    x_axis_label: str = ""
+    y_axis_label: str = ""
+    height: int = 0
+    width: int = 0
     show_legend: bool = False
     sort_metric: Optional[constants.SortMetric] = constants.SortMetric.NONE.value
     sort_field: Optional[str] = None
@@ -112,18 +117,22 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             description="barmode",
             disabled=widget_defaults.type != constants.PlotType.BAR,
         ),
-        title=widgets.Text(value="", description="title"),
-        y_axis_title=widgets.Text(value="", description="y axis label"),
-        x_axis_title=widgets.Text(value="", description="x axis label"),
+        title=widgets.Text(value=widget_defaults.title, description="title"),
+        y_axis_title=widgets.Text(
+            value=widget_defaults.y_axis_label, description="y axis label"
+        ),
+        x_axis_title=widgets.Text(
+            value=widget_defaults.x_axis_label, description="x axis label"
+        ),
         height=widgets.BoundedIntText(
-            value=0,  # default
+            value=widget_defaults.height,  # default
             min=0,
             max=5000,
             step=10,
             description="Height:",
         ),
         width=widgets.BoundedIntText(
-            value=0,  # default
+            value=widget_defaults.width,  # default
             min=0,
             max=3000,
             step=10,
