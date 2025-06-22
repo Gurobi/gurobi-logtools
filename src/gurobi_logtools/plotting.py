@@ -1,6 +1,6 @@
 import contextlib
 from dataclasses import dataclass, fields
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import ipywidgets as widgets
 import pandas as pd
