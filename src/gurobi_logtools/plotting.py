@@ -16,7 +16,7 @@ from gurobi_logtools.colors import (  # _diverging_plotly_palettes,; _qualitativ
 
 
 @dataclass
-class InitialWidgetValues:
+class WidgetValues:
     x: str = "Runtime"
     y: str = "Parameters"
     color: str = "Parameters"
@@ -34,22 +34,30 @@ class InitialWidgetValues:
     show_legend: bool = False
     sort_metric: Optional[constants.SortMetric] = constants.SortMetric.NONE.value
     sort_field: Optional[str] = None
+    sort_axis: constants.SortAxis = constants.SortAxis.SORT_Y
     boxmean: bool = False
     notched: bool = False
     reverse_ecdf: bool = False
     palette_type: constants.PaletteType = constants.PaletteType.QUALITATIVE.value
+    palette_name: str = None
+    color_scale: constants.ColorScale = constants.ColorScale.DISCRETE.value
+    color_categorical: bool = False
     ignore_params: str = "SoftMemLimit TimeLimit"
+    query: str = ""
+
+
+_saved_widget_values = None
 
 
 def _get_initial_widget_values(user_kwargs: Dict):
-    field_names = {f.name for f in fields(InitialWidgetValues)}
+    field_names = {f.name for f in fields(WidgetValues)}
     init_user_kwargs = {k: v for k, v in user_kwargs.items() if k in field_names}
 
     # remove any used keyword args from the original dictionary, otherwise we will run into an error
     for k in init_user_kwargs.keys():
         user_kwargs.pop(k)
 
-    return InitialWidgetValues(**init_user_kwargs)
+    return WidgetValues(**init_user_kwargs)
 
 
 def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
@@ -105,6 +113,16 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             description="Swap axes",
             disabled=False,
         ),
+        save_config=widgets.Button(
+            description="Save config",
+            disabled=False,
+            style={"button_width": "auto"},
+        ),
+        load_config=widgets.Button(
+            description="Load config",
+            disabled=False,
+            style={"button_width": "auto"},
+        ),
         points=widgets.Dropdown(
             options=[member.value for member in constants.Points],
             value=widget_defaults.points,
@@ -118,10 +136,10 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             disabled=widget_defaults.type != constants.PlotType.BAR,
         ),
         title=widgets.Text(value=widget_defaults.title, description="title"),
-        y_axis_title=widgets.Text(
+        y_axis_label=widgets.Text(
             value=widget_defaults.y_axis_label, description="y axis label"
         ),
-        x_axis_title=widgets.Text(
+        x_axis_label=widgets.Text(
             value=widget_defaults.x_axis_label, description="x axis label"
         ),
         height=widgets.BoundedIntText(
@@ -170,12 +188,12 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         ),
         color_scale=widgets.ToggleButtons(
             options=[member.value for member in constants.ColorScale],
-            value=constants.ColorScale.DISCRETE,
+            value=widget_defaults.color_scale,
             disabled=widget_defaults.type in discrete_color_scale_plot_types,
             style={"button_width": "auto"},
         ),
         color_categorical=widgets.Checkbox(
-            value=False, description="Categorical color?"
+            value=widget_defaults.color_categorical, description="Categorical color?"
         ),
         query=widgets.Textarea(
             description="", disabled=False, rows=1, layout=widgets.Layout(padding="0em")
@@ -221,16 +239,16 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         y_ = widget_dict["y"].value
         log_x_ = widget_dict["log_x"].value
         log_y_ = widget_dict["log_y"].value
-        x_axis_title_ = widget_dict["x_axis_title"].value
-        y_axis_title_ = widget_dict["y_axis_title"].value
+        x_axis_label_ = widget_dict["x_axis_label"].value
+        y_axis_label_ = widget_dict["y_axis_label"].value
         sort_axis_ = widget_dict["sort_axis"].value
 
         widget_dict["x"].value = y_
         widget_dict["y"].value = x_
         widget_dict["log_x"].value = log_y_
         widget_dict["log_y"].value = log_x_
-        widget_dict["x_axis_title"].value = y_axis_title_
-        widget_dict["y_axis_title"].value = x_axis_title_
+        widget_dict["x_axis_label"].value = y_axis_label_
+        widget_dict["y_axis_label"].value = x_axis_label_
         widget_dict["sort_axis"].value = (
             constants.SortAxis.SORT_X
             if sort_axis_ == constants.SortAxis.SORT_Y
@@ -238,6 +256,27 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         )
 
     widget_dict["swap_axes"].on_click(swap_axes_press)
+
+    def save_widget_values(button_instance):
+        global _saved_widget_values
+        _saved_widget_values = WidgetValues(
+            **{f.name: widget_dict[f.name].value for f in fields(WidgetValues)}
+        )
+
+    widget_dict["save_config"].on_click(save_widget_values)
+
+    def load_widget_values(button_instance):
+        global _saved_widget_values
+
+        if _saved_widget_values is None:
+            return
+
+        field_names = {f.name for f in fields(WidgetValues) if f.name != "palette_name"}
+        for name in field_names:
+            widget_dict[name].value = getattr(_saved_widget_values, name)
+        widget_dict["palette_name"].value = _saved_widget_values.palette_name
+
+    widget_dict["load_config"].on_click(load_widget_values)
 
     return widget_dict
 
@@ -310,8 +349,8 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
         log_x,
         log_y,
         title,
-        x_axis_title,
-        y_axis_title,
+        x_axis_label,
+        y_axis_label,
         points,
         barmode,
         height,
@@ -389,10 +428,10 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
             )
         if _fig:
             updates = {}
-            if x_axis_title:
-                updates["xaxis_title"] = x_axis_title
-            if y_axis_title:
-                updates["yaxis_title"] = y_axis_title
+            if x_axis_label:
+                updates["xaxis_title"] = x_axis_label
+            if y_axis_label:
+                updates["yaxis_title"] = y_axis_label
             if height:
                 updates["height"] = height
             if width:
@@ -456,8 +495,8 @@ def plot(
         [
             layout_header,
             widget_dict["title"],
-            widget_dict["y_axis_title"],
-            widget_dict["x_axis_title"],
+            widget_dict["y_axis_label"],
+            widget_dict["x_axis_label"],
             widget_dict["height"],
             widget_dict["width"],
             widget_dict["sort_field"],
@@ -480,6 +519,12 @@ def plot(
                 layout=widgets.Layout(
                     display="flex",
                     justify_content="center",
+                ),
+            ),
+            widgets.HBox(
+                [widget_dict["save_config"], widget_dict["load_config"]],
+                layout=widgets.Layout(
+                    width="100%",
                 ),
             ),
         ]
@@ -513,6 +558,9 @@ def plot(
     )
 
     widget_dict.pop("swap_axes")
+    widget_dict.pop("save_config")
+    widget_dict.pop("load_config")
+
     output = widgets.interactive_output(
         _make_plot_function(df, **kwargs),
         widget_dict,
