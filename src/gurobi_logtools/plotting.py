@@ -265,6 +265,19 @@ def get_plotly_fig():
     return _fig
 
 
+def save_plot(filepath: str) -> None:
+    """Will save plot to file.  Filetype inferred from extension.
+
+    A variety of filetypes are supported, including png, svg and pdf.
+    Requires `kaleido` Python package and Chrome.  See https://plotly.com/python/static-image-export/
+
+    Parameters
+    ----------
+    filepath : str
+    """
+    get_plotly_fig().write_image(filepath)
+
+
 def _get_category_orders(df, x, y, sort_axis, sort_metric, sort_field):
     if sort_field is None:
         group_col, value_col = (
