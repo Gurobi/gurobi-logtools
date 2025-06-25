@@ -1,3 +1,6 @@
+# These Gurobi palettes are permutations of the four most colorful colors in the brand palette
+# (Tomato, Denim, Sky, Navy) with Charcoal appended at the end.
+
 Gurobi_0 = [
     "#DD2113",  # Tomato
     "#1C4679",  # Denim

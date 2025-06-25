@@ -4,6 +4,7 @@ from gurobi_logtools import constants, gurobi_colors
 
 
 def _get_palette(palette_type, palette):
+    # used by the plotting functions in .plotting.py
     family = {
         constants.PaletteType.SEQUENTIAL: px.colors.sequential,
         constants.PaletteType.DIVERGING: px.colors.diverging,
@@ -17,6 +18,7 @@ def _get_palette(palette_type, palette):
 
 
 def _get_palettes(type_name):
+    # used by the plotting functions in .plotting.py
     return {
         constants.PaletteType.SEQUENTIAL: _sequential_plotly_palettes,
         constants.PaletteType.DIVERGING: _diverging_plotly_palettes,
@@ -26,6 +28,7 @@ def _get_palettes(type_name):
 
 
 def _get_default_palette(type_name):
+    # used by the plotting functions in .plotting.py
     return {
         constants.PaletteType.SEQUENTIAL: "Plotly3",
         constants.PaletteType.DIVERGING: "Picnic",

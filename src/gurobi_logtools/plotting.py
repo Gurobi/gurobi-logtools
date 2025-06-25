@@ -8,15 +8,15 @@ import plotly.express as px
 from IPython.display import display
 
 from gurobi_logtools import constants
-from gurobi_logtools.colors import (  # _diverging_plotly_palettes,; _qualitative_plotly_palettes,; _sequential_plotly_palettes,
-    _get_default_palette,
-    _get_palette,
-    _get_palettes,
-)
+from gurobi_logtools.colors import _get_default_palette, _get_palette, _get_palettes
 
 
 @dataclass
 class WidgetValues:
+    """
+    This class is used to both define default values for widgets, and enable load/save functionality.
+    """
+
     x: str = "Runtime"
     y: str = "Parameters"
     color: str = "Parameters"
@@ -46,7 +46,8 @@ class WidgetValues:
     query: str = ""
 
 
-_saved_widget_values = None
+# global variable used to hold a single instance of
+_saved_widget_values: Optional[WidgetValues] = None
 
 
 def _get_initial_widget_values(user_kwargs: Dict):
@@ -63,7 +64,11 @@ def _get_initial_widget_values(user_kwargs: Dict):
 def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
     widget_defaults = _get_initial_widget_values(user_kwargs)
 
-    column_names.append("Parameters")
+    # 'Parameters' will be a special column available from the plot UI.
+    #  It is intended for use as an 'aesthetic' label.  It needs to be manually added
+    #  here so that the defaults can use it.  We then sort by lower case alphabetical order.
+    column_names = sorted(column_names + ["Parameters"], key=str.lower) + [None]
+
     # check wether selected keys are available in DataFrame
     widget_defaults.x = widget_defaults.x if widget_defaults.x in column_names else None
     widget_defaults.y = widget_defaults.y if widget_defaults.y in column_names else None
@@ -71,14 +76,15 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         widget_defaults.color if widget_defaults.color in column_names else None
     )
 
-    column_names = sorted(column_names, key=str.lower) + [None]
-
     discrete_color_scale_plot_types = (
         constants.PlotType.BOX,
         constants.PlotType.LINE,
         constants.PlotType.ECDF,
     )
 
+    # This dictionary of widgets makes it easy to retrieve widgets later.
+    # Some of these widgets will have values that feed into the plot function,
+    # some do not (such as swap_axes, or save_config).
     widget_dict = dict(
         x=widgets.Dropdown(
             options=column_names, value=widget_defaults.x, description="x"
@@ -206,8 +212,8 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         ),
     )
 
-    # used to disable one widget based on the value of another
     def type_change(change):
+        # This function is a callback used to disable one widget based on the value of another
         if change["new"] in discrete_color_scale_plot_types:
             widget_dict["color_scale"].value = constants.ColorScale.DISCRETE
         widget_dict["color_scale"].disabled = (
@@ -230,34 +236,33 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
     widget_dict["type"].observe(type_change, names="value")
 
     def palette_type_change(change):
+        # This function changes the palettes available in the dropdown when the palette type changes
         widget_dict["palette_name"].options = _get_palettes(change["new"])
 
     widget_dict["palette_type"].observe(palette_type_change, names="value")
 
     def swap_axes_press(button_instance):
-        x_ = widget_dict["x"].value
-        y_ = widget_dict["y"].value
-        log_x_ = widget_dict["log_x"].value
-        log_y_ = widget_dict["log_y"].value
-        x_axis_label_ = widget_dict["x_axis_label"].value
-        y_axis_label_ = widget_dict["y_axis_label"].value
-        sort_axis_ = widget_dict["sort_axis"].value
+        # Switches necessary widget values to swap axes.  button_instance is ignored but
+        # necessary for signature of function used in on_click.
 
-        widget_dict["x"].value = y_
-        widget_dict["y"].value = x_
-        widget_dict["log_x"].value = log_y_
-        widget_dict["log_y"].value = log_x_
-        widget_dict["x_axis_label"].value = y_axis_label_
-        widget_dict["y_axis_label"].value = x_axis_label_
+        def _swap(s1, s2):
+            w = widget_dict
+            w[s1].value, w[s2].value = w[s2].value, w[s1].value
+
+        _swap("x", "y")
+        _swap("log_x", "log_y")
+        _swap("x_axis_label", "y_axis_label")
+
         widget_dict["sort_axis"].value = (
             constants.SortAxis.SORT_X
-            if sort_axis_ == constants.SortAxis.SORT_Y
+            if widget_dict["sort_axis"].value == constants.SortAxis.SORT_Y
             else constants.SortAxis.SORT_Y
         )
 
     widget_dict["swap_axes"].on_click(swap_axes_press)
 
     def save_widget_values(button_instance):
+        # button_instance is ignored but necessary for signature of function used in on_click
         global _saved_widget_values
         _saved_widget_values = WidgetValues(
             **{f.name: widget_dict[f.name].value for f in fields(WidgetValues)}
@@ -282,7 +287,11 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
 
 
 def _add_pretty_param_labels(df: pd.DataFrame, ignored_params: str) -> pd.DataFrame:
+    # 'Parameters' will be a special column available from the plot UI.
+    #  It is derived from ChangedParams and is intended for use as an 'aesthetic' label.
+
     if "ChangedParams" not in df.columns:
+        # the fact we return a copy is important here.  It is not ideal, but it is convenient.
         return df.copy()
     ignored_params = ignored_params.lower().replace("\n", " ").replace(",", " ").split()
     pretty_params = (
@@ -297,6 +306,7 @@ def _add_pretty_param_labels(df: pd.DataFrame, ignored_params: str) -> pd.DataFr
     return df.assign(Parameters=pretty_params)
 
 
+# Global variable used to keep track of figure related to the last plot
 _fig = None
 
 
@@ -324,6 +334,9 @@ def save_plot(filepath: str) -> None:
 
 
 def _get_category_orders(df, x, y, sort_axis, sort_metric, sort_field):
+    # the return value of this function will be used as an argument to the `category_orders` parameter
+    # in plotly functions, e.g. https://plotly.com/python-api-reference/generated/plotly.express.box.html#plotly.express.box
+    assert sort_metric is not None
     if sort_field is None:
         group_col, value_col = (
             (x, y) if sort_axis == constants.SortAxis.SORT_X else (y, x)
@@ -335,8 +348,6 @@ def _get_category_orders(df, x, y, sort_axis, sort_metric, sort_field):
             else (y, sort_field)
         )
 
-    if sort_metric is None:
-        sort_metric = constants.SortMetric.MEAN.value
     return {
         group_col: df.groupby(group_col)[value_col]
         .apply(sort_metric)
@@ -346,6 +357,7 @@ def _get_category_orders(df, x, y, sort_axis, sort_metric, sort_field):
 
 
 def _make_plot_function(df: pd.DataFrame, **kwargs):
+    # using closure so that dataframe and user key word arguments are captured in the plotting function
     def _plot(
         x,
         y,
@@ -378,6 +390,8 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
         global _fig
 
         palette = _get_palette(palette_type, palette_name)
+
+        # common keyword arguments to all plotly.express plotting functions (eg. box, scatter, line etc)
         common_kwargs = dict(
             x=x,
             y=y,
@@ -391,12 +405,17 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
         else:
             common_kwargs["color_continuous_scale"] = palette
 
+        # possibly add the Parameters column here
+        # In any case `data` will be a copy which is important to avoid errors, and avoid changing
+        # the original dataframe.
         data = _add_pretty_param_labels(df, ignore_params)
 
         with contextlib.suppress(Exception):
+            # suppress the error, as we don't want an error while the user is creating their query string
             data = data.query(query)
 
         if color_categorical:
+            # convert color column to a categorical type
             data[color] = pd.Categorical(
                 data[color],
                 categories=sorted(data[color].unique().tolist()),
@@ -404,6 +423,9 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
             )
         if sort_metric:
             with contextlib.suppress(Exception):
+                # some sort related values will not make sense, e.g. the mean of strings.
+                # We prefer to just ignore this rather than cause errors, under assumption the user
+                # is making multiple changes to reach something which does make sense.
                 common_kwargs["category_orders"] = _get_category_orders(
                     data,
                     x,
@@ -432,6 +454,7 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
             _fig = px.ecdf(
                 data, **common_kwargs, ecdfmode=ecdfmode, ecdfnorm="percent", **kwargs
             )
+
         if _fig:
             updates = {}
             if x_axis_label:
@@ -459,9 +482,18 @@ def plot(
     df: pd.DataFrame,
     **kwargs,
 ):
-    """plot different chart types to compare performance and see performance variability across random seeds
+    """Plot different chart types to compare performance, and explore correlations.
 
-    uses Plotly express; all available keyword arguments can be passed through to px.bar(), px.scatter(), etc.
+    A major use case is to compare parameters vs runtime and assess performance variability across random seeds.
+
+    This functionality is built upon Plotly express; all available keyword arguments can be passed through to px.bar(), px.scatter(), etc.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+    ** kwargs
+        Key word arguments that can be used to either prepopulate widget values, e.g. y="ObjVal",
+        or otherwise passed to the underlying Plotly express function.
     """
 
     widget_dict = _make_widgets(df.columns.tolist(), kwargs)
@@ -476,7 +508,7 @@ def plot(
     toggles_header = _make_heading("Toggles")
     palette_header = _make_heading("Palette")
 
-    left_col_widgets = widgets.VBox(
+    column_1_widgets = widgets.VBox(
         [
             parameters_header,
             widget_dict["x"],
@@ -489,15 +521,7 @@ def plot(
         ]
     )
 
-    centered_sort_axis_buttons = widgets.HBox(
-        [widget_dict["sort_axis"]], layout=widgets.Layout(justify_content="center")
-    )
-    centered_color_scale_buttons = widgets.HBox(
-        [widget_dict["color_scale"]],
-        layout=widgets.Layout(display="flex", justify_content="center"),
-    )
-
-    right_col_widgets = widgets.VBox(
+    column_2_widgets = widgets.VBox(
         [
             layout_header,
             widget_dict["title"],
@@ -507,11 +531,14 @@ def plot(
             widget_dict["width"],
             widget_dict["sort_field"],
             widget_dict["sort_metric"],
-            centered_sort_axis_buttons,
+            widgets.HBox(
+                [widget_dict["sort_axis"]],
+                layout=widgets.Layout(justify_content="center"),
+            ),
         ]
     )
 
-    toggle_widgets = widgets.VBox(
+    columns_3_widgets = widgets.VBox(
         [
             toggles_header,
             widget_dict["boxmean"],
@@ -536,12 +563,15 @@ def plot(
         ]
     )
 
-    palette_widgets = widgets.VBox(
+    columns_4_widgets = widgets.VBox(
         [
             palette_header,
             widget_dict["palette_type"],
             widget_dict["palette_name"],
-            centered_color_scale_buttons,
+            widgets.HBox(
+                [widget_dict["color_scale"]],
+                layout=widgets.Layout(display="flex", justify_content="center"),
+            ),
             widget_dict["color_categorical"],
             widgets.HTML(
                 f"<h4 style='text-align:left; margin: 0px; padding: 0px;'>DataFrame query string</h4>",
@@ -555,7 +585,7 @@ def plot(
     )
 
     ui = widgets.HBox(
-        [left_col_widgets, right_col_widgets, toggle_widgets, palette_widgets],
+        [column_1_widgets, column_2_widgets, columns_3_widgets, columns_4_widgets],
         layout=widgets.Layout(
             display="flex",
             flex_flow="row wrap",  # key part: enables wrapping
@@ -563,6 +593,8 @@ def plot(
         ),
     )
 
+    # these widgets don't correspond to plot arguments and need to be removed from
+    # the widget dictionary before it is stitched with the plot function via interactive_output()
     widget_dict.pop("swap_axes")
     widget_dict.pop("save_config")
     widget_dict.pop("load_config")
@@ -572,6 +604,9 @@ def plot(
         widget_dict,
     )
 
+    # spacer is used to create a bit of space between plot and widgets.
+    # This space could be used to dispay messages to the user in the future
+    # if this seems useful.
     spacer = widgets.Box(layout=widgets.Layout(height="40px"))
     container = widgets.VBox(
         [
