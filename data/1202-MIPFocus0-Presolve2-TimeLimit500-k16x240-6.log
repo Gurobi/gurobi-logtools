@@ -1,7 +1,7 @@
 #######################
-Slurm job id: 17497813_227
-Running on machine: p29
-Running cmd: /nfs/shared/static-builds/gurobi1202 SOFTMEMLIMIT=125 MIPFocus=0 Presolve=2 TimeLimit=500 seed=16 /nfs/models/miplib2010/k16x240.mps.bz2
+
+
+
 #######################
 Set parameter TimeLimit to value 500
 Set parameter SoftMemLimit to value 125
@@ -13,7 +13,7 @@ Using license file /opt/gurobi/gurobi.lic
 Gurobi Optimizer version 12.0.2 build v12.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS")
 Copyright (c) 2025, Gurobi Optimization, LLC
 
-Read MPS format model from file /nfs/models/miplib2010/k16x240.mps.bz2
+Read MPS format model from file /miplib2010/k16x240.mps.bz2
 Reading time = 0.00 seconds
 k16x240: 256 rows, 480 columns, 960 nonzeros
 

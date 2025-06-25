@@ -1,0 +1,360 @@
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=500 seed=10 logfile=1003-MIPFocus0-Presolve1-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=500 seed=11 logfile=1003-MIPFocus0-Presolve1-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=500 seed=12 logfile=1003-MIPFocus0-Presolve1-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=500 seed=13 logfile=1003-MIPFocus0-Presolve1-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=500 seed=14 logfile=1003-MIPFocus0-Presolve1-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=500 seed=15 logfile=1003-MIPFocus0-Presolve1-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=500 seed=16 logfile=1003-MIPFocus0-Presolve1-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=500 seed=17 logfile=1003-MIPFocus0-Presolve1-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=500 seed=18 logfile=1003-MIPFocus0-Presolve1-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=500 seed=19 logfile=1003-MIPFocus0-Presolve1-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=500 seed=10 logfile=1003-MIPFocus1-Presolve1-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=500 seed=11 logfile=1003-MIPFocus1-Presolve1-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=500 seed=12 logfile=1003-MIPFocus1-Presolve1-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=500 seed=13 logfile=1003-MIPFocus1-Presolve1-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=500 seed=14 logfile=1003-MIPFocus1-Presolve1-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=500 seed=15 logfile=1003-MIPFocus1-Presolve1-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=500 seed=16 logfile=1003-MIPFocus1-Presolve1-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=500 seed=17 logfile=1003-MIPFocus1-Presolve1-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=500 seed=18 logfile=1003-MIPFocus1-Presolve1-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=500 seed=19 logfile=1003-MIPFocus1-Presolve1-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=500 seed=10 logfile=1003-MIPFocus2-Presolve1-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=500 seed=11 logfile=1003-MIPFocus2-Presolve1-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=500 seed=12 logfile=1003-MIPFocus2-Presolve1-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=500 seed=13 logfile=1003-MIPFocus2-Presolve1-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=500 seed=14 logfile=1003-MIPFocus2-Presolve1-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=500 seed=15 logfile=1003-MIPFocus2-Presolve1-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=500 seed=16 logfile=1003-MIPFocus2-Presolve1-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=500 seed=17 logfile=1003-MIPFocus2-Presolve1-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=500 seed=18 logfile=1003-MIPFocus2-Presolve1-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=500 seed=19 logfile=1003-MIPFocus2-Presolve1-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=500 seed=10 logfile=1003-MIPFocus3-Presolve1-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=500 seed=11 logfile=1003-MIPFocus3-Presolve1-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=500 seed=12 logfile=1003-MIPFocus3-Presolve1-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=500 seed=13 logfile=1003-MIPFocus3-Presolve1-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=500 seed=14 logfile=1003-MIPFocus3-Presolve1-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=500 seed=15 logfile=1003-MIPFocus3-Presolve1-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=500 seed=16 logfile=1003-MIPFocus3-Presolve1-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=500 seed=17 logfile=1003-MIPFocus3-Presolve1-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=500 seed=18 logfile=1003-MIPFocus3-Presolve1-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=500 seed=19 logfile=1003-MIPFocus3-Presolve1-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=500 seed=10 logfile=1003-MIPFocus0-Presolve2-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=500 seed=11 logfile=1003-MIPFocus0-Presolve2-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=500 seed=12 logfile=1003-MIPFocus0-Presolve2-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=500 seed=13 logfile=1003-MIPFocus0-Presolve2-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=500 seed=14 logfile=1003-MIPFocus0-Presolve2-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=500 seed=15 logfile=1003-MIPFocus0-Presolve2-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=500 seed=16 logfile=1003-MIPFocus0-Presolve2-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=500 seed=17 logfile=1003-MIPFocus0-Presolve2-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=500 seed=18 logfile=1003-MIPFocus0-Presolve2-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=500 seed=19 logfile=1003-MIPFocus0-Presolve2-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=500 seed=10 logfile=1003-MIPFocus1-Presolve2-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=500 seed=11 logfile=1003-MIPFocus1-Presolve2-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=500 seed=12 logfile=1003-MIPFocus1-Presolve2-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=500 seed=13 logfile=1003-MIPFocus1-Presolve2-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=500 seed=14 logfile=1003-MIPFocus1-Presolve2-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=500 seed=15 logfile=1003-MIPFocus1-Presolve2-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=500 seed=16 logfile=1003-MIPFocus1-Presolve2-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=500 seed=17 logfile=1003-MIPFocus1-Presolve2-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=500 seed=18 logfile=1003-MIPFocus1-Presolve2-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=500 seed=19 logfile=1003-MIPFocus1-Presolve2-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=500 seed=10 logfile=1003-MIPFocus2-Presolve2-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=500 seed=11 logfile=1003-MIPFocus2-Presolve2-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=500 seed=12 logfile=1003-MIPFocus2-Presolve2-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=500 seed=13 logfile=1003-MIPFocus2-Presolve2-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=500 seed=14 logfile=1003-MIPFocus2-Presolve2-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=500 seed=15 logfile=1003-MIPFocus2-Presolve2-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=500 seed=16 logfile=1003-MIPFocus2-Presolve2-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=500 seed=17 logfile=1003-MIPFocus2-Presolve2-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=500 seed=18 logfile=1003-MIPFocus2-Presolve2-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=500 seed=19 logfile=1003-MIPFocus2-Presolve2-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=500 seed=10 logfile=1003-MIPFocus3-Presolve2-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=500 seed=11 logfile=1003-MIPFocus3-Presolve2-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=500 seed=12 logfile=1003-MIPFocus3-Presolve2-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=500 seed=13 logfile=1003-MIPFocus3-Presolve2-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=500 seed=14 logfile=1003-MIPFocus3-Presolve2-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=500 seed=15 logfile=1003-MIPFocus3-Presolve2-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=500 seed=16 logfile=1003-MIPFocus3-Presolve2-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=500 seed=17 logfile=1003-MIPFocus3-Presolve2-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=500 seed=18 logfile=1003-MIPFocus3-Presolve2-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=500 seed=19 logfile=1003-MIPFocus3-Presolve2-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=500 seed=10 logfile=1003-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=500 seed=11 logfile=1003-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=500 seed=12 logfile=1003-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=500 seed=13 logfile=1003-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=500 seed=14 logfile=1003-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=500 seed=15 logfile=1003-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=500 seed=16 logfile=1003-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=500 seed=17 logfile=1003-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=500 seed=18 logfile=1003-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=500 seed=19 logfile=1003-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=300 seed=0 logfile=1003-MIPFocus0-Presolve1-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=300 seed=1 logfile=1003-MIPFocus0-Presolve1-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=300 seed=2 logfile=1003-MIPFocus0-Presolve1-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=300 seed=3 logfile=1003-MIPFocus0-Presolve1-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=300 seed=4 logfile=1003-MIPFocus0-Presolve1-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=300 seed=5 logfile=1003-MIPFocus0-Presolve1-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=300 seed=6 logfile=1003-MIPFocus0-Presolve1-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=300 seed=7 logfile=1003-MIPFocus0-Presolve1-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=300 seed=8 logfile=1003-MIPFocus0-Presolve1-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=1 TimeLimit=300 seed=9 logfile=1003-MIPFocus0-Presolve1-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=300 seed=0 logfile=1003-MIPFocus1-Presolve1-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=300 seed=1 logfile=1003-MIPFocus1-Presolve1-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=300 seed=2 logfile=1003-MIPFocus1-Presolve1-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=300 seed=3 logfile=1003-MIPFocus1-Presolve1-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=300 seed=4 logfile=1003-MIPFocus1-Presolve1-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=300 seed=5 logfile=1003-MIPFocus1-Presolve1-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=300 seed=6 logfile=1003-MIPFocus1-Presolve1-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=300 seed=7 logfile=1003-MIPFocus1-Presolve1-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=300 seed=8 logfile=1003-MIPFocus1-Presolve1-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=1 TimeLimit=300 seed=9 logfile=1003-MIPFocus1-Presolve1-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=300 seed=0 logfile=1003-MIPFocus2-Presolve1-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=300 seed=1 logfile=1003-MIPFocus2-Presolve1-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=300 seed=2 logfile=1003-MIPFocus2-Presolve1-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=300 seed=3 logfile=1003-MIPFocus2-Presolve1-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=300 seed=4 logfile=1003-MIPFocus2-Presolve1-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=300 seed=5 logfile=1003-MIPFocus2-Presolve1-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=300 seed=6 logfile=1003-MIPFocus2-Presolve1-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=300 seed=7 logfile=1003-MIPFocus2-Presolve1-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=300 seed=8 logfile=1003-MIPFocus2-Presolve1-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=1 TimeLimit=300 seed=9 logfile=1003-MIPFocus2-Presolve1-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=300 seed=0 logfile=1003-MIPFocus3-Presolve1-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=300 seed=1 logfile=1003-MIPFocus3-Presolve1-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=300 seed=2 logfile=1003-MIPFocus3-Presolve1-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=300 seed=3 logfile=1003-MIPFocus3-Presolve1-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=300 seed=4 logfile=1003-MIPFocus3-Presolve1-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=300 seed=5 logfile=1003-MIPFocus3-Presolve1-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=300 seed=6 logfile=1003-MIPFocus3-Presolve1-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=300 seed=7 logfile=1003-MIPFocus3-Presolve1-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=300 seed=8 logfile=1003-MIPFocus3-Presolve1-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=1 TimeLimit=300 seed=9 logfile=1003-MIPFocus3-Presolve1-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=300 seed=0 logfile=1003-MIPFocus0-Presolve2-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=300 seed=1 logfile=1003-MIPFocus0-Presolve2-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=300 seed=2 logfile=1003-MIPFocus0-Presolve2-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=300 seed=3 logfile=1003-MIPFocus0-Presolve2-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=300 seed=4 logfile=1003-MIPFocus0-Presolve2-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=300 seed=5 logfile=1003-MIPFocus0-Presolve2-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=300 seed=6 logfile=1003-MIPFocus0-Presolve2-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=300 seed=7 logfile=1003-MIPFocus0-Presolve2-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=300 seed=8 logfile=1003-MIPFocus0-Presolve2-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=0 Presolve=2 TimeLimit=300 seed=9 logfile=1003-MIPFocus0-Presolve2-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=300 seed=0 logfile=1003-MIPFocus1-Presolve2-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=300 seed=1 logfile=1003-MIPFocus1-Presolve2-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=300 seed=2 logfile=1003-MIPFocus1-Presolve2-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=300 seed=3 logfile=1003-MIPFocus1-Presolve2-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=300 seed=4 logfile=1003-MIPFocus1-Presolve2-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=300 seed=5 logfile=1003-MIPFocus1-Presolve2-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=300 seed=6 logfile=1003-MIPFocus1-Presolve2-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=300 seed=7 logfile=1003-MIPFocus1-Presolve2-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=300 seed=8 logfile=1003-MIPFocus1-Presolve2-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=1 Presolve=2 TimeLimit=300 seed=9 logfile=1003-MIPFocus1-Presolve2-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=300 seed=0 logfile=1003-MIPFocus2-Presolve2-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=300 seed=1 logfile=1003-MIPFocus2-Presolve2-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=300 seed=2 logfile=1003-MIPFocus2-Presolve2-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=300 seed=3 logfile=1003-MIPFocus2-Presolve2-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=300 seed=4 logfile=1003-MIPFocus2-Presolve2-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=300 seed=5 logfile=1003-MIPFocus2-Presolve2-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=300 seed=6 logfile=1003-MIPFocus2-Presolve2-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=300 seed=7 logfile=1003-MIPFocus2-Presolve2-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=300 seed=8 logfile=1003-MIPFocus2-Presolve2-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=2 Presolve=2 TimeLimit=300 seed=9 logfile=1003-MIPFocus2-Presolve2-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=300 seed=0 logfile=1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=300 seed=1 logfile=1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=300 seed=2 logfile=1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=300 seed=3 logfile=1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=300 seed=4 logfile=1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=300 seed=5 logfile=1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=300 seed=6 logfile=1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=300 seed=7 logfile=1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=300 seed=8 logfile=1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 MIPFocus=3 Presolve=2 TimeLimit=300 seed=9 logfile=1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=300 seed=0 logfile=1003-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=300 seed=1 logfile=1003-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=300 seed=2 logfile=1003-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=300 seed=3 logfile=1003-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=300 seed=4 logfile=1003-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=300 seed=5 logfile=1003-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=300 seed=6 logfile=1003-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=300 seed=7 logfile=1003-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=300 seed=8 logfile=1003-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1003 TimeLimit=300 seed=9 logfile=1003-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=500 seed=10 logfile=1202-MIPFocus0-Presolve1-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=500 seed=11 logfile=1202-MIPFocus0-Presolve1-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=500 seed=12 logfile=1202-MIPFocus0-Presolve1-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=500 seed=13 logfile=1202-MIPFocus0-Presolve1-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=500 seed=14 logfile=1202-MIPFocus0-Presolve1-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=500 seed=15 logfile=1202-MIPFocus0-Presolve1-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=500 seed=16 logfile=1202-MIPFocus0-Presolve1-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=500 seed=17 logfile=1202-MIPFocus0-Presolve1-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=500 seed=18 logfile=1202-MIPFocus0-Presolve1-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=500 seed=19 logfile=1202-MIPFocus0-Presolve1-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=500 seed=10 logfile=1202-MIPFocus1-Presolve1-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=500 seed=11 logfile=1202-MIPFocus1-Presolve1-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=500 seed=12 logfile=1202-MIPFocus1-Presolve1-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=500 seed=13 logfile=1202-MIPFocus1-Presolve1-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=500 seed=14 logfile=1202-MIPFocus1-Presolve1-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=500 seed=15 logfile=1202-MIPFocus1-Presolve1-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=500 seed=16 logfile=1202-MIPFocus1-Presolve1-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=500 seed=17 logfile=1202-MIPFocus1-Presolve1-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=500 seed=18 logfile=1202-MIPFocus1-Presolve1-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=500 seed=19 logfile=1202-MIPFocus1-Presolve1-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=500 seed=10 logfile=1202-MIPFocus2-Presolve1-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=500 seed=11 logfile=1202-MIPFocus2-Presolve1-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=500 seed=12 logfile=1202-MIPFocus2-Presolve1-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=500 seed=13 logfile=1202-MIPFocus2-Presolve1-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=500 seed=14 logfile=1202-MIPFocus2-Presolve1-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=500 seed=15 logfile=1202-MIPFocus2-Presolve1-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=500 seed=16 logfile=1202-MIPFocus2-Presolve1-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=500 seed=17 logfile=1202-MIPFocus2-Presolve1-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=500 seed=18 logfile=1202-MIPFocus2-Presolve1-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=500 seed=19 logfile=1202-MIPFocus2-Presolve1-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=500 seed=10 logfile=1202-MIPFocus3-Presolve1-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=500 seed=11 logfile=1202-MIPFocus3-Presolve1-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=500 seed=12 logfile=1202-MIPFocus3-Presolve1-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=500 seed=13 logfile=1202-MIPFocus3-Presolve1-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=500 seed=14 logfile=1202-MIPFocus3-Presolve1-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=500 seed=15 logfile=1202-MIPFocus3-Presolve1-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=500 seed=16 logfile=1202-MIPFocus3-Presolve1-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=500 seed=17 logfile=1202-MIPFocus3-Presolve1-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=500 seed=18 logfile=1202-MIPFocus3-Presolve1-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=500 seed=19 logfile=1202-MIPFocus3-Presolve1-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=500 seed=10 logfile=1202-MIPFocus0-Presolve2-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=500 seed=11 logfile=1202-MIPFocus0-Presolve2-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=500 seed=12 logfile=1202-MIPFocus0-Presolve2-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=500 seed=13 logfile=1202-MIPFocus0-Presolve2-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=500 seed=14 logfile=1202-MIPFocus0-Presolve2-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=500 seed=15 logfile=1202-MIPFocus0-Presolve2-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=500 seed=16 logfile=1202-MIPFocus0-Presolve2-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=500 seed=17 logfile=1202-MIPFocus0-Presolve2-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=500 seed=18 logfile=1202-MIPFocus0-Presolve2-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=500 seed=19 logfile=1202-MIPFocus0-Presolve2-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=500 seed=10 logfile=1202-MIPFocus1-Presolve2-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=500 seed=11 logfile=1202-MIPFocus1-Presolve2-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=500 seed=12 logfile=1202-MIPFocus1-Presolve2-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=500 seed=13 logfile=1202-MIPFocus1-Presolve2-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=500 seed=14 logfile=1202-MIPFocus1-Presolve2-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=500 seed=15 logfile=1202-MIPFocus1-Presolve2-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=500 seed=16 logfile=1202-MIPFocus1-Presolve2-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=500 seed=17 logfile=1202-MIPFocus1-Presolve2-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=500 seed=18 logfile=1202-MIPFocus1-Presolve2-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=500 seed=19 logfile=1202-MIPFocus1-Presolve2-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=500 seed=10 logfile=1202-MIPFocus2-Presolve2-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=500 seed=11 logfile=1202-MIPFocus2-Presolve2-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=500 seed=12 logfile=1202-MIPFocus2-Presolve2-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=500 seed=13 logfile=1202-MIPFocus2-Presolve2-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=500 seed=14 logfile=1202-MIPFocus2-Presolve2-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=500 seed=15 logfile=1202-MIPFocus2-Presolve2-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=500 seed=16 logfile=1202-MIPFocus2-Presolve2-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=500 seed=17 logfile=1202-MIPFocus2-Presolve2-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=500 seed=18 logfile=1202-MIPFocus2-Presolve2-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=500 seed=19 logfile=1202-MIPFocus2-Presolve2-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=500 seed=10 logfile=1202-MIPFocus3-Presolve2-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=500 seed=11 logfile=1202-MIPFocus3-Presolve2-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=500 seed=12 logfile=1202-MIPFocus3-Presolve2-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=500 seed=13 logfile=1202-MIPFocus3-Presolve2-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=500 seed=14 logfile=1202-MIPFocus3-Presolve2-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=500 seed=15 logfile=1202-MIPFocus3-Presolve2-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=500 seed=16 logfile=1202-MIPFocus3-Presolve2-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=500 seed=17 logfile=1202-MIPFocus3-Presolve2-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=500 seed=18 logfile=1202-MIPFocus3-Presolve2-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=500 seed=19 logfile=1202-MIPFocus3-Presolve2-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=500 seed=10 logfile=1202-TimeLimit500-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=500 seed=11 logfile=1202-TimeLimit500-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=500 seed=12 logfile=1202-TimeLimit500-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=500 seed=13 logfile=1202-TimeLimit500-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=500 seed=14 logfile=1202-TimeLimit500-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=500 seed=15 logfile=1202-TimeLimit500-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=500 seed=16 logfile=1202-TimeLimit500-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=500 seed=17 logfile=1202-TimeLimit500-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=500 seed=18 logfile=1202-TimeLimit500-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=500 seed=19 logfile=1202-TimeLimit500-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=300 seed=0 logfile=1202-MIPFocus0-Presolve1-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=300 seed=1 logfile=1202-MIPFocus0-Presolve1-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=300 seed=2 logfile=1202-MIPFocus0-Presolve1-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=300 seed=3 logfile=1202-MIPFocus0-Presolve1-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=300 seed=4 logfile=1202-MIPFocus0-Presolve1-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=300 seed=5 logfile=1202-MIPFocus0-Presolve1-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=300 seed=6 logfile=1202-MIPFocus0-Presolve1-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=300 seed=7 logfile=1202-MIPFocus0-Presolve1-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=300 seed=8 logfile=1202-MIPFocus0-Presolve1-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=1 TimeLimit=300 seed=9 logfile=1202-MIPFocus0-Presolve1-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=300 seed=0 logfile=1202-MIPFocus1-Presolve1-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=300 seed=1 logfile=1202-MIPFocus1-Presolve1-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=300 seed=2 logfile=1202-MIPFocus1-Presolve1-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=300 seed=3 logfile=1202-MIPFocus1-Presolve1-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=300 seed=4 logfile=1202-MIPFocus1-Presolve1-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=300 seed=5 logfile=1202-MIPFocus1-Presolve1-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=300 seed=6 logfile=1202-MIPFocus1-Presolve1-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=300 seed=7 logfile=1202-MIPFocus1-Presolve1-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=300 seed=8 logfile=1202-MIPFocus1-Presolve1-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=1 TimeLimit=300 seed=9 logfile=1202-MIPFocus1-Presolve1-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=300 seed=0 logfile=1202-MIPFocus2-Presolve1-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=300 seed=1 logfile=1202-MIPFocus2-Presolve1-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=300 seed=2 logfile=1202-MIPFocus2-Presolve1-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=300 seed=3 logfile=1202-MIPFocus2-Presolve1-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=300 seed=4 logfile=1202-MIPFocus2-Presolve1-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=300 seed=5 logfile=1202-MIPFocus2-Presolve1-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=300 seed=6 logfile=1202-MIPFocus2-Presolve1-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=300 seed=7 logfile=1202-MIPFocus2-Presolve1-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=300 seed=8 logfile=1202-MIPFocus2-Presolve1-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=1 TimeLimit=300 seed=9 logfile=1202-MIPFocus2-Presolve1-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=300 seed=0 logfile=1202-MIPFocus3-Presolve1-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=300 seed=1 logfile=1202-MIPFocus3-Presolve1-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=300 seed=2 logfile=1202-MIPFocus3-Presolve1-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=300 seed=3 logfile=1202-MIPFocus3-Presolve1-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=300 seed=4 logfile=1202-MIPFocus3-Presolve1-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=300 seed=5 logfile=1202-MIPFocus3-Presolve1-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=300 seed=6 logfile=1202-MIPFocus3-Presolve1-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=300 seed=7 logfile=1202-MIPFocus3-Presolve1-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=300 seed=8 logfile=1202-MIPFocus3-Presolve1-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=1 TimeLimit=300 seed=9 logfile=1202-MIPFocus3-Presolve1-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=300 seed=0 logfile=1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=300 seed=1 logfile=1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=300 seed=2 logfile=1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=300 seed=3 logfile=1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=300 seed=4 logfile=1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=300 seed=5 logfile=1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=300 seed=6 logfile=1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=300 seed=7 logfile=1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=300 seed=8 logfile=1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=0 Presolve=2 TimeLimit=300 seed=9 logfile=1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=300 seed=0 logfile=1202-MIPFocus1-Presolve2-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=300 seed=1 logfile=1202-MIPFocus1-Presolve2-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=300 seed=2 logfile=1202-MIPFocus1-Presolve2-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=300 seed=3 logfile=1202-MIPFocus1-Presolve2-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=300 seed=4 logfile=1202-MIPFocus1-Presolve2-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=300 seed=5 logfile=1202-MIPFocus1-Presolve2-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=300 seed=6 logfile=1202-MIPFocus1-Presolve2-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=300 seed=7 logfile=1202-MIPFocus1-Presolve2-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=300 seed=8 logfile=1202-MIPFocus1-Presolve2-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=1 Presolve=2 TimeLimit=300 seed=9 logfile=1202-MIPFocus1-Presolve2-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=300 seed=0 logfile=1202-MIPFocus2-Presolve2-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=300 seed=1 logfile=1202-MIPFocus2-Presolve2-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=300 seed=2 logfile=1202-MIPFocus2-Presolve2-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=300 seed=3 logfile=1202-MIPFocus2-Presolve2-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=300 seed=4 logfile=1202-MIPFocus2-Presolve2-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=300 seed=5 logfile=1202-MIPFocus2-Presolve2-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=300 seed=6 logfile=1202-MIPFocus2-Presolve2-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=300 seed=7 logfile=1202-MIPFocus2-Presolve2-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=300 seed=8 logfile=1202-MIPFocus2-Presolve2-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=2 Presolve=2 TimeLimit=300 seed=9 logfile=1202-MIPFocus2-Presolve2-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=300 seed=0 logfile=1202-MIPFocus3-Presolve2-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=300 seed=1 logfile=1202-MIPFocus3-Presolve2-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=300 seed=2 logfile=1202-MIPFocus3-Presolve2-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=300 seed=3 logfile=1202-MIPFocus3-Presolve2-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=300 seed=4 logfile=1202-MIPFocus3-Presolve2-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=300 seed=5 logfile=1202-MIPFocus3-Presolve2-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=300 seed=6 logfile=1202-MIPFocus3-Presolve2-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=300 seed=7 logfile=1202-MIPFocus3-Presolve2-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=300 seed=8 logfile=1202-MIPFocus3-Presolve2-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 MIPFocus=3 Presolve=2 TimeLimit=300 seed=9 logfile=1202-MIPFocus3-Presolve2-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=300 seed=0 logfile=1202-TimeLimit300-k16x240-0.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=300 seed=1 logfile=1202-TimeLimit300-k16x240-1.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=300 seed=2 logfile=1202-TimeLimit300-k16x240-2.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=300 seed=3 logfile=1202-TimeLimit300-k16x240-3.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=300 seed=4 logfile=1202-TimeLimit300-k16x240-4.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=300 seed=5 logfile=1202-TimeLimit300-k16x240-5.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=300 seed=6 logfile=1202-TimeLimit300-k16x240-6.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=300 seed=7 logfile=1202-TimeLimit300-k16x240-7.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=300 seed=8 logfile=1202-TimeLimit300-k16x240-8.log /nfs/models/miplib2010/k16x240.mps.bz2
+gurobi1202 TimeLimit=300 seed=9 logfile=1202-TimeLimit300-k16x240-9.log /nfs/models/miplib2010/k16x240.mps.bz2
