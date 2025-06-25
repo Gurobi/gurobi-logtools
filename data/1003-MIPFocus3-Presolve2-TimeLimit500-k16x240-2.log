@@ -1,0 +1,88 @@
+#######################
+Slurm job id: 17497813_73
+Running on machine: p77
+Running cmd: /nfs/shared/static-builds/gurobi1003 SOFTMEMLIMIT=125 MIPFocus=3 Presolve=2 TimeLimit=500 seed=12 /nfs/models/miplib2010/k16x240.mps.bz2
+#######################
+Set parameter TimeLimit to value 500
+Set parameter SoftMemLimit to value 125
+Set parameter MIPFocus to value 3
+Set parameter LogFile to value 1003-MIPFocus3-Presolve2-TimeLimit500-k16x240-2.log
+Set parameter Presolve to value 2
+Set parameter Seed to value 12
+Using license file /opt/gurobi/gurobi.lic
+
+Gurobi Optimizer version 10.0.3 build v10.0.3rc0 (linux64)
+Copyright (c) 2023, Gurobi Optimization, LLC
+
+Read MPS format model from file /nfs/models/miplib2010/k16x240.mps.bz2
+Reading time = 0.00 seconds
+k16x240: 256 rows, 480 columns, 960 nonzeros
+
+CPU model: Intel(R) Xeon(R) E-2388G CPU @ 3.20GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Optimize a model with 256 rows, 480 columns and 960 nonzeros
+Model fingerprint: 0x4e80885f
+Variable types: 240 continuous, 240 integer (240 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [1e+00, 1e+03]
+  Bounds range     [1e+00, 1e+03]
+  RHS range        [4e+00, 4e+02]
+Found heuristic solution: objective 19617.000000
+Presolve time: 0.00s
+Presolved: 256 rows, 480 columns, 960 nonzeros
+Variable types: 240 continuous, 240 integer (240 binary)
+Root relaxation presolve removed 241 rows and 240 columns
+Root relaxation presolved: 15 rows, 240 columns, 450 nonzeros
+
+
+Root relaxation: objective 2.769838e+03, 16 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 2769.83800    0   14 19617.0000 2769.83800  85.9%     -    0s
+H    0     0                    11359.000000 2769.83800  75.6%     -    0s
+H    0     0                    11026.000000 8116.87580  26.4%     -    0s
+H    0     0                    11016.000000 8116.87580  26.3%     -    0s
+     0     0 8116.87580    0   26 11016.0000 8116.87580  26.3%     -    0s
+H    0     0                    10895.000000 8116.87580  25.5%     -    0s
+     0     0 8748.93137    0   24 10895.0000 8748.93137  19.7%     -    0s
+     0     0 8969.22182    0   35 10895.0000 8969.22182  17.7%     -    0s
+H    0     0                    10851.000000 8969.22182  17.3%     -    0s
+     0     0 9030.74105    0   30 10851.0000 9030.74105  16.8%     -    0s
+     0     0 9030.74105    0   39 10851.0000 9030.74105  16.8%     -    0s
+     0     0 9068.09979    0   40 10851.0000 9068.09979  16.4%     -    0s
+     0     0 9111.56138    0   39 10851.0000 9111.56138  16.0%     -    0s
+     0     0 9140.29789    0   31 10851.0000 9140.29789  15.8%     -    0s
+     0     0 9152.97829    0   31 10851.0000 9152.97829  15.6%     -    0s
+     0     0 9152.97829    0   39 10851.0000 9152.97829  15.6%     -    0s
+     0     0 9184.39864    0   30 10851.0000 9184.39864  15.4%     -    0s
+     0     0 9184.39864    0   30 10851.0000 9184.39864  15.4%     -    0s
+H    0     0                    10681.000000 9184.39864  14.0%     -    0s
+     0     2 9184.39864    0   30 10681.0000 9184.39864  14.0%     -    0s
+H   38    40                    10678.000000 9425.81821  11.7%  71.1    0s
+H   78    93                    10674.000000 9504.07221  11.0%  62.2    0s
+  3963  3005 10297.4682   39    4 10674.0000 10253.2342  3.94%  81.7    5s
+ 17061  9477     cutoff   34      10674.0000 10477.5592  1.84%  59.8   10s
+ 47596  4625 10660.9020   28   17 10674.0000 10642.1551  0.30%  38.0   15s
+
+Cutting planes:
+  Lift-and-project: 6
+  Cover: 1
+  Implied bound: 11
+  MIR: 138
+  Flow cover: 472
+  Flow path: 35
+  Zero half: 41
+  Network: 27
+  Relax-and-lift: 3
+
+Explored 54264 nodes (1876749 simplex iterations) in 15.44 seconds (25.69 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 9: 10674 10678 10681 ... 19617
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.067400000000e+04, best bound 1.067301682776e+04, gap 0.0092%

@@ -1,0 +1,85 @@
+#######################
+Slurm job id: 17497813_163
+Running on machine: p45
+Running cmd: /nfs/shared/static-builds/gurobi1003 SOFTMEMLIMIT=125 MIPFocus=3 Presolve=2 TimeLimit=300 seed=2 /nfs/models/miplib2010/k16x240.mps.bz2
+#######################
+Set parameter TimeLimit to value 300
+Set parameter SoftMemLimit to value 125
+Set parameter MIPFocus to value 3
+Set parameter LogFile to value 1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-2.log
+Set parameter Presolve to value 2
+Set parameter Seed to value 2
+Using license file /opt/gurobi/gurobi.lic
+
+Gurobi Optimizer version 10.0.3 build v10.0.3rc0 (linux64)
+Copyright (c) 2023, Gurobi Optimization, LLC
+
+Read MPS format model from file /nfs/models/miplib2010/k16x240.mps.bz2
+Reading time = 0.00 seconds
+k16x240: 256 rows, 480 columns, 960 nonzeros
+
+CPU model: Intel(R) Xeon(R) E-2388G CPU @ 3.20GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Optimize a model with 256 rows, 480 columns and 960 nonzeros
+Model fingerprint: 0x4e80885f
+Variable types: 240 continuous, 240 integer (240 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [1e+00, 1e+03]
+  Bounds range     [1e+00, 1e+03]
+  RHS range        [4e+00, 4e+02]
+Found heuristic solution: objective 20929.000000
+Presolve time: 0.00s
+Presolved: 256 rows, 480 columns, 960 nonzeros
+Variable types: 240 continuous, 240 integer (240 binary)
+Root relaxation presolve removed 241 rows and 240 columns
+Root relaxation presolved: 15 rows, 240 columns, 450 nonzeros
+
+
+Root relaxation: objective 2.769838e+03, 16 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 2769.83800    0   14 20929.0000 2769.83800  86.8%     -    0s
+H    0     0                    11359.000000 2769.83800  75.6%     -    0s
+H    0     0                    11157.000000 2769.83800  75.2%     -    0s
+H    0     0                    11061.000000 8116.87580  26.6%     -    0s
+     0     0 8116.87580    0   26 11061.0000 8116.87580  26.6%     -    0s
+H    0     0                    10895.000000 8116.87580  25.5%     -    0s
+     0     0 8747.58893    0   24 10895.0000 8747.58893  19.7%     -    0s
+     0     0 8748.93137    0   14 10895.0000 8748.93137  19.7%     -    0s
+     0     0 8804.26894    0   22 10895.0000 8804.26894  19.2%     -    0s
+     0     0 8808.82545    0   20 10895.0000 8808.82545  19.1%     -    0s
+     0     0 8810.78815    0   24 10895.0000 8810.78815  19.1%     -    0s
+     0     0 8990.44691    0   34 10895.0000 8990.44691  17.5%     -    0s
+H    0     0                    10851.000000 8990.44691  17.1%     -    0s
+     0     0 8992.54558    0   35 10851.0000 8992.54558  17.1%     -    0s
+     0     0 9089.06319    0   39 10851.0000 9089.06319  16.2%     -    0s
+     0     0 9089.06319    0   39 10851.0000 9089.06319  16.2%     -    0s
+H    0     0                    10838.000000 9089.06319  16.1%     -    0s
+H    0     0                    10681.000000 9089.06319  14.9%     -    0s
+     0     2 9089.06319    0   39 10681.0000 9089.06319  14.9%     -    0s
+H  192   203                    10674.000000 9499.19618  11.0%  54.6    0s
+  4154  3093 10343.8972   29   26 10674.0000 10233.2831  4.13%  79.4    5s
+ 15313  9401 10596.0176   25   32 10674.0000 10435.1754  2.24%  67.1   10s
+ 39608 13275     cutoff   26      10674.0000 10578.0460  0.90%  47.8   15s
+
+Cutting planes:
+  Lift-and-project: 8
+  Implied bound: 11
+  MIR: 137
+  Flow cover: 462
+  Flow path: 31
+  Zero half: 37
+  Network: 20
+  Relax-and-lift: 5
+
+Explored 65430 nodes (2309548 simplex iterations) in 18.05 seconds (30.35 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 9: 10674 10681 10838 ... 20929
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.067400000000e+04, best bound 1.067305882676e+04, gap 0.0088%

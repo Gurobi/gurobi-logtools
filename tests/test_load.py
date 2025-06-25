@@ -46,6 +46,8 @@ def test_norel_timeline():
 
 
 def test_newsolution_markers():
-    _, timelines = glt.get_dataframe(["data/912-glass4-1.log"], timelines=True)
+    _, timelines = glt.get_dataframe(
+        ["data/1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-3.log"], timelines=True
+    )
     new_solutions = timelines["nodelog"]["NewSolution"]
-    assert new_solutions.value_counts().to_dict() == {"H": 19, "*": 4}
+    assert new_solutions.value_counts().to_dict() == {"H": 13, "*": 1}

@@ -26,7 +26,7 @@ def test_pretty_parameters():
         "1: Conservative",
         "2: Aggressive",
     }
-    assert is_float_dtype(summary["Heuristics (Parameter)"])
+    assert is_float_dtype(summary["TimeLimit (Parameter)"])
 
 
 def test_fill_default_parameters():
