@@ -1,17 +1,34 @@
-# gurobi-logtools
+<style >
+@media (prefers-color-scheme: dark) {
+    .logo-dark { display: inline; justify-content: center; margin-right: "0px";}
+    .logo-light { display: none; justify-content: center; margin-right: "0px";}
+}
+@media (prefers-color-scheme: light) {
+    .logo-dark { display: none; justify-content: center; margin-right: "0px";}
+    .logo-light { display: inline; justify-content: center; margin-right: "0px";}
+}
+</style>
 
-[![PyPI](https://img.shields.io/pypi/v/gurobi-logtools?label=PyPI)](https://pypi.python.org/pypi/gurobi-logtools)
-[![License](https://img.shields.io/github/license/Gurobi/gurobi-logtools?color=blue&label=License)](https://github.com/Gurobi/gurobi-logtools/blob/master/LICENSE)
-[![Test Python Package](https://github.com/Gurobi/gurobi-logtools/actions/workflows/python-tox.yml/badge.svg?branch=master)](https://github.com/Gurobi/gurobi-logtools/actions/workflows/python-tox.yml)
+<img src="logo_lightmode.svg" class="logo-light">
+<img src="logo_darkmode.svg" class="logo-dark">
 
-Extract information from Gurobi log files and generate [pandas DataFrames](https://pandas.pydata.org/) or Excel worksheets for further processing. Also includes a wrapper for out-of-the-box interactive visualizations using the plotting library [Plotly](https://plotly.com/python/).
+<p align="center">
+	<a href="https://pypi.python.org/pypi/gurobi-logtools" alt="PyPI">
+        <img src="https://img.shields.io/pypi/v/gurobi-logtools?label=PyPI" /></a>
+    <a href="https://github.com/Gurobi/gurobi-logtools/blob/master/LICENSE" alt="License">
+        <img src="https://img.shields.io/github/license/Gurobi/gurobi-logtools?color=blue&label=License" /></a>
+    <a href="https://github.com/Gurobi/gurobi-logtools/actions/workflows/python-tox.yml" alt="Test Python Package">
+        <img src="https://github.com/Gurobi/gurobi-logtools/actions/workflows/python-tox.yml/badge.svg?branch=master" /></a>
+</p>
+
+With **gurobi-logtools** you can extract information from Gurobi log files and generate [pandas DataFrames](https://pandas.pydata.org/) or Excel worksheets for further processing.  We also include a plot method which combines the power of interactive dashboards through [`ipywidgets`](https://ipywidgets.readthedocs.io/en/stable/) and plotting functions from [`plotly.express`](https://plotly.com/python/plotly-express/), making it easy to explore your data and results!
 
 > [!NOTE]
 > We have renamed the project to `gurobi-logtools`, so please also adapt the import statement accordingly:
 >
 > `import gurobi_logtools as glt`
 
-![performance plot](https://github.com/Gurobi/gurobi-logtools/raw/master/assets/performance-plot.png)
+![performance plot](./assets/performance-plot.png)
 
 # Installation
 
@@ -32,7 +49,7 @@ First, you need a set of Gurobi log files to compare, e.g.,
   - ...
 
 You may also use the provided [gurobi-logtools.ipynb notebook](https://github.com/Gurobi/gurobi-logtools/blob/master/gurobi-logtools.ipynb) with the [example data set](https://github.com/Gurobi/gurobi-logtools/tree/master/data) to get started.
-Additionally, there is a [Gurobi TechTalk demonstrating how to use it (YouTube)](https://youtu.be/wbg4Zr_A1s8):
+Additionally, there is a [Gurobi TechTalk demonstrating how to use it (YouTube)](https://youtu.be/wbg4Zr_A1s8), but please note it presents a version of gurobi-logtools that is several years old (but the big ideas remain the same):
 
 [![](https://github.com/Gurobi/gurobi-logtools/raw/master/assets/youtube-thumbnail.png)](https://youtu.be/wbg4Zr_A1s8)
 
@@ -51,12 +68,12 @@ Additionally, there is a [Gurobi TechTalk demonstrating how to use it (YouTube)]
 
     - final results from the individual runs:
     ```Python
-    glt.plot(summary, type="box")
+    glt.plot(summary)
     ```
 
     - progress charts for the individual runs:
     ```Python
-    glt.plot(nodelog_progress, y="Gap", color="Log", type="line")
+    glt.plot(nodelog_progress, x="Time", y="Gap", color="Log", type="line")
     ```
 
     - progress of the norel heuristic (note, the time recorded here is since the start of norel, and does not include presolve + read time):
@@ -88,17 +105,4 @@ For example:
 python -m gurobi_logtools --write-to-dir nicenames summary.xlsx tests/assets/combined/*.log
 ```
 
-separates logs for individual runs in the input files and writes copies to the 'nicenames' folder with a consistent naming scheme:
-
-```
-> ls nicenames
-912-MIPFocus1-Presolve1-TimeLimit600-glass4-0.log
-912-MIPFocus1-Presolve1-TimeLimit600-glass4-1.log
-912-MIPFocus1-Presolve1-TimeLimit600-glass4-2.log
-912-MIPFocus2-Presolve1-TimeLimit600-glass4-0.log
-912-MIPFocus2-Presolve1-TimeLimit600-glass4-1.log
-912-MIPFocus2-Presolve1-TimeLimit600-glass4-2.log
-912-Presolve1-TimeLimit600-glass4-0.log
-912-Presolve1-TimeLimit600-glass4-1.log
-912-Presolve1-TimeLimit600-glass4-2.log
-```
+separates logs for individual runs in the input files and writes copies to the 'nicenames' folder with a consistent naming scheme.
