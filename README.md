@@ -1,16 +1,4 @@
-<style >
-@media (prefers-color-scheme: dark) {
-    .logo-dark { display: inline; justify-content: center; margin-right: "0px";}
-    .logo-light { display: none; justify-content: center; margin-right: "0px";}
-}
-@media (prefers-color-scheme: light) {
-    .logo-dark { display: none; justify-content: center; margin-right: "0px";}
-    .logo-light { display: inline; justify-content: center; margin-right: "0px";}
-}
-</style>
-
-<img src="logo_lightmode.svg" class="logo-light">
-<img src="logo_darkmode.svg" class="logo-dark">
+<img src="assets/logo_light_or_dark_mode.svg" justify-content="center">
 
 <p align="center">
 	<a href="https://pypi.python.org/pypi/gurobi-logtools" alt="PyPI">
@@ -40,7 +28,7 @@ It is recommended to prepend the `pip install` command with `python -m` to ensur
 
 See [CHANGELOG](https://github.com/Gurobi/gurobi-logtools/blob/master/CHANGELOG.md) for added, removed or fixed functionality.
 
-# Usage
+# Usage and tutorial
 
 First, you need a set of Gurobi log files to compare, e.g.,
   - results from several model instances
@@ -48,7 +36,7 @@ First, you need a set of Gurobi log files to compare, e.g.,
   - performance variability experiments involving multiple random seed runs
   - ...
 
-You may also use the provided [gurobi-logtools.ipynb notebook](https://github.com/Gurobi/gurobi-logtools/blob/master/gurobi-logtools.ipynb) with the [example data set](https://github.com/Gurobi/gurobi-logtools/tree/master/data) to get started.
+We provide a **TUTORIAL** in the form of a [gurobi-logtools.ipynb notebook](https://github.com/Gurobi/gurobi-logtools/blob/master/gurobi-logtools.ipynb) with the [example data set](https://github.com/Gurobi/gurobi-logtools/tree/master/data) to get started.
 Additionally, there is a [Gurobi TechTalk demonstrating how to use it (YouTube)](https://youtu.be/wbg4Zr_A1s8), but please note it presents a version of gurobi-logtools that is several years old (but the big ideas remain the same):
 
 [![](https://github.com/Gurobi/gurobi-logtools/raw/master/assets/youtube-thumbnail.png)](https://youtu.be/wbg4Zr_A1s8)
