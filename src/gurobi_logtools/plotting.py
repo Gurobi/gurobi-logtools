@@ -67,7 +67,9 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
     # 'Parameters' will be a special column available from the plot UI.
     #  It is intended for use as an 'aesthetic' label.  It needs to be manually added
     #  here so that the defaults can use it.  We then sort by lower case alphabetical order.
-    column_names = sorted(column_names + ["Parameters"], key=str.lower) + [None]
+    if "ChangedParams" in column_names:
+        column_names.append("Parameters")
+    column_names = sorted(column_names, key=str.lower) + [None]
 
     # check wether selected keys are available in DataFrame
     widget_defaults.x = widget_defaults.x if widget_defaults.x in column_names else None
@@ -153,14 +155,14 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             min=0,
             max=5000,
             step=10,
-            description="Height:",
+            description="height:",
         ),
         width=widgets.BoundedIntText(
             value=widget_defaults.width,  # default
             min=0,
             max=3000,
             step=10,
-            description="Width:",
+            description="width:",
         ),
         sort_axis=widgets.ToggleButtons(
             options=[member.value for member in constants.SortAxis],
@@ -175,7 +177,7 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             options=column_names, value=widget_defaults.x, description="sort field"
         ),
         show_legend=widgets.Checkbox(
-            value=widget_defaults.show_legend, description="legend"
+            value=widget_defaults.show_legend, description="show legend"
         ),
         reverse_ecdf=widgets.Checkbox(
             value=widget_defaults.reverse_ecdf,
@@ -185,12 +187,12 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         palette_type=widgets.Dropdown(
             options=[member.value for member in constants.PaletteType],
             value=widget_defaults.palette_type,
-            description="Palette type",
+            description="palette type",
         ),
         palette_name=widgets.Dropdown(
             options=_get_palettes(widget_defaults.palette_type),
             value=_get_default_palette(widget_defaults.palette_type),
-            description="Palette",
+            description="palette",
         ),
         color_scale=widgets.ToggleButtons(
             options=[member.value for member in constants.ColorScale],
@@ -199,7 +201,7 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             style={"button_width": "auto"},
         ),
         color_categorical=widgets.Checkbox(
-            value=widget_defaults.color_categorical, description="Categorical color?"
+            value=widget_defaults.color_categorical, description="categorical color?"
         ),
         query=widgets.Textarea(
             description="", disabled=False, rows=1, layout=widgets.Layout(padding="0em")
