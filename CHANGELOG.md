@@ -1,12 +1,30 @@
 # CHANGELOG
 ## Unreleased
+
 ### Fixed
 - fixed platform-specific issues in tests with file and path handling
+
 ### Changed
+- New defaults for dashboard widgets
+
 ### Removed
 - remove Python 3.8 support
 ### Added
 - All parsers now additionally return the result of a parsed line. This enables live usage within a Gurobi Callback.
+- Added "Parameters" column when plotting summary DataFrame to facilitate aesthetic parameter labels
+- Added ECDF to plot types
+- Added widget to dashboard fields for "points" and "barmode"
+- Added widgets to dashboard related to palettes
+- Added button to dashboard to swap x and y axes
+- Added widgets to dashboard for title, x-axis label, y-axis label
+- Added widgets to dashboard for height and width
+- Added toggles to dashboard for boxplot means, boxplot notches, reversing ecdf and legend visibility
+- Added widgets to facilitate sorting either x or y axis by a particular data column and aggregation metric
+- Added buttons to save and load widget config (i.e. values)
+- Added a query field to dashboard to enable filtering of data "on the fly""
+- Added an "parameters to ignore" field to dashboard to give finer control over "Parameters" column
+- Added new top level functions: `gurobi_logtools.register_custom_palette`, `gurobi_logtools.reset_custom_palettes`, `gurobi_logtools.show_palettes`, `gurobi_logtools.get_plotly_fig`, `gurobi_logtools.save_plot`
+- Added `--progress` to alias the `--timelines` option in the command line interface
 
 ## 3.2.0 - 2024-12-19
 ### Fixed
