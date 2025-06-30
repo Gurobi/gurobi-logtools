@@ -73,6 +73,18 @@ Additionally, there is a [Gurobi TechTalk demonstrating how to use it (YouTube)]
 
     These are just examples using the [Plotly Python library](https://plotly.com/python/) - of course, any other plotting library of your choice can be used to work with these DataFrames.
 
+## Other top-level functions
+
+- **glt.register_custom_palette(name, colors)** : use this function to add custom palettes to the "Custom" group in the palette type field.  The arguments should be a string, and list/tuple of hex strings respectively.
+
+- **glt.reset_custom_palettes()** : clears all custom palettes added
+
+- **glt.show_palettes()** : displays a colorful guide to plotly's built-in palettes
+
+- **glt.get_plotly_fig()** : use this function to access the underlying plotly figure.  You can use this figure object to perform detailed customizations via the `Figure.update_layout`, `Figure.update_traces`, `Figure.update_xaxes`, and `Figure.update_yaxes` functions.
+
+- **glt.save_plot(filepath)** : use this function to save the plot to a range of formats including png, svg, pdf and html. The filetype is inferred from the extension of the filepath.  Note that additional packages may be needed to be installed depending on the filetype.
+
 ## Excel
 Convert your log files to Excel worksheets right on the command-line:
 

@@ -92,6 +92,8 @@ Plotly groups its palettes into 3 categories: Qualitative, Sequential, Diverging
 
 A fourth palette group, "Gurobi", is added to enable coloring the chart with permutations of the Gurobi brand palette.
 
+A fifth palette group, "Custom", is used to enable custom palettes to be added (via the `register_custom_palette` function).
+
 These fields can be prepopulated in the plot function with keyword arguments `palette_type`, and `palette_name`.
 
 
