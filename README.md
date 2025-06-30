@@ -36,6 +36,8 @@ First, you need a set of Gurobi log files to compare, e.g.,
   - performance variability experiments involving multiple random seed runs
   - ...
 
+For a description of the plotting dashboard please see the following link: [Gurobi-logtools plotting dashboard](Dashboard.md)
+
 We provide a **TUTORIAL** in the form of a [gurobi-logtools.ipynb notebook](https://github.com/Gurobi/gurobi-logtools/blob/master/gurobi-logtools.ipynb) with the [example data set](https://github.com/Gurobi/gurobi-logtools/tree/master/data) to get started.
 Additionally, there is a [Gurobi TechTalk demonstrating how to use it (YouTube)](https://youtu.be/wbg4Zr_A1s8), but please note it presents a version of gurobi-logtools that is several years old (but the big ideas remain the same):
 
