@@ -61,6 +61,7 @@ class PaletteType(StrEnum):
     SEQUENTIAL = "Sequential"
     DIVERGING = "Diverging"
     GUROBI = "Gurobi"
+    CUSTOM = "Custom"
 
 
 class ColorScale(StrEnum):

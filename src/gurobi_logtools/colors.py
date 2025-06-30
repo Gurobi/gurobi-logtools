@@ -1,6 +1,49 @@
+import re
+from typing import List, Tuple
+
 import plotly.express as px
 
 from gurobi_logtools import constants, gurobi_colors
+
+
+class CustomPalettes:
+    def __init__(self):
+        self.palette_names = []
+
+    def add_palette(self, name, colors):
+        if not isinstance(colors, (list, tuple)):
+            return ValueError("palette must be given as a list or tuple")
+        for color in colors:
+            if not isinstance(color, str) or not re.fullmatch(
+                r"#[A-Fa-f0-9]{6}", color
+            ):
+                raise ValueError(f"color {color} not a 6 digit hex string")
+        setattr(self, name, colors)
+        self.palette_names.append(name)
+
+
+_custom_palette = CustomPalettes()
+
+
+def register_custom_palette(name: str, colors: "List[str] | Tuple[str]") -> None:
+    """add a custom palette to the "Custom" palette group
+
+    Parameters
+    ----------
+    name : str
+        Name of the palette
+    colors : List[str] | Tuple[str]
+        A list or tuple of hexadecimal strings, eg ("#DD2113",  "#4E5059", "#00ff00")
+    """
+    _custom_palette.add_palette(name, colors)
+
+
+def reset_custom_palettes() -> None:
+    """
+    Removes all registered custom palettes
+    """
+    global _custom_palette
+    _custom_palette = CustomPalettes()
 
 
 def _get_palette(palette_type, palette):
@@ -10,6 +53,7 @@ def _get_palette(palette_type, palette):
         constants.PaletteType.DIVERGING: px.colors.diverging,
         constants.PaletteType.QUALITATIVE: px.colors.qualitative,
         constants.PaletteType.GUROBI: gurobi_colors,
+        constants.PaletteType.CUSTOM: _custom_palette,
     }[palette_type]
     try:
         return getattr(family, palette)
@@ -24,6 +68,7 @@ def _get_palettes(type_name):
         constants.PaletteType.DIVERGING: _diverging_plotly_palettes,
         constants.PaletteType.QUALITATIVE: _qualitative_plotly_palettes,
         constants.PaletteType.GUROBI: _gurobi_palettes,
+        constants.PaletteType.CUSTOM: _custom_palette.palette_names,
     }[type_name]
 
 
@@ -34,6 +79,7 @@ def _get_default_palette(type_name):
         constants.PaletteType.DIVERGING: "Picnic",
         constants.PaletteType.QUALITATIVE: "Plotly",
         constants.PaletteType.GUROBI: "Gurobi_0",
+        constants.PaletteType.CUSTOM: "",
     }[type_name]
 
 
