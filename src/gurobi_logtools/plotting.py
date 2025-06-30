@@ -192,7 +192,7 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         palette_name=widgets.Dropdown(
             options=_get_palettes(widget_defaults.palette_type),
             value=_get_default_palette(widget_defaults.palette_type),
-            description="palette",
+            description="palette name",
         ),
         color_scale=widgets.ToggleButtons(
             options=[member.value for member in constants.ColorScale],
