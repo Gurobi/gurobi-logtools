@@ -6,6 +6,7 @@
 
 ### Changed
 - New defaults for dashboard widgets
+- Updated data folder and gurobi-logtools.ipynb notebook
 
 ### Removed
 - remove Python 3.8 support
