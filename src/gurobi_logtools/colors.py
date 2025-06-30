@@ -85,7 +85,6 @@ _diverging_plotly_palettes = [
 ]
 
 _qualitative_plotly_palettes = [
-    "Gurobi",
     "Alphabet",
     "Alphabet_r",
     "Antique",
