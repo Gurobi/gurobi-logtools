@@ -1,0 +1,88 @@
+#######################
+
+
+
+#######################
+Set parameter TimeLimit to value 300
+Set parameter SoftMemLimit to value 125
+Set parameter MIPFocus to value 3
+Set parameter LogFile to value 1003-MIPFocus3-Presolve2-TimeLimit300-k16x240-7.log
+Set parameter Presolve to value 2
+Set parameter Seed to value 7
+Using license file /opt/gurobi/gurobi.lic
+
+Gurobi Optimizer version 10.0.3 build v10.0.3rc0 (linux64)
+Copyright (c) 2023, Gurobi Optimization, LLC
+
+Read MPS format model from file /miplib2010/k16x240.mps.bz2
+Reading time = 0.00 seconds
+k16x240: 256 rows, 480 columns, 960 nonzeros
+
+CPU model: Intel(R) Xeon(R) E-2388G CPU @ 3.20GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Optimize a model with 256 rows, 480 columns and 960 nonzeros
+Model fingerprint: 0x4e80885f
+Variable types: 240 continuous, 240 integer (240 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [1e+00, 1e+03]
+  Bounds range     [1e+00, 1e+03]
+  RHS range        [4e+00, 4e+02]
+Found heuristic solution: objective 24303.000000
+Presolve time: 0.00s
+Presolved: 256 rows, 480 columns, 960 nonzeros
+Variable types: 240 continuous, 240 integer (240 binary)
+Root relaxation presolve removed 241 rows and 240 columns
+Root relaxation presolved: 15 rows, 240 columns, 450 nonzeros
+
+
+Root relaxation: objective 2.769838e+03, 16 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 2769.83800    0   14 24303.0000 2769.83800  88.6%     -    0s
+H    0     0                    11359.000000 2769.83800  75.6%     -    0s
+H    0     0                    11019.000000 8116.87580  26.3%     -    0s
+     0     0 8116.87580    0   26 11019.0000 8116.87580  26.3%     -    0s
+H    0     0                    10848.000000 8116.87580  25.2%     -    0s
+     0     0 8777.29693    0   26 10848.0000 8777.29693  19.1%     -    0s
+H    0     0                    10841.000000 8777.29693  19.0%     -    0s
+     0     0 8889.58028    0   32 10841.0000 8889.58028  18.0%     -    0s
+     0     0 8889.58028    0   33 10841.0000 8889.58028  18.0%     -    0s
+     0     0 8895.53113    0   36 10841.0000 8895.53113  17.9%     -    0s
+     0     0 8897.11447    0   38 10841.0000 8897.11447  17.9%     -    0s
+H    0     0                    10750.000000 9059.44718  15.7%     -    0s
+H    0     0                    10748.000000 9059.44718  15.7%     -    0s
+     0     0 9059.44718    0   41 10748.0000 9059.44718  15.7%     -    0s
+     0     0 9097.90802    0   39 10748.0000 9097.90802  15.4%     -    0s
+     0     0 9120.49618    0   32 10748.0000 9120.49618  15.1%     -    0s
+     0     0 9152.53642    0   41 10748.0000 9152.53642  14.8%     -    0s
+     0     0 9212.72266    0   41 10748.0000 9212.72266  14.3%     -    0s
+H    0     0                    10732.000000 9212.72266  14.2%     -    0s
+H    0     0                    10681.000000 9212.72266  13.7%     -    0s
+H    0     0                    10674.000000 9212.72266  13.7%     -    0s
+     0     2 9212.72266    0   41 10674.0000 9212.72266  13.7%     -    0s
+  2581  2256 10174.6489   21   33 10674.0000 10093.5899  5.44%  75.9    5s
+  5228  3577 10380.2571   24   32 10674.0000 10246.8996  4.00%  80.5   10s
+ 15389  9596 10418.5865   27   19 10674.0000 10412.0032  2.45%  66.2   15s
+ 34645 13946     cutoff   32      10674.0000 10545.9264  1.20%  51.7   20s
+
+Cutting planes:
+  Lift-and-project: 8
+  Implied bound: 12
+  MIR: 154
+  Flow cover: 549
+  Flow path: 45
+  Zero half: 24
+  Network: 15
+  Relax-and-lift: 4
+
+Explored 64906 nodes (2374377 simplex iterations) in 24.38 seconds (44.20 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 10: 10674 10681 10732 ... 24303
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.067400000000e+04, best bound 1.067316597964e+04, gap 0.0078%

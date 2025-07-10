@@ -10,15 +10,20 @@ from pandas.testing import assert_frame_equal, assert_series_equal
 
 import gurobi_logtools as glt
 
+# @pytest.fixture(scope="module")
+# def k16x240_summary():
+#     """Summary data from API call."""
+#     return glt.parse("data/1202-TimeLimit500-k16x240-[0-2].log").summary()
+
 
 @pytest.fixture(scope="module")
-def glass4_summary():
+def k16x240_summary():
     """Summary data from API call."""
-    return glt.parse("data/*glass4*.log").summary()
+    return glt.parse("data/1202-*.log").summary()
 
 
 @pytest.fixture(scope="module")
-def glass4_progress():
+def k16x240_progress():
     """Progress data from API call."""
     return {
         "norel": glt.parse("data/*.log").progress("norel"),
@@ -46,7 +51,7 @@ def testlog_progress():
 @pytest.fixture(scope="module")
 def merged_log():
     with tempfile.NamedTemporaryFile("w", delete=False) as fp:
-        for path in sorted(glob.glob("data/912-glass4-*.log")):
+        for path in sorted(glob.glob("data/1202-TimeLimit500-k16x240-[0-2].log")):
             with open(path) as infile:
                 fp.writelines(infile.readlines())
         fp.flush()
@@ -59,9 +64,9 @@ def test_merged_log(merged_log):
     result = summary[["Seed", "Runtime", "LogFilePath", "LogNumber"]]
     expected = pd.DataFrame(
         [
-            {"Seed": 0, "Runtime": 35.66, "LogFilePath": merged_log, "LogNumber": 1},
-            {"Seed": 1, "Runtime": 42.79, "LogFilePath": merged_log, "LogNumber": 2},
-            {"Seed": 2, "Runtime": 11.37, "LogFilePath": merged_log, "LogNumber": 3},
+            {"Seed": 10, "Runtime": 14.08, "LogFilePath": merged_log, "LogNumber": 1},
+            {"Seed": 11, "Runtime": 16.91, "LogFilePath": merged_log, "LogNumber": 2},
+            {"Seed": 12, "Runtime": 16.98, "LogFilePath": merged_log, "LogNumber": 3},
         ]
     )
     assert_frame_equal(result, expected)
@@ -94,68 +99,69 @@ def test_progress(testlog_progress):
     )
 
 
-def test_summary_glass4(glass4_summary):
-    assert len(glass4_summary) == 63
-    assert set(glass4_summary.columns).issuperset(
+def test_summary_k16x240(k16x240_summary):
+    assert len(k16x240_summary) == 180
+    assert set(k16x240_summary.columns).issuperset(
         {"Status", "ObjVal", "ReadingTime", "RelaxObj", "Seed"}
     )
 
 
-def test_progress_glass4(glass4_progress):
-    assert len(glass4_progress) == 4
-    assert len(glass4_progress["norel"]) == 0
-    assert len(glass4_progress["rootlp"]) == 0
+def test_progress_k16x240(k16x240_progress):
+    assert len(k16x240_progress) == 4
+    assert len(k16x240_progress["norel"]) == 0
+    assert len(k16x240_progress["rootlp"]) == 0
 
-    assert set(glass4_progress["nodelog"].columns).issuperset(
+    assert set(k16x240_progress["nodelog"].columns).issuperset(
         {"Depth", "IntInf", "Incumbent", "BestBd", "ItPerNode"}
     )
-    assert len(glass4_progress["pretreesols"]) == 51
-    assert set(glass4_progress["pretreesols"].columns).issuperset(
+    assert len(k16x240_progress["pretreesols"]) == 360
+    assert set(k16x240_progress["pretreesols"].columns).issuperset(
         {"Incumbent", "ModelFile", "Version"}
     )
 
 
-def test_logfile(glass4_summary):
-    logfiles = glass4_summary["LogFilePath"]
+def test_logfile(k16x240_summary):
+    logfiles = k16x240_summary["LogFilePath"]
     assert len(logfiles.unique()) == len(logfiles)
     assert logfiles.str.startswith("data" + os.sep).all()
     assert logfiles.str.endswith(".log").all()
+    print(k16x240_summary["LogFile (Parameter)"])
     assert_series_equal(
-        glass4_summary["LogFile (Parameter)"].apply(lambda l: Path("data") / l),
+        k16x240_summary["LogFile (Parameter)"].apply(lambda l: Path("data") / l),
         logfiles.apply(Path),
         check_names=False,
     )
     # log names are stripped of the model name and seed
-    log = glass4_summary["Log"]
-    assert log.str.startswith("912").all()
-    assert not log.str.contains("glass4").any()
+    log = k16x240_summary["Log"]
+    assert log.str.startswith("1202").all()
+    assert not log.str.contains("k16x240").any()
     assert not log.str.endswith("-").any()
-    assert len(log.unique()) == 21  # different seeds get same label
+    assert len(log.unique()) == 18  # different seeds get same label
 
 
-def test_modelfile(glass4_summary):
-    modelfiles = glass4_summary["ModelFilePath"]
+def test_modelfile(k16x240_summary):
+    modelfiles = k16x240_summary["ModelFilePath"]
     assert len(modelfiles.unique()) == 1
-    assert glass4_summary["ModelFile"].eq("glass4").all()
-    assert glass4_summary["Model"].eq("glass4").all()
+    assert k16x240_summary["ModelFile"].eq("k16x240").all()
+    assert k16x240_summary["Model"].eq("k16x240").all()
 
 
-def test_parameters(glass4_summary):
-    seeds = glass4_summary["Seed"]
+def test_parameters(k16x240_summary):
+    seeds = k16x240_summary["Seed"]
     assert is_integer_dtype(seeds)
     assert seeds.notnull().all()
-    assert set(seeds.unique()) == {0, 1, 2}
-    assert "TimeLimit (Parameter)" in glass4_summary.columns
-    parameters = glass4_summary[
-        [f"{c} (Parameter)" for c in ["Heuristics", "MIPFocus", "Presolve"]]
+    assert set(seeds.unique()) == set(range(20))
+    assert "TimeLimit (Parameter)" in k16x240_summary.columns
+    parameters = k16x240_summary[
+        [f"{c} (Parameter)" for c in ["TimeLimit", "MIPFocus", "Presolve"]]
     ]
     assert parameters.notnull().all().all()
 
 
 def test_legacy_api():
-    glass4_summary = glt.get_dataframe(["data/*.log"])
-    assert glass4_summary.shape[0] == 63
-    assert set(glass4_summary.columns).issuperset({"Status", "ObjVal"})
+    k16x240_summary = glt.get_dataframe(["data/*.log"])
+    assert k16x240_summary.shape[0] == 360
+    assert set(k16x240_summary.columns).issuperset({"Status", "ObjVal"})
 
 
 def test_legacy_api_twopattern():
@@ -163,25 +169,25 @@ def test_legacy_api_twopattern():
     filtered out."""
     glass4_summary = glt.get_dataframe(
         [
-            "data/912-glass4-*.log",
-            "data/912-Cuts0-glass4-*.log",
-            "data/912-Cuts0-glass4-*.log",
+            "data/1202-TimeLimit300-k16x240-*.log",
+            "data/1202-TimeLimit300-k16x240-*.log",
+            "data/1202-TimeLimit500-k16x240-*.log",
         ]
     )
-    assert glass4_summary.shape[0] == 6
+    assert glass4_summary.shape[0] == 20
     assert set(glass4_summary.columns).issuperset({"Status", "ObjVal"})
 
 
 def test_listpattern():
     result = glt.parse(
         [
-            "data/912-glass4-*.log",
-            "data/912-Cuts0-glass4-*.log",
-            "data/912-Cuts0-glass4-*.log",
+            "data/1202-TimeLimit300-k16x240-*.log",
+            "data/1202-TimeLimit300-k16x240-*.log",
+            "data/1202-TimeLimit500-k16x240-*.log",
         ]
     )
     glass4_summary = result.summary()
-    assert glass4_summary.shape[0] == 6
+    assert glass4_summary.shape[0] == 20
     assert set(glass4_summary.columns).issuperset({"Status", "ObjVal"})
 
 

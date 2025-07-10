@@ -18,7 +18,9 @@ def cli(glt_parse, argparse_kwargs):
     )
     parser.add_argument(
         "-t",
+        "-p",
         "--timelines",
+        "--progress",
         action="store_true",
         help="also store timelines (root LP, node log, and NoRel log) in separate sheets",
     )
