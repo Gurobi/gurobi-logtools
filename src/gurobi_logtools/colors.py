@@ -15,7 +15,8 @@ class CustomPalettes:
             return ValueError("palette must be given as a list or tuple")
         for color in colors:
             if not isinstance(color, str) or not re.fullmatch(
-                r"#[A-Fa-f0-9]{6}", color
+                r"#[A-Fa-f0-9]{6}",
+                color,
             ):
                 raise ValueError(f"color {color} not a 6 digit hex string")
         setattr(self, name, colors)
@@ -26,7 +27,7 @@ _custom_palette = CustomPalettes()
 
 
 def register_custom_palette(name: str, colors: "List[str] | Tuple[str]") -> None:
-    """add a custom palette to the "Custom" palette group
+    """Add a custom palette to the "Custom" palette group
 
     Parameters
     ----------
@@ -34,14 +35,13 @@ def register_custom_palette(name: str, colors: "List[str] | Tuple[str]") -> None
         Name of the palette
     colors : List[str] | Tuple[str]
         A list or tuple of hexadecimal strings, eg ("#DD2113",  "#4E5059", "#00ff00")
+
     """
     _custom_palette.add_palette(name, colors)
 
 
 def reset_custom_palettes() -> None:
-    """
-    Removes all registered custom palettes
-    """
+    """Removes all registered custom palettes"""
     global _custom_palette
     _custom_palette = CustomPalettes()
 
@@ -57,7 +57,7 @@ def _get_palette(palette_type, palette):
     }[palette_type]
     try:
         return getattr(family, palette)
-    except:
+    except AttributeError:
         return px.colors.qualitative.Plotly
 
 

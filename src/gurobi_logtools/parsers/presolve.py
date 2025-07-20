@@ -8,38 +8,38 @@ from gurobi_logtools.parsers.util import typeconvert_groupdict
 class PresolveParser:
     # The pattern indicating the initialization of the parser
     presolve_start_pattern = re.compile(
-        r"Optimize a model with (?P<NumConstrs>\d+) (R|r)ows, (?P<NumVars>\d+) (C|c)olumns and (?P<NumNZs>\d+) (N|n)on(Z|z)ero(e?)s"
+        r"Optimize a model with (?P<NumConstrs>\d+) (R|r)ows, (?P<NumVars>\d+) (C|c)olumns and (?P<NumNZs>\d+) (N|n)on(Z|z)ero(e?)s",
     )
 
     # Possible intermediate patterns to be parsed
     presolve_intermediate_patterns = [
         re.compile(r"Model fingerprint: (?P<Fingerprint>.*)$"),
         re.compile(
-            r"Variable types: (?P<PresolvedNumConVars>\d+) continuous, (?P<PresolvedNumIntVars>\d+) integer \((?P<PresolvedNumBinVars>\d+) binary\)$"
+            r"Variable types: (?P<PresolvedNumConVars>\d+) continuous, (?P<PresolvedNumIntVars>\d+) integer \((?P<PresolvedNumBinVars>\d+) binary\)$",
         ),
         re.compile(
-            r"Variable types: (?P<PresolvedNumBinVars>\d+) bin/(?P<PresolvedNumIntVars>\d+) gen[^/]*/(?P<PresolvedNumConVars>\d+) continuous"
+            r"Variable types: (?P<PresolvedNumBinVars>\d+) bin/(?P<PresolvedNumIntVars>\d+) gen[^/]*/(?P<PresolvedNumConVars>\d+) continuous",
         ),
         re.compile(
-            r"Semi-Variable types: (?P<PresolvedNumSemiContVars>\d+) continuous, (?P<PresolvedNumSemiIntVars>\d+) integer$"
+            r"Semi-Variable types: (?P<PresolvedNumSemiContVars>\d+) continuous, (?P<PresolvedNumSemiIntVars>\d+) integer$",
         ),
         re.compile(
-            r"\s*QMatrix range\s*\[(?P<MinQCCoeff>[^,]+),\s*(?P<MaxQCCoeff>[^\]]+)\]"
+            r"\s*QMatrix range\s*\[(?P<MinQCCoeff>[^,]+),\s*(?P<MaxQCCoeff>[^\]]+)\]",
         ),
         re.compile(
-            r"\s*QLMatrix range\s*\[(?P<MinQCLCoeff>[^,]+),\s*(?P<MaxQCLCoeff>[^\]]+)\]"
+            r"\s*QLMatrix range\s*\[(?P<MinQCLCoeff>[^,]+),\s*(?P<MaxQCLCoeff>[^\]]+)\]",
         ),
         re.compile(
-            r"\s*Matrix range\s*\[(?P<MinCoeff>[^,]+),\s*(?P<MaxCoeff>[^\]]+)\]"
+            r"\s*Matrix range\s*\[(?P<MinCoeff>[^,]+),\s*(?P<MaxCoeff>[^\]]+)\]",
         ),
         re.compile(
-            r"\s*QObjective range\s*\[(?P<MinQObjCoeff>[^,]+),\s*(?P<MaxQObjCoeff>[^\]]+)\]"
+            r"\s*QObjective range\s*\[(?P<MinQObjCoeff>[^,]+),\s*(?P<MaxQObjCoeff>[^\]]+)\]",
         ),
         re.compile(
-            r"\s*Objective range\s*\[(?P<MinObjCoeff>[^,]+),\s*(?P<MaxObjCoeff>[^\]]+)\]"
+            r"\s*Objective range\s*\[(?P<MinObjCoeff>[^,]+),\s*(?P<MaxObjCoeff>[^\]]+)\]",
         ),
         re.compile(
-            r"\s*Bounds range\s*\[(?P<MinBound>[^,]+),\s*(?P<MaxBound>[^\]]+)\]"
+            r"\s*Bounds range\s*\[(?P<MinBound>[^,]+),\s*(?P<MaxBound>[^\]]+)\]",
         ),
         re.compile(r"\s*RHS range\s*\[(?P<MinRHS>[^,]+),\s*(?P<MaxRHS>[^\]]+)\]"),
         re.compile(r"\s*QRHS range\s*\[(?P<MinQCRHS>[^,]+),\s*(?P<MaxQCRHS>[^\]]+)\]"),
@@ -47,20 +47,20 @@ class PresolveParser:
         re.compile(r"Model has (?P<NumQConstrs>\d+) quadratic constraints?"),
         re.compile(r"Model has (?P<NumSOS>\d+) SOS constraints?"),
         re.compile(
-            r"Model has (?P<NumPWLObjVars>\d+) piecewise-linear objective terms?"
+            r"Model has (?P<NumPWLObjVars>\d+) piecewise-linear objective terms?",
         ),
         re.compile(r"Model has (?P<NumGenConstrs>\d+) general constraints?"),
         re.compile(r"Distributed MIP job count: (?P<DistributedMIPJobs>\d+)"),
         re.compile(r"Concurrent MIP job count: (?P<ConcurrentJobs>\d+)"),
         re.compile(
-            r"Concurrent MIP optimizer: (?P<ConcurrentJobs>\d+) concurrent instances \(\d+ threads per instance\)"
+            r"Concurrent MIP optimizer: (?P<ConcurrentJobs>\d+) concurrent instances \(\d+ threads per instance\)",
         ),
         re.compile(
-            r"Presolved: (?P<PresolvedNumConstrs>\d+) (R|r)ows, (?P<PresolvedNumVars>\d+) (C|c)olumns, (?P<PresolvedNumNZs>\d+) (N|n)on(Z|z)ero(e?)s"
+            r"Presolved: (?P<PresolvedNumConstrs>\d+) (R|r)ows, (?P<PresolvedNumVars>\d+) (C|c)olumns, (?P<PresolvedNumNZs>\d+) (N|n)on(Z|z)ero(e?)s",
         ),
         re.compile(r"Presolved model has (?P<PresolvedNumSOS>\d+) SOS constraint(s)\n"),
         re.compile(
-            r"Presolved model has (?P<PresolvedNumQNZs>\d+) quadratic objective terms"
+            r"Presolved model has (?P<PresolvedNumQNZs>\d+) quadratic objective terms",
         ),
         re.compile(r"Presolve time: (?P<PresolveTime>[\d\.]+)s"),
     ]
@@ -88,6 +88,7 @@ class PresolveParser:
         Returns:
             dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
+
         """
         if not self._started:
             match = PresolveParser.presolve_start_pattern.match(line)
@@ -116,7 +117,7 @@ class PresolveParser:
                     "PresolvedNumConstrs": 0,
                     "PresolvedNumVars": 0,
                     "PresolvedNumNZs": 0,
-                }
+                },
             )
             return self._summary.copy()
 

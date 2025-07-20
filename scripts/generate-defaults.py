@@ -1,5 +1,4 @@
-"""
-Kept in scripts as we do not want gurobi-logtools to depend on gurobipy (since it
+"""Kept in scripts as we do not want gurobi-logtools to depend on gurobipy (since it
 would then require a license/consume a token/open a compute server session in
 order to look up basic parameter information). This script can instead be used
 to generate a default parameters file gurobi-logtools can read from.
@@ -41,10 +40,10 @@ default_parameter_values = {
 
 # Store parameter defaults in a file tagged with the release version.
 defaults_dir = pathlib.Path(__file__).parent.parent.joinpath(
-    "src/gurobi_logtools/parameters/data"
+    "src/gurobi_logtools/parameters/data",
 )
 target_file = defaults_dir.joinpath(
-    f"{gp.GRB.VERSION_MAJOR}{gp.GRB.VERSION_MINOR}{gp.GRB.VERSION_TECHNICAL}.json"
+    f"{gp.GRB.VERSION_MAJOR}{gp.GRB.VERSION_MINOR}{gp.GRB.VERSION_TECHNICAL}.json",
 )
 print(target_file)
 os.makedirs(defaults_dir, exist_ok=True)

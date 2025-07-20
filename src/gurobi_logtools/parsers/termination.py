@@ -26,11 +26,11 @@ class TerminationParser:
         re.compile(r"(?P<CUTOFF>Objective cutoff exceeded)"),
         re.compile(r"(?P<USER_OBJ_LIMIT>Optimization achieved user objective limit)"),
         re.compile(
-            r"(?P<INTERRUPTED>(Interrupt request received|Solve interrupted))(?: \\(error code (?P<ErrorCode>[^\\)]+)\\))?"
+            r"(?P<INTERRUPTED>(Interrupt request received|Solve interrupted))(?: \\(error code (?P<ErrorCode>[^\\)]+)\\))?",
         ),
         re.compile(r"Solution count (?P<SolCount>\d+)"),
         re.compile(
-            r"Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
+            r"Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)",
         ),
         re.compile(r"(?P<WORK_LIMIT>Work limit reached)"),
         re.compile(r"(?P<MEM_LIMIT>Memory limit reached)"),
@@ -64,6 +64,7 @@ class TerminationParser:
         Returns:
             dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
+
         """
         for pattern in TerminationParser.patterns:
             match = pattern.match(line)

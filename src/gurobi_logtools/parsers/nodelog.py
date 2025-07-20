@@ -13,42 +13,32 @@ class NodeLogParser:
 
     tree_search_final_stats = [
         re.compile(
-            r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>{0}) seconds \((?P<Work>{0}) work units\)".format(
-                float_pattern
-            )
+            rf"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>{float_pattern}) seconds \((?P<Work>{float_pattern}) work units\)",
         ),
         re.compile(
-            r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>[^\s]+) seconds"
+            r"Explored (?P<NodeCount>\d+) nodes \((?P<IterCount>\d+) simplex iterations\) in (?P<Runtime>[^\s]+) seconds",
         ),
         re.compile(
-            r"Best objective (?P<ObjVal>[^,]+), best bound (?P<ObjBound>[^,]+), gap (?P<MIPGap>.*)$"
+            r"Best objective (?P<ObjVal>[^,]+), best bound (?P<ObjBound>[^,]+), gap (?P<MIPGap>.*)$",
         ),
     ]
 
     line_types = [
         # tree_search_full_log_line_regex
         re.compile(
-            r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>{0})\s+(?P<Depth>\d+)\s+(?P<IntInf>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
-                float_pattern
-            )
+            rf"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Obj>{float_pattern})\s+(?P<Depth>\d+)\s+(?P<IntInf>\d+)\s+(?P<Incumbent>({float_pattern}|-))\s+(?P<BestBd>{float_pattern})\s+(?P<Gap>(-|{float_pattern}%))\s+(?P<ItPerNode>({float_pattern}|-))\s+(?P<Time>\d+)s",
         ),
         # tree_search_nodepruned_line_regex
         re.compile(
-            r"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Pruned>(cutoff|infeasible|postponed))\s+(?P<Depth>\d+)\s+(?P<Incumbent>(-|{0}))\s+(?P<BestBd>{0})\s+(?P<Gap>(-|{0}%))\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
-                float_pattern
-            )
+            rf"\s\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Pruned>(cutoff|infeasible|postponed))\s+(?P<Depth>\d+)\s+(?P<Incumbent>(-|{float_pattern}))\s+(?P<BestBd>{float_pattern})\s+(?P<Gap>(-|{float_pattern}%))\s+(?P<ItPerNode>({float_pattern}|-))\s+(?P<Time>\d+)s",
         ),
         # tree_search_new_solution_heuristic_log_line_regex
         re.compile(
-            r"(?P<NewSolution>H)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>{0}%)\s+(?P<ItPerNode>(-|{0}))\s+(?P<Time>\d+)s".format(
-                float_pattern
-            )
+            rf"(?P<NewSolution>H)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Incumbent>({float_pattern}|-))\s+(?P<BestBd>{float_pattern})\s+(?P<Gap>{float_pattern}%)\s+(?P<ItPerNode>(-|{float_pattern}))\s+(?P<Time>\d+)s",
         ),
         # tree_search_new_solution_branching_log_line_regex
         re.compile(
-            r"(?P<NewSolution>\*)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Depth>\d+)\s+(?P<Incumbent>({0}|-))\s+(?P<BestBd>{0})\s+(?P<Gap>{0}%)\s+(?P<ItPerNode>({0}|-))\s+(?P<Time>\d+)s".format(
-                float_pattern
-            )
+            rf"(?P<NewSolution>\*)\s*(?P<CurrentNode>\d+)\s+(?P<RemainingNodes>\d+)\s+(?P<Depth>\d+)\s+(?P<Incumbent>({float_pattern}|-))\s+(?P<BestBd>{float_pattern})\s+(?P<Gap>{float_pattern}%)\s+(?P<ItPerNode>({float_pattern}|-))\s+(?P<Time>\d+)s",
         ),
     ]
     cut_report_start = re.compile(r"Cutting planes:")
@@ -77,8 +67,8 @@ class NodeLogParser:
         Returns:
             dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
-        """
 
+        """
         for regex in self.tree_search_final_stats:
             match = regex.match(line)
             if match:
@@ -95,7 +85,7 @@ class NodeLogParser:
             match = self.cut_report_line.match(line)
             if match:
                 self._cuts[match.group("Name")] = convert_data_types(
-                    match.group("Count")
+                    match.group("Count"),
                 )
                 return self._cuts.copy()
 
@@ -129,6 +119,6 @@ class NodeLogParser:
                     "Gap": self._summary.get("MIPGap"),
                     "CurrentNode": self._summary.get("NodeCount"),
                     "Time": self._summary.get("Runtime"),
-                }
+                },
             )
         return result

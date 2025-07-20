@@ -6,7 +6,7 @@ from gurobi_logtools.parsers.util import typeconvert_groupdict
 
 class PreTreeSolutionParser:
     pretree_solution_regex = re.compile(
-        r"Found heuristic solution:\sobjective\s(?P<Incumbent>[^\s]+)"
+        r"Found heuristic solution:\sobjective\s(?P<Incumbent>[^\s]+)",
     )
 
     def __init__(self):
@@ -28,6 +28,7 @@ class PreTreeSolutionParser:
 
         Returns:
             dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data.
+
         """
         match = self.pretree_solution_regex.match(line)
         if match:

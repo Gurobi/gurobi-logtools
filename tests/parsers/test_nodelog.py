@@ -73,7 +73,7 @@ def test_nodelog_parser_statsonly():
             "Gap": 8e-06,
             "CurrentNode": 188,
             "Time": 5.2,
-        }
+        },
     ]
 
 

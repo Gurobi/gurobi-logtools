@@ -9,7 +9,7 @@ re_parameter_column = re.compile(r"(.*) \(Parameter\)")
 
 def fill_for_version(group, parameter_columns):
     parameter_defaults = load_defaults(
-        version=group["Version"].iloc[0].replace(".", "")
+        version=group["Version"].iloc[0].replace(".", ""),
     )
     for column in parameter_columns:
         default = parameter_defaults.get(re_parameter_column.match(column).group(1))
@@ -33,7 +33,7 @@ def fill_default_parameters(summary):
 
 def fill_for_version_nosuffix(group):
     parameter_defaults = load_defaults(
-        version=group["Version"].iloc[0].replace(".", "")
+        version=group["Version"].iloc[0].replace(".", ""),
     )
     for parameter in group.columns:
         default = parameter_defaults.get(parameter)
@@ -45,7 +45,7 @@ def fill_for_version_nosuffix(group):
 def fill_default_parameters_nosuffix(parameters):
     """Fill defaults for Version and parameter cols with no (Parameter) suffix."""
     return parameters.groupby("Version", group_keys=False)[parameters.columns].apply(
-        fill_for_version_nosuffix
+        fill_for_version_nosuffix,
     )
 
 

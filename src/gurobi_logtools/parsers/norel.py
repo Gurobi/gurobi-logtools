@@ -7,12 +7,12 @@ from gurobi_logtools.parsers.util import typeconvert_groupdict
 class NoRelParser:
     norel_log_start = re.compile(r"Starting NoRel heuristic")
     norel_primal_regex = re.compile(
-        r"Found heuristic solution:\sobjective\s(?P<Incumbent>[^\s]+)"
+        r"Found heuristic solution:\sobjective\s(?P<Incumbent>[^\s]+)",
     )
     # Order is important in this list as regexes are checked in order
     norel_elapsed = [
         re.compile(
-            r"Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s\s\(best\sbound\s(?P<BestBd>[^\s]+)[\)|,.*]"
+            r"Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s\s\(best\sbound\s(?P<BestBd>[^\s]+)[\)|,.*]",
         ),
         re.compile(r"Elapsed time for NoRel heuristic:\s(?P<Time>\d+)s"),
     ]
@@ -46,6 +46,7 @@ class NoRelParser:
         Returns:
             dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
+
         """
         if not self._started:
             match = self.norel_log_start.match(line)

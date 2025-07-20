@@ -99,6 +99,7 @@ class SingleLogParser:
         Returns:
             dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
+
         """
         # Initially, only check the header parser until started
         if not self.started:

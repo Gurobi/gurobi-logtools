@@ -5,7 +5,7 @@ from pathlib import Path
 data_dir = Path(__file__).parent.joinpath("data")
 
 
-@lru_cache()
+@lru_cache
 def load_descriptions():
     with data_dir.joinpath("descriptions.json").open() as infile:
         descriptions = json.load(infile)

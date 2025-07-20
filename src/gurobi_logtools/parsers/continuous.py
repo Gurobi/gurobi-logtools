@@ -12,16 +12,16 @@ class ContinuousParser:
     # in case of solving a MIP. In some cases, the log might only include this one
     # line
     mip_relaxation_pattern = re.compile(
-        r"Root relaxation: objective (?P<RelaxObj>[^,]+), (?P<RelaxIterCount>\d+) iterations, (?P<RelaxTime>[^\s]+) seconds"
+        r"Root relaxation: objective (?P<RelaxObj>[^,]+), (?P<RelaxIterCount>\d+) iterations, (?P<RelaxTime>[^\s]+) seconds",
     )
 
     barrier_interruption_pattern = re.compile(
-        r"Barrier solve interrupted - model solved by another algorithm"
+        r"Barrier solve interrupted - model solved by another algorithm",
     )
 
     continuous_termination_patterns = [
         re.compile(
-            r"(?P<SUBOPTIMAL>Sub-optimal termination)(?: - objective (?P<ObjVal>.*))$"
+            r"(?P<SUBOPTIMAL>Sub-optimal termination)(?: - objective (?P<ObjVal>.*))$",
         ),
         re.compile(r"(?P<OPTIMAL>Optimal objective\s+(?P<ObjVal>.*))$"),
     ]
@@ -48,8 +48,8 @@ class ContinuousParser:
         Returns:
             dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
-        """
 
+        """
         if parse_result := self._pretree_solution_parser.parse(line):
             return parse_result.copy()
 
