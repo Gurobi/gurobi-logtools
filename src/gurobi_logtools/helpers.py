@@ -12,9 +12,11 @@ def fill_for_version(group, parameter_columns):
         version=group["Version"].iloc[0].replace(".", ""),
     )
     for column in parameter_columns:
-        default = parameter_defaults.get(re_parameter_column.match(column).group(1))
-        if default is not None:
-            group[column] = group[column].fillna(default).astype(type(default))
+        match = re_parameter_column.match(column)
+        if match:
+            default = parameter_defaults.get(match.group(1))
+            if default is not None:
+                group[column] = group[column].fillna(default).astype(type(default))
     return group
 
 

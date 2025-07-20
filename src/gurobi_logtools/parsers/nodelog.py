@@ -1,14 +1,15 @@
 import re
-from typing import Union
+from typing import Dict, Union
 
 from gurobi_logtools.parsers.util import (
+    Parser,
     convert_data_types,
     float_pattern,
     typeconvert_groupdict,
 )
 
 
-class NodeLogParser:
+class NodeLogParser(Parser):
     tree_search_start = re.compile(r" Expl Unexpl(.*)It/Node Time$")
 
     tree_search_final_stats = [
@@ -46,26 +47,26 @@ class NodeLogParser:
 
     def __init__(self):
         """Initialize the NodeLog parser."""
-        self._summary = {}
+        self._summary: Dict[str, Union[str, int, float, None]] = {}
         self._cuts = {}
         self._progress = []
         self._in_cut_report = False
         self._started = False
 
-    def get_summary(self) -> dict:
+    def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         summary = self._summary
         summary.update({f"Cuts: {name}": count for name, count in self._cuts.items()})
         return summary
 
-    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """

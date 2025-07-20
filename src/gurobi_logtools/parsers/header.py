@@ -1,10 +1,14 @@
 import re
-from typing import Union
+from typing import Dict, Union
 
-from gurobi_logtools.parsers.util import convert_data_types, typeconvert_groupdict
+from gurobi_logtools.parsers.util import (
+    Parser,
+    convert_data_types,
+    typeconvert_groupdict,
+)
 
 
-class HeaderParser:
+class HeaderParser(Parser):
     header_start_patterns = [
         re.compile(
             r"Gurobi (?P<Version>\d{1,2}\.[^\s]+) \((?P<Platform>[^\)]+)\) logging started (?P<Time>.*)$",
@@ -45,18 +49,18 @@ class HeaderParser:
         Parameters are stored separately from the summary data as they are
         handled differently in the final output.
         """
-        self._summary = {}
+        self._summary: Dict[str, Union[str, int, float, None]] = {}
         self._parameters = {}
         self._started = False
 
-    def parse(self, line: str) -> dict[str, Union[str, float, int, None]]:
+    def parse(self, line: str) -> Dict[str, Union[str, float, int, None]]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """
@@ -85,14 +89,14 @@ class HeaderParser:
 
         return {}
 
-    def get_summary(self) -> dict:
+    def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         return self._summary
 
-    def get_parameters(self) -> dict:
+    def get_parameters(self) -> Dict:
         """Return all changed parameters detected in the header."""
         return self._parameters
 
-    def changed_params(self) -> int:
+    def changed_params(self) -> Dict:
         omit_params = {"Seed", "LogFile"}
         return {k: v for k, v in self._parameters.items() if k not in omit_params}

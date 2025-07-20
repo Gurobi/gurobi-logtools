@@ -1,10 +1,10 @@
 import re
-from typing import Union
+from typing import Dict, Union
 
-from gurobi_logtools.parsers.util import typeconvert_groupdict
+from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
 
 
-class PreTreeSolutionParser:
+class PreTreeSolutionParser(Parser):
     pretree_solution_regex = re.compile(
         r"Found heuristic solution:\sobjective\s(?P<Incumbent>[^\s]+)",
     )
@@ -17,18 +17,17 @@ class PreTreeSolutionParser:
         the HeaderParser and the NoRelParser or the RelaxationParser.
         """
         self._progress = []
-        self._summary = {}
+        self._summary: Dict[str, Union[str, int, float, None]] = {}
         # self._started = False
 
-    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data.
-
+           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data.
         """
         match = self.pretree_solution_regex.match(line)
         if match:
@@ -37,7 +36,7 @@ class PreTreeSolutionParser:
             return parse_result.copy()
         return {}
 
-    def get_summary(self) -> dict:
+    def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         return {"PreTreeSolutions": len(self._progress)}
 

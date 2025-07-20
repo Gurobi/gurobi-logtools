@@ -1,10 +1,10 @@
 import re
-from typing import Union
+from typing import Dict, Union
 
-from gurobi_logtools.parsers.util import typeconvert_groupdict
+from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
 
 
-class TerminationParser:
+class TerminationParser(Parser):
     # Termination patterns
     patterns = [
         re.compile(r"ERROR (?P<ErrorCode>[^:]+): (?P<ErrorMessage>.*)$"),
@@ -53,16 +53,16 @@ class TerminationParser:
     ]
 
     def __init__(self):
-        self._summary = {}
+        self._summary: Dict[str, Union[str, int, float, None]] = {}
 
-    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
         """Return True if the line is matched by some pattern.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """
@@ -77,6 +77,6 @@ class TerminationParser:
                 return self._summary.copy()
         return {}
 
-    def get_summary(self) -> dict:
+    def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         return self._summary

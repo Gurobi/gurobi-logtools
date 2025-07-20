@@ -1,11 +1,11 @@
 import re
-from typing import Union
+from typing import Dict, Union
 
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
-from gurobi_logtools.parsers.util import typeconvert_groupdict
+from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
 
 
-class PresolveParser:
+class PresolveParser(Parser):
     # The pattern indicating the initialization of the parser
     presolve_start_pattern = re.compile(
         r"Optimize a model with (?P<NumConstrs>\d+) (R|r)ows, (?P<NumVars>\d+) (C|c)olumns and (?P<NumNZs>\d+) (N|n)on(Z|z)ero(e?)s",
@@ -75,18 +75,18 @@ class PresolveParser:
         model. Specifically, it includes information for all lines appearing between
         the HeaderParser and the NoRelParser or the RelaxationParser.
         """
-        self._summary = {}
+        self._summary: Dict[str, Union[str, int, float, None]] = {}
         self._started = False
         self._pretree_solution_parser = pretree_solution_parser
 
-    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """
@@ -123,6 +123,6 @@ class PresolveParser:
 
         return {}
 
-    def get_summary(self) -> dict:
+    def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         return self._summary

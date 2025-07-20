@@ -34,7 +34,7 @@ class ParseResult:
         self.parsers = []
         self._common = None
 
-    def progress(self, section="nodelog") -> dict:
+    def progress(self, section="nodelog") -> pd.DataFrame:
         """Return the search progress for the given section in the log.
 
         Args:

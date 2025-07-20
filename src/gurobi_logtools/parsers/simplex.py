@@ -1,10 +1,10 @@
 import re
-from typing import Union
+from typing import Dict, Union
 
-from gurobi_logtools.parsers.util import float_pattern, typeconvert_groupdict
+from gurobi_logtools.parsers.util import Parser, float_pattern, typeconvert_groupdict
 
 
-class SimplexParser:
+class SimplexParser(Parser):
     # The pattern indicating the initialization of the parser
     simplex_start_pattern = re.compile(
         r"Iteration(\s+)Objective(\s+)Primal Inf.(\s+)Dual Inf.(\s+)Time",
@@ -27,18 +27,18 @@ class SimplexParser:
 
     def __init__(self):
         """Initialize the Simplex parser."""
-        self._summary = {}
+        self._summary: Dict[str, Union[str, int, float, None]] = {}
         self._progress = []
         self._started = False
 
-    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """
@@ -68,7 +68,7 @@ class SimplexParser:
 
         return {}
 
-    def get_summary(self) -> dict:
+    def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         return self._summary
 

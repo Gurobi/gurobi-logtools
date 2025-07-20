@@ -18,27 +18,27 @@ class WidgetValues:
     x: str = "Runtime"
     y: str = "Parameters"
     color: str = "Parameters"
-    type: constants.PlotType = constants.PlotType.BOX.value
+    type: str = constants.PlotType.BOX.value
     symbol: Optional[str] = None
     log_x: bool = False
     log_y: bool = False
-    points: constants.Points = constants.Points.ALL.value
-    barmode: constants.BarMode = constants.BarMode.GROUP.value
+    points: str = constants.Points.ALL.value
+    barmode: str = constants.BarMode.GROUP.value
     title: str = ""
     x_axis_label: str = ""
     y_axis_label: str = ""
     height: int = 0
     width: int = 0
     show_legend: bool = False
-    sort_metric: Optional[constants.SortMetric] = constants.SortMetric.NONE.value
+    sort_metric: Optional[str] = constants.SortMetric.NONE.value
     sort_field: Optional[str] = None
-    sort_axis: constants.SortAxis = constants.SortAxis.SORT_Y
+    sort_axis: str = constants.SortAxis.SORT_Y
     boxmean: bool = False
     notched: bool = False
     reverse_ecdf: bool = False
-    palette_type: constants.PaletteType = constants.PaletteType.QUALITATIVE.value
-    palette_name: str = None
-    color_scale: constants.ColorScale = constants.ColorScale.DISCRETE.value
+    palette_type: str = constants.PaletteType.QUALITATIVE.value
+    palette_name: Optional[str] = None
+    color_scale: str = constants.ColorScale.DISCRETE.value
     color_categorical: bool = False
     ignore_params: str = "SoftMemLimit TimeLimit"
     query: str = ""
@@ -310,13 +310,19 @@ def _add_pretty_param_labels(df: pd.DataFrame, ignored_params: str) -> pd.DataFr
     if "ChangedParams" not in df.columns:
         # the fact we return a copy is important here.  It is not ideal, but it is convenient.
         return df.copy()
-    ignored_params = ignored_params.lower().replace("\n", " ").replace(",", " ").split()
+    ignored_params_list = (
+        ignored_params.lower().replace("\n", " ").replace(",", " ").split()
+    )
     pretty_params = (
         df["ChangedParams"]
         .map(
             lambda d: "<br>".join(
-                [f"{k}={v}" for k, v in d.items() if k.lower() not in ignored_params],
-            ),
+                [
+                    f"{k}={v}"
+                    for k, v in d.items()
+                    if k.lower() not in ignored_params_list
+                ]
+            )
         )
         .replace("", "Defaults")
     )

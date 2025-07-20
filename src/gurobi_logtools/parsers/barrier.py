@@ -1,10 +1,10 @@
 import re
-from typing import Union
+from typing import Dict
 
-from gurobi_logtools.parsers.util import float_pattern, typeconvert_groupdict
+from gurobi_logtools.parsers.util import Parser, float_pattern, typeconvert_groupdict
 
 
-class BarrierParser:
+class BarrierParser(Parser):
     # The pattern indicating the initialization of the parser
     barrier_start_pattern = re.compile(
         r"Iter(\s+)Primal(\s+)Dual(\s+)Primal(\s+)Dual(\s+)Compl(\s+)Time",
@@ -44,14 +44,14 @@ class BarrierParser:
         self._progress = []
         self._started = False
 
-    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict:
         """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-           dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+          Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """
@@ -90,7 +90,7 @@ class BarrierParser:
 
         return {}
 
-    def get_summary(self) -> dict:
+    def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         return self._summary
 

@@ -1,6 +1,6 @@
 import datetime
 import re
-from collections.abc import Iterable
+from typing import Dict, Iterable, Protocol, Union
 
 float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
 
@@ -64,3 +64,7 @@ def model_type(discrete_vars=0, quad_nonzeros=0, quad_constrs=0):
     if not mtype:
         return "LP"
     return mtype + "P"
+
+
+class Parser(Protocol):
+    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]: ...
