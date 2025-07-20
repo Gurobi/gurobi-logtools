@@ -41,6 +41,7 @@ dev = [
     "pytest>=8.1,<9",
     "ipykernel>=6.29.5",
     "mypy>=1.14.1",
+    "nbmake",
     "pre-commit",
     "pre-commit-uv",
     "pandas-stubs",
@@ -66,6 +67,7 @@ module=[
     "pandas.*",
     "plotly.*",
     "ipywidgets.*",
+    "IPython.*",
 ]
 ignore_missing_imports='true'
 

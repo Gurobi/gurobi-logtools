@@ -260,8 +260,14 @@ def test_rewrite_filenames():
             "tests/assets/combined/*.log",
             write_to_dir=Path(tempdirname) / "logs",
         )
-        split_log_files = sorted(Path(tempdirname).joinpath("logs").glob("*.log"))
+        split_log_files = sorted(
+            Path(tempdirname).joinpath("logs").glob("*.log"),
+            key=lambda p: p.name.casefold(),  # needed for cross OS correctness
+        )
         expected_names = [
+            "912-glass4-0",
+            "912-glass4-1",
+            "912-glass4-2",
             "912-MIPFocus1-Presolve1-TimeLimit600-glass4-0",
             "912-MIPFocus1-Presolve1-TimeLimit600-glass4-1",
             "912-MIPFocus1-Presolve1-TimeLimit600-glass4-2",
@@ -271,9 +277,6 @@ def test_rewrite_filenames():
             "912-Presolve1-glass4-0",
             "912-Presolve1-glass4-1",
             "912-Presolve1-glass4-2",
-            "912-glass4-0",
-            "912-glass4-1",
-            "912-glass4-2",
         ]
         assert len(split_log_files) == len(expected_names)
 
