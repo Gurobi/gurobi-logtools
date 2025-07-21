@@ -132,7 +132,8 @@ class TestContinuous(TestCase):
         continuous_parser = ContinuousParser(PreTreeSolutionParser())
         parse_block(continuous_parser, example_log_barrier_with_simplex)
         self.assertEqual(
-            continuous_parser.get_progress()[-1], expected_progress_last_entry
+            continuous_parser.get_progress()[-1],
+            expected_progress_last_entry,
         )
 
     def test_get_summary_progress(self):

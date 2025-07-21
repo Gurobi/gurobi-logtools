@@ -67,7 +67,7 @@ def test_merged_log(merged_log):
             {"Seed": 10, "Runtime": 14.08, "LogFilePath": merged_log, "LogNumber": 1},
             {"Seed": 11, "Runtime": 16.91, "LogFilePath": merged_log, "LogNumber": 2},
             {"Seed": 12, "Runtime": 16.98, "LogFilePath": merged_log, "LogNumber": 3},
-        ]
+        ],
     )
     assert_frame_equal(result, expected)
 
@@ -75,7 +75,7 @@ def test_merged_log(merged_log):
 def test_summary(testlog_summary):
     assert len(testlog_summary) == 8
     assert set(testlog_summary.columns).issuperset(
-        {"Status", "ObjVal", "ReadingTime", "RelaxObj"}
+        {"Status", "ObjVal", "ReadingTime", "RelaxObj"},
     )
 
 
@@ -83,26 +83,26 @@ def test_progress(testlog_progress):
     assert len(testlog_progress) == 4
     assert len(testlog_progress["norel"]) == 19
     assert set(testlog_progress["norel"].columns).issuperset(
-        {"Time", "BestBd", "Incumbent"}
+        {"Time", "BestBd", "Incumbent"},
     )
     assert len(testlog_progress["rootlp"]) == 409
     assert set(testlog_progress["rootlp"].columns).issuperset(
-        {"Iteration", "PInf", "DInf", "PObj", "DObj"}
+        {"Iteration", "PInf", "DInf", "PObj", "DObj"},
     )
     assert len(testlog_progress["nodelog"]) == 145
     assert set(testlog_progress["nodelog"].columns).issuperset(
-        {"Depth", "IntInf", "Incumbent", "BestBd", "ItPerNode", "ModelFile", "Version"}
+        {"Depth", "IntInf", "Incumbent", "BestBd", "ItPerNode", "ModelFile", "Version"},
     )
     assert len(testlog_progress["pretreesols"]) == 4
     assert set(testlog_progress["pretreesols"].columns).issuperset(
-        {"Incumbent", "ModelFile", "Version"}
+        {"Incumbent", "ModelFile", "Version"},
     )
 
 
 def test_summary_k16x240(k16x240_summary):
     assert len(k16x240_summary) == 180
     assert set(k16x240_summary.columns).issuperset(
-        {"Status", "ObjVal", "ReadingTime", "RelaxObj", "Seed"}
+        {"Status", "ObjVal", "ReadingTime", "RelaxObj", "Seed"},
     )
 
 
@@ -112,11 +112,11 @@ def test_progress_k16x240(k16x240_progress):
     assert len(k16x240_progress["rootlp"]) == 0
 
     assert set(k16x240_progress["nodelog"].columns).issuperset(
-        {"Depth", "IntInf", "Incumbent", "BestBd", "ItPerNode"}
+        {"Depth", "IntInf", "Incumbent", "BestBd", "ItPerNode"},
     )
     assert len(k16x240_progress["pretreesols"]) == 360
     assert set(k16x240_progress["pretreesols"].columns).issuperset(
-        {"Incumbent", "ModelFile", "Version"}
+        {"Incumbent", "ModelFile", "Version"},
     )
 
 
@@ -127,7 +127,7 @@ def test_logfile(k16x240_summary):
     assert logfiles.str.endswith(".log").all()
     print(k16x240_summary["LogFile (Parameter)"])
     assert_series_equal(
-        k16x240_summary["LogFile (Parameter)"].apply(lambda l: Path("data") / l),
+        k16x240_summary["LogFile (Parameter)"].apply(lambda log: Path("data") / log),
         logfiles.apply(Path),
         check_names=False,
     )
@@ -166,13 +166,14 @@ def test_legacy_api():
 
 def test_legacy_api_twopattern():
     """Check multiple file patterns can be passed and duplicate files are
-    filtered out."""
+    filtered out.
+    """
     glass4_summary = glt.get_dataframe(
         [
             "data/1202-TimeLimit300-k16x240-*.log",
             "data/1202-TimeLimit300-k16x240-*.log",
             "data/1202-TimeLimit500-k16x240-*.log",
-        ]
+        ],
     )
     assert glass4_summary.shape[0] == 20
     assert set(glass4_summary.columns).issuperset({"Status", "ObjVal"})
@@ -184,7 +185,7 @@ def test_listpattern():
             "data/1202-TimeLimit300-k16x240-*.log",
             "data/1202-TimeLimit300-k16x240-*.log",
             "data/1202-TimeLimit500-k16x240-*.log",
-        ]
+        ],
     )
     glass4_summary = result.summary()
     assert glass4_summary.shape[0] == 20
@@ -194,7 +195,8 @@ def test_listpattern():
 def test_gurobipy_logs():
     """API logs differ in some cases: sometimes no model file is read, and
     parameter settings may appear before the header. At the moment this test
-    just asserts no errors."""
+    just asserts no errors.
+    """
     glt.parse("tests/assets/gurobipy/empty.log").summary()
     glt.parse("tests/assets/gurobipy/read.log").summary()
     glt.parse("tests/assets/gurobipy/*.log").summary()
@@ -254,11 +256,18 @@ def test_rewrite_filenames():
     # Test workflow for rewriting file names
 
     with tempfile.TemporaryDirectory() as tempdirname:
-        results = glt.parse(
-            "tests/assets/combined/*.log", write_to_dir=Path(tempdirname) / "logs"
+        glt.parse(
+            "tests/assets/combined/*.log",
+            write_to_dir=Path(tempdirname) / "logs",
         )
-        split_log_files = sorted(Path(tempdirname).joinpath("logs").glob("*.log"))
+        split_log_files = sorted(
+            Path(tempdirname).joinpath("logs").glob("*.log"),
+            key=lambda p: p.name.casefold(),  # needed for cross OS correctness
+        )
         expected_names = [
+            "912-glass4-0",
+            "912-glass4-1",
+            "912-glass4-2",
             "912-MIPFocus1-Presolve1-TimeLimit600-glass4-0",
             "912-MIPFocus1-Presolve1-TimeLimit600-glass4-1",
             "912-MIPFocus1-Presolve1-TimeLimit600-glass4-2",
@@ -268,9 +277,6 @@ def test_rewrite_filenames():
             "912-Presolve1-glass4-0",
             "912-Presolve1-glass4-1",
             "912-Presolve1-glass4-2",
-            "912-glass4-0",
-            "912-glass4-1",
-            "912-glass4-2",
         ]
         assert len(split_log_files) == len(expected_names)
 

@@ -1,10 +1,10 @@
 import re
-from typing import Union
+from typing import Dict, Union
 
-from gurobi_logtools.parsers.util import typeconvert_groupdict
+from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
 
 
-class TerminationParser:
+class TerminationParser(Parser):
     # Termination patterns
     patterns = [
         re.compile(r"ERROR (?P<ErrorCode>[^:]+): (?P<ErrorMessage>.*)$"),
@@ -26,11 +26,11 @@ class TerminationParser:
         re.compile(r"(?P<CUTOFF>Objective cutoff exceeded)"),
         re.compile(r"(?P<USER_OBJ_LIMIT>Optimization achieved user objective limit)"),
         re.compile(
-            r"(?P<INTERRUPTED>(Interrupt request received|Solve interrupted))(?: \\(error code (?P<ErrorCode>[^\\)]+)\\))?"
+            r"(?P<INTERRUPTED>(Interrupt request received|Solve interrupted))(?: \\(error code (?P<ErrorCode>[^\\)]+)\\))?",
         ),
         re.compile(r"Solution count (?P<SolCount>\d+)"),
         re.compile(
-            r"Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)"
+            r"Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)",
         ),
         re.compile(r"(?P<WORK_LIMIT>Work limit reached)"),
         re.compile(r"(?P<MEM_LIMIT>Memory limit reached)"),
@@ -53,17 +53,18 @@ class TerminationParser:
     ]
 
     def __init__(self):
-        self._summary = {}
+        self._summary: Dict[str, Union[str, int, float, None]] = {}
 
-    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
         """Return True if the line is matched by some pattern.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
+
         """
         for pattern in TerminationParser.patterns:
             match = pattern.match(line)
@@ -76,6 +77,6 @@ class TerminationParser:
                 return self._summary.copy()
         return {}
 
-    def get_summary(self) -> dict:
+    def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         return self._summary

@@ -34,7 +34,7 @@ class ParseResult:
         self.parsers = []
         self._common = None
 
-    def progress(self, section="nodelog") -> dict:
+    def progress(self, section="nodelog") -> pd.DataFrame:
         """Return the search progress for the given section in the log.
 
         Args:
@@ -44,6 +44,7 @@ class ParseResult:
         Returns:
             pd.DataFrame: A data frame representing the progress of the given section
                 in the log.
+
         """
         progress = []
         for logfile, lognumber, parser in self.parsers:
@@ -59,7 +60,7 @@ class ParseResult:
                 raise ValueError(f"Unknown section '{section}'")
 
             progress.append(
-                pd.DataFrame(log).assign(LogFilePath=logfile, LogNumber=lognumber)
+                pd.DataFrame(log).assign(LogFilePath=logfile, LogNumber=lognumber),
             )
 
         return pd.merge(
@@ -80,19 +81,21 @@ class ParseResult:
                     "LogFilePath": logfile,
                     "LogNumber": lognumber,
                     "ModelFilePath": parser.header_parser.get_summary().get(
-                        "ModelFilePath"
+                        "ModelFilePath",
                     ),
                     "Seed": parser.header_parser.get_parameters().get("Seed", 0),
                     "Version": parser.header_parser.get_summary().get("Version"),
                 }
                 for logfile, lognumber, parser in self.parsers
-            ]
+            ],
         )
         common = common.dropna(axis="columns", how="all")
         if "ModelFilePath" in common:
             common = common.assign(
                 ModelFile=lambda df: df["ModelFilePath"].apply(
-                    lambda p: None if p is None else Path(p).parts[-1].partition(".")[0]
+                    lambda p: None
+                    if p is None
+                    else Path(p).parts[-1].partition(".")[0],
                 ),
                 Model=lambda df: df["ModelFile"],
                 Log=lambda df: df.apply(strip_model_and_seed, axis=1),
@@ -105,10 +108,10 @@ class ParseResult:
             [
                 dict(parser.get_summary(), LogFilePath=logfile, LogNumber=lognumber)
                 for logfile, lognumber, parser in self.parsers
-            ]
+            ],
         )
         parameters = pd.DataFrame(
-            [parser.header_parser.get_parameters() for _, _, parser in self.parsers]
+            [parser.header_parser.get_parameters() for _, _, parser in self.parsers],
         )
         # Fill defaults and add suffix to parameter columns.
         parameters = (
@@ -130,7 +133,6 @@ class ParseResult:
 
     def parse(self, logfile: str) -> None:
         """Parse a single file. The log file may contain multiple run logs."""
-
         new_parser = functools.partial(SingleLogParser, write_to_dir=self.write_to_dir)
 
         parser = new_parser()
@@ -170,9 +172,9 @@ def parse(patterns: Union[str, List[str]], write_to_dir=None) -> ParseResult:
     if type(patterns) is str:
         patterns = [patterns]
     logfiles = sorted(
-        set(itertools.chain(*(glob.glob(pattern) for pattern in patterns)))
+        set(itertools.chain(*(glob.glob(pattern) for pattern in patterns))),
     )
-    if not len(logfiles):
+    if not logfiles:
         raise FileNotFoundError(f"No logfiles found in patterns: {patterns}")
     for logfile in logfiles:
         result.parse(logfile)
@@ -191,6 +193,7 @@ def get_dataframe(logfiles: List[str], timelines=False, prettyparams=False):
             search tree progress if set to True. Defaults to False.
         prettyparams (bool, optional): Replace some parameter values with
             categorical labels.
+
     """
     result = parse(logfiles)
     summary = result.summary(prettyparams=prettyparams)

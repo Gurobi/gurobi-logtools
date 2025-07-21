@@ -1,6 +1,78 @@
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.isort]
-profile = "black"
+
+[project]
+name = "gurobi-logtools"
+dynamic = ["version"]
+description = "Gurobi log file tools for parsing and exploring data"
+license = { file = "LICENSE" }
+readme = "README.md"
+authors = [
+    { name = "Gurobi Optimization, LLC", email = "support@gurobi.com" }
+]
+classifiers = [
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+urls = { Homepage = "https://github.com/Gurobi/gurobi-logtools" }
+
+
+requires-python = ">=3.9"
+dependencies = [
+    "ipywidgets",
+    "numpy",
+    "pandas",
+    "plotly",
+    "xlsxwriter",
+    "nbformat>=4.2.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.1,<9",
+    "ipykernel>=6.29.5",
+    "mypy>=1.14.1",
+    "nbmake",
+    "pre-commit",
+    "pre-commit-uv",
+    "pandas-stubs",
+    "scipy-stubs; python_version >= '3.10'",
+    "tox",
+    "tox-uv",
+    "types-openpyxl",
+    "types-python-dateutil",
+]
+
+[tool.hatch.version]            # reads __version__ from the package
+path = "src/gurobi_logtools/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gurobi_logtools"]
+
+# Include the JSON parameter files that were listed in setup.cfg
+[tool.hatch.build]
+include = ["src/gurobi_logtools/parameters/data/*.json"]
+
+[[tool.mypy.overrides]]
+module=[
+    "pandas.*",
+    "plotly.*",
+    "ipywidgets.*",
+    "IPython.*",
+]
+ignore_missing_imports='true'
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+ignore  = ["F401"]

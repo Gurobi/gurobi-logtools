@@ -1,27 +1,27 @@
 import re
-from typing import Union
+from typing import Dict, Union
 
 from gurobi_logtools.parsers.barrier import BarrierParser
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.simplex import SimplexParser
-from gurobi_logtools.parsers.util import typeconvert_groupdict
+from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
 
 
-class ContinuousParser:
+class ContinuousParser(Parser):
     # The pattern indicating the start or the termination of the barrier/simplex
     # in case of solving a MIP. In some cases, the log might only include this one
     # line
     mip_relaxation_pattern = re.compile(
-        r"Root relaxation: objective (?P<RelaxObj>[^,]+), (?P<RelaxIterCount>\d+) iterations, (?P<RelaxTime>[^\s]+) seconds"
+        r"Root relaxation: objective (?P<RelaxObj>[^,]+), (?P<RelaxIterCount>\d+) iterations, (?P<RelaxTime>[^\s]+) seconds",
     )
 
     barrier_interruption_pattern = re.compile(
-        r"Barrier solve interrupted - model solved by another algorithm"
+        r"Barrier solve interrupted - model solved by another algorithm",
     )
 
     continuous_termination_patterns = [
         re.compile(
-            r"(?P<SUBOPTIMAL>Sub-optimal termination)(?: - objective (?P<ObjVal>.*))$"
+            r"(?P<SUBOPTIMAL>Sub-optimal termination)(?: - objective (?P<ObjVal>.*))$",
         ),
         re.compile(r"(?P<OPTIMAL>Optimal objective\s+(?P<ObjVal>.*))$"),
     ]
@@ -31,13 +31,13 @@ class ContinuousParser:
         self._barrier_parser = BarrierParser()
         self._simplex_parser = SimplexParser()
 
-        self._summary = {}
+        self._summary: Dict[str, Union[str, int, float, None]] = {}
 
-        self._current_pattern = None
+        self._current_pattern: Union[str, None] = None
 
         self._pretree_solution_parser = pretree_solution_parser
 
-    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate summary and progress data.
 
         It defers to the simplex and the barrier parsers as needed.
@@ -46,10 +46,10 @@ class ContinuousParser:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
-        """
 
+        """
         if parse_result := self._pretree_solution_parser.parse(line):
             return parse_result.copy()
 
@@ -61,9 +61,9 @@ class ContinuousParser:
             return parse_result.copy()
 
         for pattern in ContinuousParser.continuous_termination_patterns:
-            parse_result = pattern.match(line)
-            if parse_result:
-                parse_result = typeconvert_groupdict(parse_result)
+            match = pattern.match(line)
+            if match:
+                parse_result = typeconvert_groupdict(match)
                 for key, value in parse_result.items():
                     if key in ["OPTIMAL", "SUBOPTIMAL"]:
                         self._summary.update({"Status": key})
@@ -100,7 +100,7 @@ class ContinuousParser:
 
         return {}
 
-    def get_summary(self) -> dict:
+    def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         self._summary.update(self._barrier_parser.get_summary())
         self._summary.update(self._simplex_parser.get_summary())

@@ -112,7 +112,9 @@ class TestHeader(TestCase):
             expected_parameters_2,
         ]
         for example_log, expected_summary, expected_parameters in zip(
-            example_logs, expected_summaries, expected_parameter_sets
+            example_logs,
+            expected_summaries,
+            expected_parameter_sets,
         ):
             with self.subTest(example_log=example_log):
                 header_parser = HeaderParser()
@@ -128,8 +130,8 @@ class TestHeader(TestCase):
 
         The below presolve line can be caught by the model name/size parser
         in the header, but it should only be picked up if the HeaderParser
-        has seen a proper log start line."""
-
+        has seen a proper log start line.
+        """
         parser = HeaderParser()
         parse_lines(parser, ["Presolved: 390 rows, 316 columns, 1803 nonzeros"])
         assert not parser.get_summary()

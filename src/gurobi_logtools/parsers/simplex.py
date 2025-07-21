@@ -1,47 +1,46 @@
 import re
-from typing import Union
+from typing import Dict, Union
 
-from gurobi_logtools.parsers.util import float_pattern, typeconvert_groupdict
+from gurobi_logtools.parsers.util import Parser, float_pattern, typeconvert_groupdict
 
 
-class SimplexParser:
+class SimplexParser(Parser):
     # The pattern indicating the initialization of the parser
     simplex_start_pattern = re.compile(
-        r"Iteration(\s+)Objective(\s+)Primal Inf.(\s+)Dual Inf.(\s+)Time"
+        r"Iteration(\s+)Objective(\s+)Primal Inf.(\s+)Dual Inf.(\s+)Time",
     )
 
     # The pattern indicating the simplex progress
     simplex_progress_pattern = re.compile(
-        r"\s*(?P<Iteration>\d+)\s+(?P<Objective>[^\s]+)\s+(?P<PInf>[^\s]+)\s+(?P<DInf>[^\s]+)\s+(?P<Time>\d+)s"
+        r"\s*(?P<Iteration>\d+)\s+(?P<Objective>[^\s]+)\s+(?P<PInf>[^\s]+)\s+(?P<DInf>[^\s]+)\s+(?P<Time>\d+)s",
     )
 
     # The pattern indicating the termination of the simplex method
     simplex_termination_patterns = [
         re.compile(
-            r"(Solved|Stopped) in (?P<IterCount>[^\s]+) iterations and (?P<Runtime>{0}) seconds \((?P<Work>{0}) work units\)".format(
-                float_pattern
-            )
+            rf"(Solved|Stopped) in (?P<IterCount>[^\s]+) iterations and (?P<Runtime>{float_pattern}) seconds \((?P<Work>{float_pattern}) work units\)",
         ),
         re.compile(
-            r"(Solved|Stopped) in (?P<IterCount>[^\s]+) iterations and (?P<Runtime>[^\s]+) seconds"
+            r"(Solved|Stopped) in (?P<IterCount>[^\s]+) iterations and (?P<Runtime>[^\s]+) seconds",
         ),
     ]
 
     def __init__(self):
         """Initialize the Simplex parser."""
-        self._summary = {}
+        self._summary: Dict[str, Union[str, int, float, None]] = {}
         self._progress = []
         self._started = False
 
-    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
+
         """
         # Check this first since the termination line might appear
         # without any progress log in the concurrent case.
@@ -69,7 +68,7 @@ class SimplexParser:
 
         return {}
 
-    def get_summary(self) -> dict:
+    def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         return self._summary
 

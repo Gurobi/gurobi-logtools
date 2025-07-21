@@ -14,7 +14,10 @@ def cli(glt_parse, argparse_kwargs):
     parser = argparse.ArgumentParser(**argparse_kwargs)
     parser.add_argument("outfile", help="Output file name (.xlsx)", metavar="XLSXFILE")
     parser.add_argument(
-        "logfiles", help="Gurobi log files", nargs="+", metavar="LOGFILE"
+        "logfiles",
+        help="Gurobi log files",
+        nargs="+",
+        metavar="LOGFILE",
     )
     parser.add_argument(
         "-t",

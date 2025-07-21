@@ -5,7 +5,7 @@ from pathlib import Path
 data_dir = Path(__file__).parent.joinpath("data")
 
 
-@lru_cache()
+@lru_cache
 def load_defaults(version):
     version_file = data_dir.joinpath(f"{version}.json")
     if not version_file.exists():

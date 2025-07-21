@@ -1,44 +1,40 @@
 import re
-from typing import Union
+from typing import Dict
 
-from gurobi_logtools.parsers.util import float_pattern, typeconvert_groupdict
+from gurobi_logtools.parsers.util import Parser, float_pattern, typeconvert_groupdict
 
 
-class BarrierParser:
+class BarrierParser(Parser):
     # The pattern indicating the initialization of the parser
     barrier_start_pattern = re.compile(
-        r"Iter(\s+)Primal(\s+)Dual(\s+)Primal(\s+)Dual(\s+)Compl(\s+)Time"
+        r"Iter(\s+)Primal(\s+)Dual(\s+)Primal(\s+)Dual(\s+)Compl(\s+)Time",
     )
 
     barrier_ordering_pattern = re.compile(r"Ordering time: (?P<OrderingTime>[\d\.]+)s")
 
     # The pattern indicating the barrier progress
     barrier_progress_pattern = re.compile(
-        r"\s*(?P<Iteration>\d+)(?P<Indicator>\s|\*)\s+(?P<PObj>[^\s]+)\s+(?P<DObj>[^\s]+)\s+(?P<PRes>[^\s]+)\s+(?P<DRes>[^\s]+)\s+(?P<Compl>[^\s]+)\s+(?P<Time>\d+)s"
+        r"\s*(?P<Iteration>\d+)(?P<Indicator>\s|\*)\s+(?P<PObj>[^\s]+)\s+(?P<DObj>[^\s]+)\s+(?P<PRes>[^\s]+)\s+(?P<DRes>[^\s]+)\s+(?P<Compl>[^\s]+)\s+(?P<Time>\d+)s",
     )
 
     # The pattern indicating the crossover
     barrier_crossover_pattern = re.compile(
-        r"\s*Push phase complete: Pinf (?P<PushPhasePInf>[^\s]+), Dinf (?P<PushPhaseDInf>[^\s]+)\s+(?P<PushPhaseEndTime>\d+)s"
+        r"\s*Push phase complete: Pinf (?P<PushPhasePInf>[^\s]+), Dinf (?P<PushPhaseDInf>[^\s]+)\s+(?P<PushPhaseEndTime>\d+)s",
     )
 
     # The pattern indicating the termination of the barrier algorithm
     barrier_termination_patterns = [
         re.compile(
-            r"Barrier solved model in (?P<BarIterCount>[^\s]+) iterations and (?P<Runtime>{0}) seconds \((?P<Work>{0}) work units\)".format(
-                float_pattern
-            )
+            rf"Barrier solved model in (?P<BarIterCount>[^\s]+) iterations and (?P<Runtime>{float_pattern}) seconds \((?P<Work>{float_pattern}) work units\)",
         ),
         re.compile(
-            r"Barrier performed (?P<BarIterCount>\d+) iterations in (?P<Runtime>{0}) seconds \((?P<Work>{0}) work units\)".format(
-                float_pattern
-            )
+            rf"Barrier performed (?P<BarIterCount>\d+) iterations in (?P<Runtime>{float_pattern}) seconds \((?P<Work>{float_pattern}) work units\)",
         ),
         re.compile(
-            r"Barrier solved model in (?P<BarIterCount>[^\s]+) iterations and (?P<Runtime>[^\s]+) seconds"
+            r"Barrier solved model in (?P<BarIterCount>[^\s]+) iterations and (?P<Runtime>[^\s]+) seconds",
         ),
         re.compile(
-            r"Barrier performed (?P<BarIterCount>\d+) iterations in (?P<Runtime>[^\s]+) seconds"
+            r"Barrier performed (?P<BarIterCount>\d+) iterations in (?P<Runtime>[^\s]+) seconds",
         ),
     ]
 
@@ -48,15 +44,16 @@ class BarrierParser:
         self._progress = []
         self._started = False
 
-    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict:
         """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-           dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+          Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
+
         """
         barrier_ordering_match = BarrierParser.barrier_ordering_pattern.match(line)
         if barrier_ordering_match:
@@ -93,7 +90,7 @@ class BarrierParser:
 
         return {}
 
-    def get_summary(self) -> dict:
+    def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         return self._summary
 

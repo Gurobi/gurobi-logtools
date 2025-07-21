@@ -1,5 +1,5 @@
 import pathlib
-from typing import Union
+from typing import Dict, List, Optional, Union
 
 from gurobi_logtools.parsers.continuous import ContinuousParser
 from gurobi_logtools.parsers.header import HeaderParser
@@ -8,10 +8,10 @@ from gurobi_logtools.parsers.norel import NoRelParser
 from gurobi_logtools.parsers.presolve import PresolveParser
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.termination import TerminationParser
-from gurobi_logtools.parsers.util import model_type
+from gurobi_logtools.parsers.util import Parser, model_type
 
 
-class SingleLogParser:
+class SingleLogParser(Parser):
     """This class parses one single log file.
 
     It expects parse to be called once for each line in a log file.
@@ -37,7 +37,7 @@ class SingleLogParser:
         # State
         self.started = False
         self.closed = False
-        self.current_parser = self.header_parser
+        self.current_parser: Parser = self.header_parser
         self.future_parsers = [
             self.presolve_parser,
             self.norel_parser,
@@ -47,7 +47,7 @@ class SingleLogParser:
 
         # Capture lines *if* we plan to write them elsewhere
         self.write_to_dir = pathlib.Path(write_to_dir) if write_to_dir else None
-        self.lines = [] if self.write_to_dir else None
+        self.lines: Optional[List[str]] = [] if self.write_to_dir else None
 
     def close(self):
         if self.write_to_dir:
@@ -55,7 +55,9 @@ class SingleLogParser:
                 f"{k}{v}"
                 for k, v in sorted(self.header_parser.changed_params().items())
             )
-            version = self.header_parser.get_summary().get("Version").replace(".", "")
+            version = self.header_parser.get_summary().get("Version")
+            if version:
+                version = version.replace(".", "")
             model_name = self.header_parser.get_summary().get("ModelName", "unknown")
             seed = self.header_parser.get_parameters().get("Seed", 0)
             if paramstr:
@@ -63,7 +65,8 @@ class SingleLogParser:
             else:
                 file_name = f"{version}-{model_name}-{seed}.log"
             with self.write_to_dir.joinpath(file_name).open("w") as outfile:
-                outfile.writelines(self.lines)
+                if self.lines:
+                    outfile.writelines(self.lines)
 
         self.write_to_dir = None
         self.lines = None
@@ -90,15 +93,16 @@ class SingleLogParser:
         summary["ChangedParams"] = self.header_parser.changed_params()
         return summary
 
-    def parse(self, line: str) -> dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
         """Parse the given log line to populate the component parsers in sequence.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-            dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
+
         """
         # Initially, only check the header parser until started
         if not self.started:
@@ -106,11 +110,11 @@ class SingleLogParser:
             matched = self.current_parser.parse(line)
             if matched:
                 self.started = True
-                if self.write_to_dir:
+                if self.lines is not None:  # i.e. write_to_dir = True
                     self.lines.append(line)
             return matched.copy()
 
-        if self.write_to_dir:
+        if self.lines is not None:  # i.e. write_to_dir = True
             self.lines.append(line)
 
         # First try the current parser

@@ -1,6 +1,6 @@
 import datetime
 import re
-from typing import Iterable
+from typing import Dict, Iterable, Protocol, Union
 
 float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
 
@@ -15,16 +15,15 @@ def convert_data_types(value):
     if value is None or value == "-":
         # Commonly used sentinel for a missing value in log tables
         return None
-    elif int_regex.match(value):
+    if int_regex.match(value):
         return int(value)
-    elif float_regex.match(value):
+    if float_regex.match(value):
         return float(value)
-    elif percentage_regex.match(value):
+    if percentage_regex.match(value):
         return float(value.rstrip("%")) / 100
-    elif date_time_regex.match(value):
+    if date_time_regex.match(value):
         return datetime.datetime.strptime(value, "%a %b %d %H:%M:%S %Y")
-    else:
-        return value
+    return value
 
 
 def typeconvert_groupdict(match: re.Match):
@@ -65,3 +64,7 @@ def model_type(discrete_vars=0, quad_nonzeros=0, quad_constrs=0):
     if not mtype:
         return "LP"
     return mtype + "P"
+
+
+class Parser(Protocol):
+    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]: ...

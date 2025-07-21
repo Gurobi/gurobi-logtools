@@ -31,13 +31,14 @@ def test_pretty_parameters():
 
 def test_fill_default_parameters():
     """Test that '* (Parameter)' columns are default-filled using the
-    appropriate Version."""
+    appropriate Version.
+    """
     summary = pd.DataFrame(
         [
             {"Version": "9.1.2", "CrossoverBasis (Parameter)": 1, "Status": "OPTIMAL"},
             {"Version": "9.1.2", "MIPFocus (Parameter)": 1, "Status": "TIME_LIMIT"},
             {"Version": "9.5.0", "Heuristics (Parameter)": 0, "Status": "OPTIMAL"},
-        ]
+        ],
     )
     filled = fill_default_parameters(summary)
     expected = pd.DataFrame(
@@ -63,7 +64,7 @@ def test_fill_default_parameters():
                 "Heuristics (Parameter)": 0.0,
                 "Status": "OPTIMAL",
             },
-        ]
+        ],
     )
     assert_frame_equal(filled.sort_index(axis=1), expected.sort_index(axis=1))
 
@@ -75,7 +76,7 @@ def test_fill_default_parameters_nosuffix():
             {"Version": "9.1.2", "CrossoverBasis": 1},
             {"Version": "9.1.2", "MIPFocus": 1},
             {"Version": "9.5.0", "Heuristics": 0},
-        ]
+        ],
     )
     filled = fill_default_parameters_nosuffix(parameters)
     expected = pd.DataFrame(
@@ -93,6 +94,6 @@ def test_fill_default_parameters_nosuffix():
                 "Heuristics": 0.05,
             },
             {"Version": "9.5.0", "CrossoverBasis": -1, "MIPFocus": 0, "Heuristics": 0},
-        ]
+        ],
     )
     assert_frame_equal(filled.sort_index(axis=1), expected.sort_index(axis=1))

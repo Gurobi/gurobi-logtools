@@ -1,9 +1,11 @@
 import gurobi_logtools as glt
+import pandas as pd
 
 
 def test_get_dataframe():
     """Just check we read without errors."""
     summary = glt.get_dataframe(["data/*.log"])
+    assert isinstance(summary, pd.DataFrame)
 
 
 def test_read_with_timelines():
@@ -14,7 +16,8 @@ def test_read_with_timelines():
 
 def test_norel_timeline():
     """Check norel logs before the root node. Note that this reports norel's
-    clock, so read + presolve time would need to be added for 'real' time."""
+    clock, so read + presolve time would need to be added for 'real' time.
+    """
     _, timelines = glt.get_dataframe(
         ["tests/assets/mip_norel.log"],
         timelines=True,
@@ -47,7 +50,8 @@ def test_norel_timeline():
 
 def test_newsolution_markers():
     _, timelines = glt.get_dataframe(
-        ["data/1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-3.log"], timelines=True
+        ["data/1202-MIPFocus0-Presolve2-TimeLimit300-k16x240-3.log"],
+        timelines=True,
     )
     new_solutions = timelines["nodelog"]["NewSolution"]
     assert new_solutions.value_counts().to_dict() == {"H": 13, "*": 1}

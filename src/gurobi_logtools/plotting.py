@@ -13,34 +13,32 @@ from gurobi_logtools.colors import _get_default_palette, _get_palette, _get_pale
 
 @dataclass
 class WidgetValues:
-    """
-    This class is used to both define default values for widgets, and enable load/save functionality.
-    """
+    """This class is used to both define default values for widgets, and enable load/save functionality."""
 
     x: str = "Runtime"
     y: str = "Parameters"
     color: str = "Parameters"
-    type: constants.PlotType = constants.PlotType.BOX.value
+    type: str = constants.PlotType.BOX.value
     symbol: Optional[str] = None
     log_x: bool = False
     log_y: bool = False
-    points: constants.Points = constants.Points.ALL.value
-    barmode: constants.BarMode = constants.BarMode.GROUP.value
+    points: str = constants.Points.ALL.value
+    barmode: str = constants.BarMode.GROUP.value
     title: str = ""
     x_axis_label: str = ""
     y_axis_label: str = ""
     height: int = 0
     width: int = 0
     show_legend: bool = False
-    sort_metric: Optional[constants.SortMetric] = constants.SortMetric.NONE.value
+    sort_metric: Optional[str] = constants.SortMetric.NONE.value
     sort_field: Optional[str] = None
-    sort_axis: constants.SortAxis = constants.SortAxis.SORT_Y
+    sort_axis: str = constants.SortAxis.SORT_Y
     boxmean: bool = False
     notched: bool = False
     reverse_ecdf: bool = False
-    palette_type: constants.PaletteType = constants.PaletteType.QUALITATIVE.value
-    palette_name: str = None
-    color_scale: constants.ColorScale = constants.ColorScale.DISCRETE.value
+    palette_type: str = constants.PaletteType.QUALITATIVE.value
+    palette_name: Optional[str] = None
+    color_scale: str = constants.ColorScale.DISCRETE.value
     color_categorical: bool = False
     ignore_params: str = "SoftMemLimit TimeLimit"
     query: str = ""
@@ -55,7 +53,7 @@ def _get_initial_widget_values(user_kwargs: Dict):
     init_user_kwargs = {k: v for k, v in user_kwargs.items() if k in field_names}
 
     # remove any used keyword args from the original dictionary, otherwise we will run into an error
-    for k in init_user_kwargs.keys():
+    for k in init_user_kwargs:
         user_kwargs.pop(k)
 
     return WidgetValues(**init_user_kwargs)
@@ -89,13 +87,19 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
     # some do not (such as swap_axes, or save_config).
     widget_dict = dict(
         x=widgets.Dropdown(
-            options=column_names, value=widget_defaults.x, description="x"
+            options=column_names,
+            value=widget_defaults.x,
+            description="x",
         ),
         y=widgets.Dropdown(
-            options=column_names, value=widget_defaults.y, description="y"
+            options=column_names,
+            value=widget_defaults.y,
+            description="y",
         ),
         color=widgets.Dropdown(
-            options=column_names, value=widget_defaults.color, description="color"
+            options=column_names,
+            value=widget_defaults.color,
+            description="color",
         ),
         type=widgets.Dropdown(
             options=[member.value for member in constants.PlotType],
@@ -103,10 +107,12 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             description="type",
         ),
         boxmean=widgets.Checkbox(
-            value=widget_defaults.boxmean, description="boxplot: show means"
+            value=widget_defaults.boxmean,
+            description="boxplot: show means",
         ),
         notched=widgets.Checkbox(
-            value=widget_defaults.notched, description="boxplot: notched"
+            value=widget_defaults.notched,
+            description="boxplot: notched",
         ),
         symbol=widgets.Dropdown(
             options=column_names,
@@ -145,10 +151,12 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         ),
         title=widgets.Text(value=widget_defaults.title, description="title"),
         y_axis_label=widgets.Text(
-            value=widget_defaults.y_axis_label, description="y axis label"
+            value=widget_defaults.y_axis_label,
+            description="y axis label",
         ),
         x_axis_label=widgets.Text(
-            value=widget_defaults.x_axis_label, description="x axis label"
+            value=widget_defaults.x_axis_label,
+            description="x axis label",
         ),
         height=widgets.BoundedIntText(
             value=widget_defaults.height,  # default
@@ -174,10 +182,13 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             description="sort metric",
         ),
         sort_field=widgets.Dropdown(
-            options=column_names, value=widget_defaults.x, description="sort field"
+            options=column_names,
+            value=widget_defaults.x,
+            description="sort field",
         ),
         show_legend=widgets.Checkbox(
-            value=widget_defaults.show_legend, description="show legend"
+            value=widget_defaults.show_legend,
+            description="show legend",
         ),
         reverse_ecdf=widgets.Checkbox(
             value=widget_defaults.reverse_ecdf,
@@ -201,10 +212,14 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             style={"button_width": "auto"},
         ),
         color_categorical=widgets.Checkbox(
-            value=widget_defaults.color_categorical, description="categorical color?"
+            value=widget_defaults.color_categorical,
+            description="categorical color?",
         ),
         query=widgets.Textarea(
-            description="", disabled=False, rows=1, layout=widgets.Layout(padding="0em")
+            description="",
+            disabled=False,
+            rows=1,
+            layout=widgets.Layout(padding="0em"),
         ),
         ignore_params=widgets.Textarea(
             description="",
@@ -267,7 +282,7 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         # button_instance is ignored but necessary for signature of function used in on_click
         global _saved_widget_values
         _saved_widget_values = WidgetValues(
-            **{f.name: widget_dict[f.name].value for f in fields(WidgetValues)}
+            **{f.name: widget_dict[f.name].value for f in fields(WidgetValues)},
         )
 
     widget_dict["save_config"].on_click(save_widget_values)
@@ -295,12 +310,18 @@ def _add_pretty_param_labels(df: pd.DataFrame, ignored_params: str) -> pd.DataFr
     if "ChangedParams" not in df.columns:
         # the fact we return a copy is important here.  It is not ideal, but it is convenient.
         return df.copy()
-    ignored_params = ignored_params.lower().replace("\n", " ").replace(",", " ").split()
+    ignored_params_list = (
+        ignored_params.lower().replace("\n", " ").replace(",", " ").split()
+    )
     pretty_params = (
         df["ChangedParams"]
         .map(
             lambda d: "<br>".join(
-                [f"{k}={v}" for k, v in d.items() if k.lower() not in ignored_params]
+                [
+                    f"{k}={v}"
+                    for k, v in d.items()
+                    if k.lower() not in ignored_params_list
+                ]
             )
         )
         .replace("", "Defaults")
@@ -325,6 +346,7 @@ def save_plot(filepath: str) -> None:
     Parameters
     ----------
     filepath : str
+
     """
     temp = filepath.split(".")
     if len(temp) <= 1:
@@ -354,7 +376,7 @@ def _get_category_orders(df, x, y, sort_axis, sort_metric, sort_field):
         group_col: df.groupby(group_col)[value_col]
         .apply(sort_metric)
         .sort_values()
-        .index.to_list()
+        .index.to_list(),
     }
 
 
@@ -454,7 +476,11 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
             common_kwargs.pop("y", None)
             ecdfmode = "complementary" if reverse_ecdf else "standard"
             _fig = px.ecdf(
-                data, **common_kwargs, ecdfmode=ecdfmode, ecdfnorm="percent", **kwargs
+                data,
+                **common_kwargs,
+                ecdfmode=ecdfmode,
+                ecdfnorm="percent",
+                **kwargs,
             )
 
         if _fig:
@@ -496,13 +522,13 @@ def plot(
     ** kwargs
         Key word arguments that can be used to either prepopulate widget values, e.g. y="ObjVal",
         or otherwise passed to the underlying Plotly express function.
-    """
 
+    """
     widget_dict = _make_widgets(df.columns.tolist(), kwargs)
 
     def _make_heading(text):
         return widgets.HTML(
-            f"<h3 style='text-align:left; padding-left: 5em;'>{text}</h3>"
+            f"<h3 style='text-align:left; padding-left: 5em;'>{text}</h3>",
         )
 
     parameters_header = _make_heading("Parameters")
@@ -520,7 +546,7 @@ def plot(
             widget_dict["points"],
             widget_dict["barmode"],
             widget_dict["symbol"],
-        ]
+        ],
     )
 
     column_2_widgets = widgets.VBox(
@@ -537,7 +563,7 @@ def plot(
                 [widget_dict["sort_axis"]],
                 layout=widgets.Layout(justify_content="center"),
             ),
-        ]
+        ],
     )
 
     columns_3_widgets = widgets.VBox(
@@ -562,7 +588,7 @@ def plot(
                     width="100%",
                 ),
             ),
-        ]
+        ],
     )
 
     columns_4_widgets = widgets.VBox(
@@ -576,14 +602,14 @@ def plot(
             ),
             widget_dict["color_categorical"],
             widgets.HTML(
-                f"<h4 style='text-align:left; margin: 0px; padding: 0px;'>DataFrame query string</h4>",
+                "<h4 style='text-align:left; margin: 0px; padding: 0px;'>DataFrame query string</h4>",
             ),
             widget_dict["query"],
             widgets.HTML(
-                f"<h4 style='text-align:left;  margin: 0px; padding: 0px;'>Parameters to ignore</h4>",
+                "<h4 style='text-align:left;  margin: 0px; padding: 0px;'>Parameters to ignore</h4>",
             ),
             widget_dict["ignore_params"],
-        ]
+        ],
     )
 
     ui = widgets.HBox(
