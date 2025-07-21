@@ -61,11 +61,11 @@ jobs:
         run: uv run pytest --nbmake --nbmake-kernel=python3 gurobi-logtools.ipynb
 
   mypy:
-    name: Run MyPy
+    name: Run Mypy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install MyPy
+      - name: Install Mypy
         run: pip install mypy
       - name: mypy
         run: mypy --install-types --non-interactive --check-untyped-defs src/gurobi_logtools

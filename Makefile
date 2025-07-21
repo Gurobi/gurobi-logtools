@@ -1,4 +1,4 @@
-.PHONY : mypy format lint test testnb tox build docs
+.PHONY : mypy format lint precommit test testnb tox build docs
 
 init:
 	uv sync --locked
@@ -12,6 +12,9 @@ format:
 
 lint:
 	uvx ruff check
+
+precommit:
+    uv run pre-commit run --all-files
 
 test:
 	uv run --no-dev pytest ./tests
