@@ -14,7 +14,7 @@ lint:
 	uvx ruff check
 
 precommit:
-    uv run pre-commit run --all-files
+	uv run pre-commit run --all-files
 
 test:
 	uv run --no-dev pytest ./tests
