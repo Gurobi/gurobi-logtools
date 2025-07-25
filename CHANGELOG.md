@@ -1,13 +1,16 @@
 # CHANGELOG
 ## Unreleased
+### Fixed
+### Changed
+### Removed
+### Added
 
+## 4.0.0 - 2025-07-25
 ### Fixed
 - fixed platform-specific issues in tests with file and path handling
-
 ### Changed
 - New defaults for dashboard widgets
 - Updated data folder and gurobi-logtools.ipynb notebook
-
 ### Removed
 - remove Python 3.8 support
 ### Added
