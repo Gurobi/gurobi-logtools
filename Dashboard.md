@@ -1,6 +1,6 @@
 # Gurobi-logtools plotting dashboard
 
-![dashboard map](assets/dashboard_map.svg)
+![dashboard map](https://github.com/Gurobi/gurobi-logtools/blob/master/assets/dashboard_map.svg)
 
 
 ## 1) x, y, color
