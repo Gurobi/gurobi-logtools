@@ -1,4 +1,4 @@
-<img src="assets/logo_light_or_dark_mode.svg" justify-content="center">
+<img src="https://github.com/Gurobi/gurobi-logtools/blob/master/assets/logo_light_or_dark_mode.svg" justify-content="center">
 
 <p align="center">
 	<a href="https://pypi.python.org/pypi/gurobi-logtools" alt="PyPI">
@@ -16,7 +16,7 @@ With **gurobi-logtools**, you can extract information from Gurobi log files and 
 >
 > `import gurobi_logtools as glt`
 
-![performance plot](./assets/performance-plot.png)
+![performance plot](https://github.com/Gurobi/gurobi-logtools/blob/master/assets/performance-plot.png)
 
 # Installation
 
