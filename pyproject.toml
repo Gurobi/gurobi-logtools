@@ -58,12 +58,10 @@ path = "src/gurobi_logtools/__init__.py"
 [tool.hatch.build.targets.wheel]
 packages = ["src/gurobi_logtools"]
 
-[tool.hatch.build.targets.sdist]
-packages = ["src/gurobi_logtools"]
 
 # Include the JSON parameter files that were listed in setup.cfg
 [tool.hatch.build]
-include = ["src/gurobi_logtools/parameters/data/*.json"]
+include = ["src/gurobi_logtools/**", "src/gurobi_logtools/parameters/data/*.json"]
 
 [[tool.mypy.overrides]]
 module=[
