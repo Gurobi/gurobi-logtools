@@ -130,12 +130,12 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         save_config=widgets.Button(
             description="Save config",
             disabled=False,
-            style={"button_width": "auto"},
+            layout=widgets.Layout(width="50%"),
         ),
         load_config=widgets.Button(
             description="Load config",
             disabled=False,
-            style={"button_width": "auto"},
+            layout=widgets.Layout(width="50%"),
         ),
         points=widgets.Dropdown(
             options=[member.value for member in constants.Points],
@@ -174,7 +174,7 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
         ),
         sort_axis=widgets.ToggleButtons(
             options=[member.value for member in constants.SortAxis],
-            style={"button_width": "auto"},
+            layout=widgets.Layout(width="auto"),
         ),
         sort_metric=widgets.Dropdown(
             options=[member.value for member in constants.SortMetric],
@@ -209,7 +209,7 @@ def _make_widgets(column_names: List, user_kwargs: Dict) -> Dict:
             options=[member.value for member in constants.ColorScale],
             value=widget_defaults.color_scale,
             disabled=widget_defaults.type in discrete_color_scale_plot_types,
-            style={"button_width": "auto"},
+            layout=widgets.Layout(width="auto"),
         ),
         color_categorical=widgets.Checkbox(
             value=widget_defaults.color_categorical,
