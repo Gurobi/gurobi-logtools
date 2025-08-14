@@ -1,4 +1,4 @@
-__version__ = "4.0.0"
+__version__ = "4.0.1"
 
 from gurobi_logtools.api import get_dataframe, parse
 from gurobi_logtools.colors import (

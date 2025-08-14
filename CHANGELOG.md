@@ -5,6 +5,10 @@
 ### Removed
 ### Added
 
+## 4.0.1 - 2025-08-14
+### Fixed
+- fixed deprecation warning for button style (#GH83)
+
 ## 4.0.0 - 2025-07-25
 ### Fixed
 - fixed platform-specific issues in tests with file and path handling
