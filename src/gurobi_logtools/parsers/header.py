@@ -102,3 +102,10 @@ class HeaderParser(Parser):
     def changed_params(self) -> Dict:
         omit_params = {"Seed", "LogFile"}
         return {k: v for k, v in self._parameters.items() if k not in omit_params}
+
+    def _make_file_name(self) -> str:
+        paramstr = "".join(f"{k}{v}-" for k, v in sorted(self.changed_params().items()))
+        version = self._summary.get("Version", "unknown").replace(".", "") + "-"
+        model_name = self._summary.get("ModelName", "unknown")
+        seed = self._parameters.get("Seed", 0)
+        return f"{version}{paramstr}{model_name}-{seed}.log"

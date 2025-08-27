@@ -51,19 +51,7 @@ class SingleLogParser(Parser):
 
     def close(self):
         if self.write_to_dir:
-            paramstr = "-".join(
-                f"{k}{v}"
-                for k, v in sorted(self.header_parser.changed_params().items())
-            )
-            version = self.header_parser.get_summary().get("Version")
-            if version:
-                version = version.replace(".", "")
-            model_name = self.header_parser.get_summary().get("ModelName", "unknown")
-            seed = self.header_parser.get_parameters().get("Seed", 0)
-            if paramstr:
-                file_name = f"{version}-{paramstr}-{model_name}-{seed}.log"
-            else:
-                file_name = f"{version}-{model_name}-{seed}.log"
+            file_name = self.header_parser._make_file_name()
             with self.write_to_dir.joinpath(file_name).open("w") as outfile:
                 if self.lines:
                     outfile.writelines(self.lines)
