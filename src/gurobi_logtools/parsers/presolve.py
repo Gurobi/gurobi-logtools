@@ -1,8 +1,8 @@
 import re
-from typing import Dict, Union
+from typing import Any, Dict
 
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
-from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
+from gurobi_logtools.parsers.util import Parser, model_type, typeconvert_groupdict
 
 
 class PresolveParser(Parser):
@@ -75,18 +75,18 @@ class PresolveParser(Parser):
         model. Specifically, it includes information for all lines appearing between
         the HeaderParser and the NoRelParser or the RelaxationParser.
         """
-        self._summary: Dict[str, Union[str, int, float, None]] = {}
+        self._summary: Dict[str, Any] = {}
         self._started = False
         self._pretree_solution_parser = pretree_solution_parser
 
-    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Any]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Any]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """
@@ -125,4 +125,18 @@ class PresolveParser(Parser):
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""
-        return self._summary
+        summary = self._summary.copy()
+        summary["ModelType"] = model_type(
+            discrete_vars=sum(
+                summary.get(k, 0)
+                for k in (
+                    "PresolvedNumBinVars",
+                    "PresolvedNumIntVars",
+                    "PresolvedNumSemiContVars",
+                    "PresolvedNumSemiIntVars",
+                )
+            ),
+            quad_nonzeros=summary.get("NumQNZs", 0),
+            quad_constrs=summary.get("NumQConstrs", 0),
+        )
+        return summary

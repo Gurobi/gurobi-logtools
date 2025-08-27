@@ -1,5 +1,5 @@
 import re
-from typing import Dict, Union
+from typing import Any, Dict
 
 from gurobi_logtools.parsers.util import (
     Parser,
@@ -47,7 +47,7 @@ class NodeLogParser(Parser):
 
     def __init__(self):
         """Initialize the NodeLog parser."""
-        self._summary: Dict[str, Union[str, int, float, None]] = {}
+        self._summary: Dict[str, Any] = {}
         self._cuts = {}
         self._progress = []
         self._in_cut_report = False
@@ -59,14 +59,14 @@ class NodeLogParser(Parser):
         summary.update({f"Cuts: {name}": count for name, count in self._cuts.items()})
         return summary
 
-    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Any]:
         """Parse the given log line to populate summary and progress data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Any]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """

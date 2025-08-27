@@ -1,5 +1,5 @@
 import re
-from typing import Dict, Union
+from typing import Any, Dict, Union
 
 from gurobi_logtools.parsers.util import (
     Parser,
@@ -49,18 +49,18 @@ class HeaderParser(Parser):
         Parameters are stored separately from the summary data as they are
         handled differently in the final output.
         """
-        self._summary: Dict[str, Union[str, int, float, None]] = {}
+        self._summary: Dict[str, Any] = {}
         self._parameters = {}
         self._started = False
 
-    def parse(self, line: str) -> Dict[str, Union[str, float, int, None]]:
+    def parse(self, line: str) -> Dict[str, Any]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Any]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """
@@ -91,7 +91,9 @@ class HeaderParser(Parser):
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""
-        return self._summary
+        summary = self._summary.copy()
+        summary["ChangedParams"] = self.changed_params()
+        return summary
 
     def get_parameters(self) -> Dict:
         """Return all changed parameters detected in the header."""
@@ -100,3 +102,10 @@ class HeaderParser(Parser):
     def changed_params(self) -> Dict:
         omit_params = {"Seed", "LogFile"}
         return {k: v for k, v in self._parameters.items() if k not in omit_params}
+
+    def _make_file_name(self) -> str:
+        paramstr = "".join(f"{k}{v}-" for k, v in sorted(self.changed_params().items()))
+        version = self._summary.get("Version", "unknown").replace(".", "") + "-"
+        model_name = self._summary.get("ModelName", "unknown")
+        seed = self._parameters.get("Seed", 0)
+        return f"{version}{paramstr}{model_name}-{seed}.log"

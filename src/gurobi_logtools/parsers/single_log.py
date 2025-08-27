@@ -1,5 +1,5 @@
 import pathlib
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 from gurobi_logtools.parsers.continuous import ContinuousParser
 from gurobi_logtools.parsers.header import HeaderParser
@@ -8,7 +8,7 @@ from gurobi_logtools.parsers.norel import NoRelParser
 from gurobi_logtools.parsers.presolve import PresolveParser
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.termination import TerminationParser
-from gurobi_logtools.parsers.util import Parser, model_type
+from gurobi_logtools.parsers.util import Parser
 
 
 class SingleLogParser(Parser):
@@ -51,19 +51,7 @@ class SingleLogParser(Parser):
 
     def close(self):
         if self.write_to_dir:
-            paramstr = "-".join(
-                f"{k}{v}"
-                for k, v in sorted(self.header_parser.changed_params().items())
-            )
-            version = self.header_parser.get_summary().get("Version")
-            if version:
-                version = version.replace(".", "")
-            model_name = self.header_parser.get_summary().get("ModelName", "unknown")
-            seed = self.header_parser.get_parameters().get("Seed", 0)
-            if paramstr:
-                file_name = f"{version}-{paramstr}-{model_name}-{seed}.log"
-            else:
-                file_name = f"{version}-{model_name}-{seed}.log"
+            file_name = self.header_parser._make_file_name()
             with self.write_to_dir.joinpath(file_name).open("w") as outfile:
                 if self.lines:
                     outfile.writelines(self.lines)
@@ -82,25 +70,16 @@ class SingleLogParser(Parser):
         summary.update(self.pretree_solution_parser.get_summary())
         summary.update(self.nodelog_parser.get_summary())
         summary.update(self.termination_parser.get_summary())
-        summary["ModelType"] = model_type(
-            discrete_vars=summary.get("PresolvedNumBinVars", 0)
-            + summary.get("PresolvedNumIntVars", 0)
-            + summary.get("PresolvedNumSemiContVars", 0)
-            + summary.get("PresolvedNumSemiIntVars", 0),
-            quad_nonzeros=summary.get("NumQNZs", 0),
-            quad_constrs=summary.get("NumQConstrs", 0),
-        )
-        summary["ChangedParams"] = self.header_parser.changed_params()
         return summary
 
-    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Any]:
         """Parse the given log line to populate the component parsers in sequence.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Any]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """

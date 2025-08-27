@@ -3,6 +3,7 @@ import os
 import tempfile
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import pytest
 from pandas.api.types import is_integer_dtype
@@ -298,3 +299,51 @@ def test_rewrite_filenames():
 def test_no_logfile_error():
     with pytest.raises(FileNotFoundError):
         glt.parse("/file/with/a/tyop")
+
+
+def test_changed_params_v2():
+    logpaths = [
+        "tests/assets/lp_barrier.log",
+        "tests/assets/lp_concurrent.log",
+        "tests/assets/lp_simplex.log",
+        "tests/assets/mip.log",
+        "tests/assets/mip_norel.log",
+        "tests/assets/multiknapsack.log",
+        "tests/assets/nonconvex.log",
+        "tests/assets/qp.log",
+    ]
+
+    summary = glt.parse(logpaths).summary()
+
+    modeltype = summary.set_index("LogFilePath")["ChangedParams"][logpaths].values
+    expected = [
+        {"TimeLimit": 300, "Method": 2, "CrossoverBasis": 1},
+        {"TimeLimit": 300, "Method": 3},
+        {"TimeLimit": 300, "Method": 0},
+        {"TimeLimit": 900, "Method": 2},
+        {"NoRelHeurWork": 60},
+        {},
+        {"TimeLimit": 900, "NonConvex": 2},
+        {},
+    ]
+    np.testing.assert_array_equal(modeltype, expected)
+
+
+def test_model_type():
+    logpaths = [
+        "tests/assets/lp_barrier.log",
+        "tests/assets/lp_concurrent.log",
+        "tests/assets/lp_simplex.log",
+        "tests/assets/mip.log",
+        "tests/assets/mip_norel.log",
+        "tests/assets/multiknapsack.log",
+        "tests/assets/nonconvex.log",
+        "tests/assets/qp.log",
+    ]
+
+    summary = glt.parse(logpaths).summary()
+
+    modeltype = summary.set_index("LogFilePath")["ModelType"][logpaths].values
+    np.testing.assert_array_equal(
+        modeltype, ["LP", "LP", "LP", "MIP", "MIP", "MIP", "QCP", "QCP"]
+    )
