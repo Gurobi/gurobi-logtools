@@ -82,7 +82,6 @@ class SingleLogParser(Parser):
         summary.update(self.pretree_solution_parser.get_summary())
         summary.update(self.nodelog_parser.get_summary())
         summary.update(self.termination_parser.get_summary())
-        summary["ChangedParams"] = self.header_parser.changed_params()
         return summary
 
     def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:

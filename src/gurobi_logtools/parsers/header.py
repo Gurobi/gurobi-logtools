@@ -91,7 +91,9 @@ class HeaderParser(Parser):
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""
-        return self._summary
+        summary = self._summary.copy()
+        summary["ChangedParams"] = self.changed_params()
+        return summary
 
     def get_parameters(self) -> Dict:
         """Return all changed parameters detected in the header."""

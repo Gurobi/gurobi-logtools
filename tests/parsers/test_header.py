@@ -13,6 +13,8 @@ glass4: 396 rows, 322 columns, 1815 nonzeros
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 """
 
+expected_parameters_0 = {}
+
 expected_summary_0 = {
     "Version": "9.5.0",
     "ModelFilePath": "/Library/gurobi950/macos_universal2/examples/data/glass4.mps",
@@ -24,9 +26,9 @@ expected_summary_0 = {
     "Rows": 396,
     "Columns": 322,
     "Nonzeros": 1815,
+    "ChangedParams": expected_parameters_0,
 }
 
-expected_parameters_0 = {}
 
 example_log_1 = """
 Set parameter Presolve to value 0
@@ -35,17 +37,19 @@ Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[rosetta2])
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 """
 
+expected_parameters_1 = {
+    "Presolve": 0,
+    "NonConvex": 2,
+}
+
 expected_summary_1 = {
     "Version": "9.5.0",
     "PhysicalCores": 8,
     "LogicalProcessors": 8,
     "Threads": 8,
+    "ChangedParams": expected_parameters_1,
 }
 
-expected_parameters_1 = {
-    "Presolve": 0,
-    "NonConvex": 2,
-}
 
 example_log_2 = """
 Set parameter CSManager to value "localhost:61000"
@@ -61,6 +65,13 @@ Gurobi Compute Server Worker version 9.5.0 build v9.5.0rc5 (mac64[arm])
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 """
 
+expected_parameters_2 = {
+    "CSManager": '"localhost:61000"',
+    "FuncPieces": 1,
+    "FuncPieceLength": 0.001,
+    "ConcurrentMIP": 2,
+}
+
 expected_summary_2 = {
     "JobID": "4e90605d-8ec1-4b56-8351-d8a5355ff641",
     "Version": "9.5.0",
@@ -68,13 +79,7 @@ expected_summary_2 = {
     "PhysicalCores": 8,
     "LogicalProcessors": 8,
     "Threads": 8,
-}
-
-expected_parameters_2 = {
-    "CSManager": '"localhost:61000"',
-    "FuncPieces": 1,
-    "FuncPieceLength": 0.001,
-    "ConcurrentMIP": 2,
+    "ChangedParams": expected_parameters_2,
 }
 
 
@@ -134,12 +139,14 @@ class TestHeader(TestCase):
         """
         parser = HeaderParser()
         parse_lines(parser, ["Presolved: 390 rows, 316 columns, 1803 nonzeros"])
-        assert not parser.get_summary()
+        self.assertEqual(parser.get_summary(), {"ChangedParams": {}})
 
     def test_tuner_log(self):
         parser = HeaderParser()
         parse_lines(parser, ["Solving model misc07"])
-        assert parser.get_summary() == {"ModelName": "misc07"}
+        self.assertEqual(
+            parser.get_summary(), {"ChangedParams": {}, "ModelName": "misc07"}
+        )
 
     def test_changed_params(self):
         """Test non-default algorithm parameters (ignore seed and logfile)"""
@@ -149,7 +156,9 @@ class TestHeader(TestCase):
         parser.parse("Set parameter Seed to value 238476")
         parser.parse("Set parameter LogFile to value log.log")
         parser.parse("Set parameter TimeLimit to value 60")
-        assert parser.changed_params() == {"Method": 2, "Threads": 4, "TimeLimit": 60}
+        self.assertEqual(
+            parser.changed_params(), {"Method": 2, "Threads": 4, "TimeLimit": 60}
+        )
 
 
 if __name__ == "__main__":
