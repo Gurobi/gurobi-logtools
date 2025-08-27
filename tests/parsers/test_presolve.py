@@ -40,6 +40,7 @@ expected_summary_0 = {
     "PresolvedNumConstrs": 390,
     "PresolvedNumVars": 316,
     "PresolvedNumNZs": 1803,
+    "ModelType": "MIP",
 }
 
 example_log_1 = """
@@ -80,6 +81,7 @@ expected_summary_1 = {
     "PresolvedNumConstrs": 0,
     "PresolvedNumVars": 0,
     "PresolvedNumNZs": 0,
+    "ModelType": "QCP",
 }
 
 example_log_2 = """
@@ -124,6 +126,7 @@ expected_summary_2 = {
     "PresolvedNumConstrs": 7,
     "PresolvedNumVars": 7267,
     "PresolvedNumNZs": 21791,
+    "ModelType": "LP",
 }
 
 

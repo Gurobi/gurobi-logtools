@@ -2,7 +2,7 @@ import re
 from typing import Dict, Union
 
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
-from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
+from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict, model_type
 
 
 class PresolveParser(Parser):
@@ -125,4 +125,18 @@ class PresolveParser(Parser):
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""
-        return self._summary
+        summary = self._summary.copy()
+        summary["ModelType"] = model_type(
+            discrete_vars=sum(
+                summary.get(k, 0)
+                for k in (
+                    "PresolvedNumBinVars",
+                    "PresolvedNumIntVars",
+                    "PresolvedNumSemiContVars",
+                    "PresolvedNumSemiIntVars",
+                )
+            ),
+            quad_nonzeros=summary.get("NumQNZs", 0),
+            quad_constrs=summary.get("NumQConstrs", 0),
+        )
+        return summary
