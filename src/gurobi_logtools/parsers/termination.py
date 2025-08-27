@@ -1,5 +1,5 @@
 import re
-from typing import Dict, Union
+from typing import Any, Dict
 
 from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
 
@@ -53,16 +53,16 @@ class TerminationParser(Parser):
     ]
 
     def __init__(self):
-        self._summary: Dict[str, Union[str, int, float, None]] = {}
+        self._summary: Dict[str, Any] = {}
 
-    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Any]:
         """Return True if the line is matched by some pattern.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Any]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """

@@ -1,5 +1,5 @@
 import re
-from typing import Dict, Union
+from typing import Any, Dict, Union
 
 from gurobi_logtools.parsers.util import (
     Parser,
@@ -49,18 +49,18 @@ class HeaderParser(Parser):
         Parameters are stored separately from the summary data as they are
         handled differently in the final output.
         """
-        self._summary: Dict[str, Union[str, int, float, None]] = {}
+        self._summary: Dict[str, Any] = {}
         self._parameters = {}
         self._started = False
 
-    def parse(self, line: str) -> Dict[str, Union[str, float, int, None]]:
+    def parse(self, line: str) -> Dict[str, Any]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Any]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """

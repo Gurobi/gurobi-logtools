@@ -1,5 +1,5 @@
 import re
-from typing import Dict, Union
+from typing import Any, Dict, Union
 
 from gurobi_logtools.parsers.barrier import BarrierParser
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
@@ -31,13 +31,13 @@ class ContinuousParser(Parser):
         self._barrier_parser = BarrierParser()
         self._simplex_parser = SimplexParser()
 
-        self._summary: Dict[str, Union[str, int, float, None]] = {}
+        self._summary: Dict[str, Any] = {}
 
         self._current_pattern: Union[str, None] = None
 
         self._pretree_solution_parser = pretree_solution_parser
 
-    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Any]:
         """Parse the given log line to populate summary and progress data.
 
         It defers to the simplex and the barrier parsers as needed.
@@ -46,7 +46,7 @@ class ContinuousParser(Parser):
             line (str): A line in the log file.
 
         Returns:
-           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+           Dict[str, Any]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """

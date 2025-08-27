@@ -1,5 +1,5 @@
 import re
-from typing import Dict, Union
+from typing import Any, Dict
 
 from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
 
@@ -17,17 +17,17 @@ class PreTreeSolutionParser(Parser):
         the HeaderParser and the NoRelParser or the RelaxationParser.
         """
         self._progress = []
-        self._summary: Dict[str, Union[str, int, float, None]] = {}
+        self._summary: Dict[str, Any] = {}
         # self._started = False
 
-    def parse(self, line: str) -> Dict[str, Union[str, int, float, None]]:
+    def parse(self, line: str) -> Dict[str, Any]:
         """Parse the given log line to populate summary data.
 
         Args:
             line (str): A line in the log file.
 
         Returns:
-           Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data.
+           Dict[str, Any]: A dictionary containing the parsed data.
         """
         match = self.pretree_solution_regex.match(line)
         if match:

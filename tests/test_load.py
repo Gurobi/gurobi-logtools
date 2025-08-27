@@ -1,5 +1,6 @@
-import gurobi_logtools as glt
 import pandas as pd
+
+import gurobi_logtools as glt
 
 
 def test_get_dataframe():

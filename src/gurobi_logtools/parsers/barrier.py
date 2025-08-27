@@ -51,7 +51,7 @@ class BarrierParser(Parser):
             line (str): A line in the log file.
 
         Returns:
-          Dict[str, Union[str, int, float, None]]: A dictionary containing the parsed data. Empty if the line does not
+          Dict[str, Any]: A dictionary containing the parsed data. Empty if the line does not
             match any pattern.
 
         """
