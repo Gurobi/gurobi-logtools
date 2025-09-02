@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict
 
-from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
+from gurobi_logtools.parsers.util import ParseResult, Parser, typeconvert_groupdict
 
 
 class PreTreeSolutionParser(Parser):
@@ -20,7 +20,7 @@ class PreTreeSolutionParser(Parser):
         self._summary: Dict[str, Any] = {}
         # self._started = False
 
-    def parse(self, line: str) -> Dict[str, Any]:
+    def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate summary data.
 
         Args:
@@ -33,8 +33,8 @@ class PreTreeSolutionParser(Parser):
         if match:
             parse_result = typeconvert_groupdict(match)
             self._progress.append(parse_result)
-            return parse_result.copy()
-        return {}
+            return ParseResult(parse_result)
+        return ParseResult(matched=False)
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""

@@ -4,7 +4,7 @@ from typing import Any, Dict, Union
 from gurobi_logtools.parsers.barrier import BarrierParser
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.simplex import SimplexParser
-from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
+from gurobi_logtools.parsers.util import ParseResult, Parser, typeconvert_groupdict
 
 
 class ContinuousParser(Parser):
@@ -37,7 +37,7 @@ class ContinuousParser(Parser):
 
         self._pretree_solution_parser = pretree_solution_parser
 
-    def parse(self, line: str) -> Dict[str, Any]:
+    def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate summary and progress data.
 
         It defers to the simplex and the barrier parsers as needed.
@@ -51,14 +51,14 @@ class ContinuousParser(Parser):
 
         """
         if parse_result := self._pretree_solution_parser.parse(line):
-            return parse_result.copy()
+            return parse_result
 
         mip_relaxation_match = ContinuousParser.mip_relaxation_pattern.match(line)
         if mip_relaxation_match:
             self._current_pattern = "relaxation"
             parse_result = typeconvert_groupdict(mip_relaxation_match)
             self._summary.update(parse_result)
-            return parse_result.copy()
+            return ParseResult(parse_result)
 
         for pattern in ContinuousParser.continuous_termination_patterns:
             match = pattern.match(line)
@@ -69,36 +69,36 @@ class ContinuousParser(Parser):
                         self._summary.update({"Status": key})
                     else:
                         self._summary.update({key: value})
-                return parse_result.copy()
+                return ParseResult(parse_result)
 
         if self._current_pattern is None:
             if parse_result := self._barrier_parser.parse(line):
                 self._current_pattern = "barrier"
-                return parse_result.copy()
+                return parse_result
             if parse_result := self._simplex_parser.parse(line):
                 self._current_pattern = "simplex"
-                return parse_result.copy()
+                return parse_result
 
-            return {}
+            return ParseResult(matched=False)
 
         if self._current_pattern == "barrier":
-            matched = self._barrier_parser.parse(line)
+            parse_result = self._barrier_parser.parse(line)
+            if parse_result:
+                return parse_result
+
             # If the barrier gets interrupted during the concurrent or there are
             # extra simplex iterations, switch to simplex
-            if not matched and (
-                ContinuousParser.barrier_interruption_pattern.match(line)
-                or self._simplex_parser.parse(line)
-            ):
-                parse_result = {"Init": "simplex"}
+            if ContinuousParser.barrier_interruption_pattern.match(
+                line
+            ) or self._simplex_parser.parse(line):
                 self._current_pattern = "simplex"
-                return parse_result
-            return matched.copy()
+            return ParseResult({"Init": "simplex"})
 
         if self._current_pattern == "simplex":
             parse_result = self._simplex_parser.parse(line)
-            return parse_result.copy()
+            return parse_result
 
-        return {}
+        return ParseResult(matched=False)
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""

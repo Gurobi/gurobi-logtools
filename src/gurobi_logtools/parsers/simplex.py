@@ -1,7 +1,12 @@
 import re
 from typing import Any, Dict
 
-from gurobi_logtools.parsers.util import Parser, float_pattern, typeconvert_groupdict
+from gurobi_logtools.parsers.util import (
+    ParseResult,
+    Parser,
+    float_pattern,
+    typeconvert_groupdict,
+)
 
 
 class SimplexParser(Parser):
@@ -31,7 +36,7 @@ class SimplexParser(Parser):
         self._progress = []
         self._started = False
 
-    def parse(self, line: str) -> Dict[str, Any]:
+    def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate summary and progress data.
 
         Args:
@@ -50,23 +55,23 @@ class SimplexParser(Parser):
             if match:
                 parse_result = typeconvert_groupdict(match)
                 self._summary.update(parse_result)
-                return parse_result.copy()
+                return ParseResult(parse_result)
 
         if not self._started:
             match = SimplexParser.simplex_start_pattern.match(line)
             if match:
                 self._started = True
-                return {"Init": "simplex"}
-            return {}
+                return ParseResult({"Init": "simplex"})
+            return ParseResult(matched=False)
 
         progress_match = SimplexParser.simplex_progress_pattern.match(line)
         if progress_match:
             parse_result = {"Type": "simplex"}
             parse_result.update(typeconvert_groupdict(progress_match))
             self._progress.append(parse_result)
-            return parse_result.copy()
+            return ParseResult(parse_result)
 
-        return {}
+        return ParseResult(matched=False)
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""

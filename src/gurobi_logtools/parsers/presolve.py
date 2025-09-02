@@ -2,7 +2,12 @@ import re
 from typing import Any, Dict
 
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
-from gurobi_logtools.parsers.util import Parser, model_type, typeconvert_groupdict
+from gurobi_logtools.parsers.util import (
+    ParseResult,
+    Parser,
+    model_type,
+    typeconvert_groupdict,
+)
 
 
 class PresolveParser(Parser):
@@ -79,7 +84,7 @@ class PresolveParser(Parser):
         self._started = False
         self._pretree_solution_parser = pretree_solution_parser
 
-    def parse(self, line: str) -> Dict[str, Any]:
+    def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate summary data.
 
         Args:
@@ -97,18 +102,18 @@ class PresolveParser(Parser):
                 self._started = True
                 parse_result = typeconvert_groupdict(match)
                 self._summary.update(parse_result)
-                return parse_result.copy()
-            return {}
+                return ParseResult(parse_result)
+            return ParseResult(matched=False)
 
         if parse_result := self._pretree_solution_parser.parse(line):
-            return parse_result.copy()
+            return parse_result
 
         for pattern in PresolveParser.presolve_intermediate_patterns:
             match = pattern.match(line)
             if match:
                 parse_result = typeconvert_groupdict(match)
                 self._summary.update(parse_result)
-                return parse_result.copy()
+                return ParseResult(parse_result)
 
         match = PresolveParser.presolve_all_removed.match(line)
         if match:
@@ -119,9 +124,9 @@ class PresolveParser(Parser):
                     "PresolvedNumNZs": 0,
                 },
             )
-            return self._summary.copy()
+            return ParseResult(self._summary)
 
-        return {}
+        return ParseResult(matched=False)
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""

@@ -1,7 +1,8 @@
 import re
-from typing import Any, Dict, Union
+from typing import Any, Dict
 
 from gurobi_logtools.parsers.util import (
+    ParseResult,
     Parser,
     convert_data_types,
     typeconvert_groupdict,
@@ -53,7 +54,7 @@ class HeaderParser(Parser):
         self._parameters = {}
         self._started = False
 
-    def parse(self, line: str) -> Dict[str, Any]:
+    def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate summary data.
 
         Args:
@@ -69,7 +70,7 @@ class HeaderParser(Parser):
             self._parameters[match.group("ParamName")] = convert_data_types(
                 match.group("ParamValue"),
             )
-            return self._parameters.copy()
+            return ParseResult(self._parameters)
 
         for pattern in self.header_start_patterns:
             match = pattern.match(line)
@@ -77,7 +78,7 @@ class HeaderParser(Parser):
                 self._started = True
                 parse_result = typeconvert_groupdict(match)
                 self._summary.update(parse_result)
-                return parse_result if parse_result else {"Init": "header"}
+                return ParseResult(parse_result)
 
         if self._started:
             for pattern in self.header_other_patterns:
@@ -85,9 +86,9 @@ class HeaderParser(Parser):
                 if match:
                     parse_result = typeconvert_groupdict(match)
                     self._summary.update(parse_result)
-                    return parse_result
+                    return ParseResult(parse_result)
 
-        return {}
+        return ParseResult(matched=False)
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""

@@ -1,7 +1,12 @@
 import re
 from typing import Dict
 
-from gurobi_logtools.parsers.util import Parser, float_pattern, typeconvert_groupdict
+from gurobi_logtools.parsers.util import (
+    Parser,
+    float_pattern,
+    typeconvert_groupdict,
+    ParseResult,
+)
 
 
 class BarrierParser(Parser):
@@ -44,7 +49,7 @@ class BarrierParser(Parser):
         self._progress = []
         self._started = False
 
-    def parse(self, line: str) -> Dict:
+    def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate summary and progress data.
 
         Args:
@@ -59,36 +64,36 @@ class BarrierParser(Parser):
         if barrier_ordering_match:
             parse_result = typeconvert_groupdict(barrier_ordering_match)
             self._summary.update(parse_result)
-            return parse_result.copy()
+            return ParseResult(parse_result)
 
         if not self._started:
             match = BarrierParser.barrier_start_pattern.match(line)
             if match:
                 self._started = True
-                return {"Init": "barrier"}
-            return {}
+                return ParseResult(matched=True)
+            return ParseResult(matched=False)
 
         progress_match = BarrierParser.barrier_progress_pattern.match(line)
         if progress_match:
             entry = {"Type": "barrier"}
             entry.update(typeconvert_groupdict(progress_match))
             self._progress.append(entry)
-            return entry.copy()
+            return ParseResult(entry)
 
         for barrier_termination_pattern in BarrierParser.barrier_termination_patterns:
             barrier_termination_match = barrier_termination_pattern.match(line)
             if barrier_termination_match:
                 parse_result = typeconvert_groupdict(barrier_termination_match)
                 self._summary.update(parse_result)
-                return parse_result.copy()
+                return ParseResult(parse_result)
 
         crossover_match = BarrierParser.barrier_crossover_pattern.match(line)
         if crossover_match:
             parse_result = typeconvert_groupdict(crossover_match)
             self._summary.update(parse_result)
-            return parse_result.copy()
+            return ParseResult(parse_result)
 
-        return {}
+        return ParseResult(matched=False)
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""
