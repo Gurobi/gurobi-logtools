@@ -28,7 +28,7 @@ from gurobi_logtools.helpers import (
 from gurobi_logtools.parsers.single_log import SingleLogParser
 
 
-class ParseResult:
+class FullLogParseResult:
     def __init__(self, write_to_dir):
         self.write_to_dir = write_to_dir
         self.parsers = []
@@ -158,7 +158,7 @@ class ParseResult:
         assert all(parser.closed for _, _, parser in self.parsers)
 
 
-def parse(patterns: Union[str, List[str]], write_to_dir=None) -> ParseResult:
+def parse(patterns: Union[str, List[str]], write_to_dir=None) -> FullLogParseResult:
     """Main entry point function.
 
     Args:
@@ -168,7 +168,7 @@ def parse(patterns: Union[str, List[str]], write_to_dir=None) -> ParseResult:
     """
     if write_to_dir:
         os.makedirs(write_to_dir, exist_ok=True)
-    result = ParseResult(write_to_dir=write_to_dir)
+    result = FullLogParseResult(write_to_dir=write_to_dir)
     if type(patterns) is str:
         patterns = [patterns]
     logfiles = sorted(
