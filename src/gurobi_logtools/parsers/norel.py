@@ -1,7 +1,7 @@
 import re
-from typing import Any, Dict
+from typing import Dict
 
-from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
+from gurobi_logtools.parsers.util import ParseResult, Parser, typeconvert_groupdict
 
 
 class NoRelParser(Parser):
@@ -37,7 +37,7 @@ class NoRelParser(Parser):
             result["NoRelBestSol"] = self._incumbent
         return result
 
-    def parse(self, line: str) -> Dict[str, Any]:
+    def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate summary and progress data.
 
         Args:
@@ -52,13 +52,13 @@ class NoRelParser(Parser):
             match = self.norel_log_start.match(line)
             if match:
                 self._started = True
-                return {"Init": "norel"}
-            return {}
+                return ParseResult({"Init": "norel"})
+            return ParseResult(matched=False)
 
         match = self.norel_primal_regex.match(line)
         if match:
             self._incumbent = float(match.group("Incumbent"))
-            return {"Incumbent": self._incumbent}
+            return ParseResult({"Incumbent": self._incumbent})
 
         for regex in self.norel_elapsed:
             match = regex.match(line)
@@ -67,9 +67,9 @@ class NoRelParser(Parser):
                 if self._incumbent is not None:
                     entry["Incumbent"] = self._incumbent
                 self._progress.append(entry)
-                return entry.copy()
+                return ParseResult(entry)
 
-        return {}
+        return ParseResult(matched=False)
 
     def get_progress(self) -> list:
         """Return the progress of the norel heuristic."""

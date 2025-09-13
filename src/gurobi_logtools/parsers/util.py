@@ -1,6 +1,7 @@
 import datetime
 import re
-from typing import Any, Dict, Iterable, Protocol, Union
+import copy
+from typing import Dict, Iterable, Optional, Protocol
 
 float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
 
@@ -8,6 +9,20 @@ int_regex = re.compile(r"[-+]?\d+$")
 float_regex = re.compile(r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?$")
 percentage_regex = re.compile(r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?%$")
 date_time_regex = re.compile(r"\D+\s\D+\s\d+\s\d+:\d+:\d+\s\d{4}")
+
+
+class ParseResult:
+    def __init__(self, result: Optional[Dict] = None, matched: bool = False):
+        self.result: Optional[Dict] = copy.copy(result)
+        if result is not None:
+            matched = True
+        self.matched: bool = matched
+
+    def __bool__(self):
+        return self.matched
+
+    def copy(self):
+        return ParseResult(self.result, self.matched)
 
 
 def convert_data_types(value):
@@ -67,6 +82,4 @@ def model_type(discrete_vars=0, quad_nonzeros=0, quad_constrs=0):
 
 
 class Parser(Protocol):
-    def parse(
-        self, line: str
-    ) -> Dict[str, Union[str, int, float, Dict[Any, Any], None]]: ...
+    def parse(self, line: str) -> ParseResult: ...

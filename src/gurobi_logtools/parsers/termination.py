@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict
 
-from gurobi_logtools.parsers.util import Parser, typeconvert_groupdict
+from gurobi_logtools.parsers.util import ParseResult, Parser, typeconvert_groupdict
 
 
 class TerminationParser(Parser):
@@ -55,7 +55,7 @@ class TerminationParser(Parser):
     def __init__(self):
         self._summary: Dict[str, Any] = {}
 
-    def parse(self, line: str) -> Dict[str, Any]:
+    def parse(self, line: str) -> ParseResult:
         """Return True if the line is matched by some pattern.
 
         Args:
@@ -74,8 +74,8 @@ class TerminationParser(Parser):
                         self._summary.update({"Status": key})
                     else:
                         self._summary.update({key: value})
-                return self._summary.copy()
-        return {}
+                return ParseResult(self._summary)
+        return ParseResult(matched=False)
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""

@@ -1,5 +1,5 @@
 import pathlib
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 from gurobi_logtools.parsers.continuous import ContinuousParser
 from gurobi_logtools.parsers.header import HeaderParser
@@ -8,7 +8,7 @@ from gurobi_logtools.parsers.norel import NoRelParser
 from gurobi_logtools.parsers.presolve import PresolveParser
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.termination import TerminationParser
-from gurobi_logtools.parsers.util import Parser
+from gurobi_logtools.parsers.util import ParseResult, Parser
 
 
 class SingleLogParser(Parser):
@@ -72,7 +72,7 @@ class SingleLogParser(Parser):
         summary.update(self.termination_parser.get_summary())
         return summary
 
-    def parse(self, line: str) -> Dict[str, Any]:
+    def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate the component parsers in sequence.
 
         Args:
@@ -86,12 +86,13 @@ class SingleLogParser(Parser):
         # Initially, only check the header parser until started
         if not self.started:
             assert self.current_parser is self.header_parser
-            matched = self.current_parser.parse(line)
-            if matched:
+            parse_result = self.current_parser.parse(line)
+            if parse_result:
                 self.started = True
                 if self.lines is not None:  # i.e. write_to_dir = True
                     self.lines.append(line)
-            return matched.copy()
+                return parse_result
+            return ParseResult(matched=False)
 
         if self.lines is not None:  # i.e. write_to_dir = True
             self.lines.append(line)
@@ -99,7 +100,7 @@ class SingleLogParser(Parser):
         # First try the current parser
         assert self.current_parser not in self.future_parsers
         if parse_result := self.current_parser.parse(line):
-            return parse_result.copy()
+            return parse_result
 
         # Check if any future parsers should take over
         for i, parser in enumerate(self.future_parsers):
@@ -113,4 +114,4 @@ class SingleLogParser(Parser):
             return parse_result
 
         # Nothing matched
-        return {}
+        return ParseResult(matched=False)

@@ -2,6 +2,7 @@ import re
 from typing import Any, Dict
 
 from gurobi_logtools.parsers.util import (
+    ParseResult,
     Parser,
     convert_data_types,
     float_pattern,
@@ -59,7 +60,7 @@ class NodeLogParser(Parser):
         summary.update({f"Cuts: {name}": count for name, count in self._cuts.items()})
         return summary
 
-    def parse(self, line: str) -> Dict[str, Any]:
+    def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate summary and progress data.
 
         Args:
@@ -75,12 +76,12 @@ class NodeLogParser(Parser):
             if match:
                 parse_result = typeconvert_groupdict(match)
                 self._summary.update(parse_result)
-                return parse_result.copy()
+                return ParseResult(parse_result)
 
         match = self.cut_report_start.match(line)
         if match:
             self._in_cut_report = True
-            return {"Init": "cutreport"}
+            return ParseResult({"Init": "cutreport"})
 
         if self._in_cut_report:
             match = self.cut_report_line.match(line)
@@ -88,15 +89,15 @@ class NodeLogParser(Parser):
                 self._cuts[match.group("Name")] = convert_data_types(
                     match.group("Count"),
                 )
-                return self._cuts.copy()
+                return ParseResult(self._cuts)
 
         # Wait for the header before matching any log lines.
         if not self._started:
             match = self.tree_search_start.match(line)
             if match:
                 self._started = True
-                return {"Init": "treesearch"}
-            return {}
+                return ParseResult({"Init": "treesearch"})
+            return ParseResult(matched=False)
 
         # Match log lines.
         for regex in self.line_types:
@@ -104,9 +105,9 @@ class NodeLogParser(Parser):
             if match:
                 parse_result = typeconvert_groupdict(match)
                 self._progress.append(parse_result)
-                return parse_result.copy()
+                return ParseResult(parse_result)
 
-        return {}
+        return ParseResult(matched=False)
 
     def get_progress(self) -> list:
         """Return the progress of the search tree."""
