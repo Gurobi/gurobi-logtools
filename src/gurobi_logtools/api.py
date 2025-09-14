@@ -132,7 +132,7 @@ class FullLogParseResult:
         )
         return summary
 
-    def parse(self, logfile: str, warnings_action) -> None:
+    def parse(self, logfile: str, warnings_action: str) -> None:
         """Parse a single file. The log file may contain multiple run logs.
 
         Parameters
@@ -171,7 +171,7 @@ class FullLogParseResult:
 
 
 def parse(
-    patterns: Union[str, List[str]], write_to_dir=None, warnings_action="log"
+    patterns: Union[str, List[str]], write_to_dir=None, warnings_action="warn"
 ) -> FullLogParseResult:
     """Main entry point function.
 
@@ -179,6 +179,9 @@ def parse(
         patterns (str): a single glob pattern, or list of patterns, matching
         log files.
 
+        warnings_action : {"ignore", "warn", "raise"}
+            Determines the action to take if certain warnings are found in the log.  The "warn" and "raise""
+            options will issue a RuntimeWarning and RuntimeError respectively.
     """
     if write_to_dir:
         os.makedirs(write_to_dir, exist_ok=True)
