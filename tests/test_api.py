@@ -347,3 +347,15 @@ def test_model_type():
     np.testing.assert_array_equal(
         modeltype, ["LP", "LP", "LP", "MIP", "MIP", "MIP", "QCP", "QCP"]
     )
+
+
+def test_raise_warning():
+    logpath = ("tests/assets/multiknapsack.log",)
+    with pytest.raises(RuntimeError):
+        glt.parse(logpath, warnings_action="raise")
+
+
+def test_warn_warning():
+    logpath = ("tests/assets/multiknapsack.log",)
+    with pytest.warns(RuntimeWarning):
+        glt.parse(logpath, warnings_action="warn")

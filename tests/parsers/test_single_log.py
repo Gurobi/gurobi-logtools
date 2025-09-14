@@ -136,6 +136,8 @@ def test_multiknapsack_iter():
         {"Columns": 1000, "ModelName": "", "Nonzeros": 1000000, "Rows": 1000},
         None,
         None,
+        None,
+        None,
         {"LogicalProcessors": 8, "PhysicalCores": 4, "Threads": 8},
         None,
         {"NumConstrs": 1000, "NumNZs": 1000000, "NumVars": 1000},
