@@ -26,7 +26,7 @@ from gurobi_logtools.helpers import (
     strip_model_and_seed,
 )
 from gurobi_logtools.parsers.single_log import SingleLogParser
-from gurobi_logtools.parsers.warnings import Warnings
+from gurobi_logtools.parsers.warnings import Warnings, WarningAction
 
 
 class FullLogParseResult:
@@ -147,7 +147,7 @@ class FullLogParseResult:
 
         parser = new_parser()
         subsequent = new_parser()
-        warnings = Warnings(logfile, action=warnings_action)
+        warnings = Warnings(logfile, action=WarningAction(warnings_action))
         lognumber = 1
         with open(logfile) as infile:
             lines = iter(infile)
