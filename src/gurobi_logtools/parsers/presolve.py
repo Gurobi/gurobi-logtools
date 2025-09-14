@@ -19,14 +19,11 @@ class PresolveParser(Parser):
     # Possible intermediate patterns to be parsed
     presolve_intermediate_patterns = [
         re.compile(r"Model fingerprint: (?P<Fingerprint>.*)$"),
-        re.compile(
-            r"Variable types: (?P<PresolvedNumConVars>\d+) continuous, (?P<PresolvedNumIntVars>\d+) integer \((?P<PresolvedNumBinVars>\d+) binary\)$",
-        ),
-        re.compile(
+        re.compile(  # dev log
             r"Variable types: (?P<PresolvedNumBinVars>\d+) bin/(?P<PresolvedNumIntVars>\d+) gen[^/]*/(?P<PresolvedNumConVars>\d+) continuous",
         ),
         re.compile(
-            r"Semi-Variable types: (?P<PresolvedNumSemiContVars>\d+) continuous, (?P<PresolvedNumSemiIntVars>\d+) integer$",
+            r"Semi-Variable types: (?P<NumSemiContVars>\d+) continuous, (?P<NumSemiIntVars>\d+) integer$",
         ),
         re.compile(
             r"\s*QMatrix range\s*\[(?P<MinQCCoeff>[^,]+),\s*(?P<MaxQCCoeff>[^\]]+)\]",
@@ -70,6 +67,13 @@ class PresolveParser(Parser):
         re.compile(r"Presolve time: (?P<PresolveTime>[\d\.]+)s"),
     ]
 
+    # Special case
+    variable_types = re.compile(
+        r"Variable types: (?P<NumConVars>\d+) continuous, (?P<NumIntVars>\d+) integer \((?P<NumBinVars>\d+) binary\)$",
+    )
+
+    coefficient_stats = re.compile("Coefficient statistics:")
+
     # Special case: model solved by presolve
     presolve_all_removed = re.compile(r"Presolve: All rows and columns removed")
 
@@ -82,6 +86,7 @@ class PresolveParser(Parser):
         """
         self._summary: Dict[str, Any] = {}
         self._started = False
+        self._post_coefficient_stats = False
         self._pretree_solution_parser = pretree_solution_parser
 
     def parse(self, line: str) -> ParseResult:
@@ -107,6 +112,21 @@ class PresolveParser(Parser):
 
         if parse_result := self._pretree_solution_parser.parse(line):
             return parse_result
+
+        if self.coefficient_stats.match(line):
+            self._post_coefficient_stats = True
+            return ParseResult(matched=True)
+
+        if match := self.variable_types.match(line):
+            parse_result = typeconvert_groupdict(match)
+            if self._post_coefficient_stats:
+                parse_result = {
+                    "PresolvedNumConVars": parse_result["NumConVars"],
+                    "PresolvedNumIntVars": parse_result["NumIntVars"],
+                    "PresolvedNumBinVars": parse_result["NumBinVars"],
+                }
+            self._summary.update(parse_result)
+            return ParseResult(parse_result)
 
         for pattern in PresolveParser.presolve_intermediate_patterns:
             match = pattern.match(line)
