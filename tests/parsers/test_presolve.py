@@ -91,7 +91,7 @@ example_log_2 = """
 Optimize a model with 1 rows, 4 columns and 2 nonzeros
 Model fingerprint: 0x741a3617
 Model has 2 general constraints
-Variable types: 4 continuous, 0 integer (0 binary)
+Variable types: 4 continuous, 0 integer (1 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 4e+00]
   Objective range  [1e+00, 2e+00]
@@ -115,7 +115,7 @@ expected_summary_2 = {
     "NumGenConstrs": 2,
     "NumConVars": 4,
     "NumIntVars": 0,
-    "NumBinVars": 0,
+    "NumBinVars": 1,
     "MinCoeff": 1.0,
     "MaxCoeff": 4.0,
     "MinObjCoeff": 1.0,
@@ -132,7 +132,7 @@ expected_summary_2 = {
     "PresolvedNumConVars": 7267,
     "PresolvedNumIntVars": 0,
     "PresolvedNumBinVars": 0,
-    "ModelType": "LP",
+    "ModelType": "MIP",
 }
 
 

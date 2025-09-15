@@ -155,10 +155,10 @@ class PresolveParser(Parser):
             discrete_vars=sum(
                 summary.get(k, 0)
                 for k in (
-                    "PresolvedNumBinVars",
-                    "PresolvedNumIntVars",
-                    "PresolvedNumSemiContVars",
-                    "PresolvedNumSemiIntVars",
+                    "NumBinVars",
+                    "NumIntVars",
+                    "NumSemiContVars",
+                    "NumSemiIntVars",
                 )
             ),
             quad_nonzeros=summary.get("NumQNZs", 0),
