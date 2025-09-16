@@ -26,6 +26,7 @@ from gurobi_logtools.helpers import (
     strip_model_and_seed,
 )
 from gurobi_logtools.parsers.single_log import SingleLogParser
+from gurobi_logtools.parsers.warnings import Warnings, WarningAction
 
 
 class FullLogParseResult:
@@ -131,16 +132,27 @@ class FullLogParseResult:
         )
         return summary
 
-    def parse(self, logfile: str) -> None:
-        """Parse a single file. The log file may contain multiple run logs."""
+    def parse(self, logfile: str, warnings_action: str) -> None:
+        """Parse a single file. The log file may contain multiple run logs.
+
+        Parameters
+        ----------
+        logfile : str
+            Filepath, as a string, for the Gurobi log to be parsed
+        warnings_action : {"ignore", "warn", "raise"}
+            Determines the action to take if certain warnings are found in the log.  The "warn" and "raise""
+            options will issue a RuntimeWarning and RuntimeError respectively.
+        """
         new_parser = functools.partial(SingleLogParser, write_to_dir=self.write_to_dir)
 
         parser = new_parser()
         subsequent = new_parser()
+        warnings = Warnings(logfile, action=WarningAction(warnings_action))
         lognumber = 1
         with open(logfile) as infile:
             lines = iter(infile)
             for line in lines:
+                warnings.check(line)
                 if not parser.parse(line):
                     assert not subsequent.started
                     if subsequent.parse(line):
@@ -158,13 +170,18 @@ class FullLogParseResult:
         assert all(parser.closed for _, _, parser in self.parsers)
 
 
-def parse(patterns: Union[str, List[str]], write_to_dir=None) -> FullLogParseResult:
+def parse(
+    patterns: Union[str, List[str]], write_to_dir=None, warnings_action="warn"
+) -> FullLogParseResult:
     """Main entry point function.
 
     Args:
         patterns (str): a single glob pattern, or list of patterns, matching
         log files.
 
+        warnings_action : {"ignore", "warn", "raise"}
+            Determines the action to take if certain warnings are found in the log.  The "warn" and "raise""
+            options will issue a RuntimeWarning and RuntimeError respectively.
     """
     if write_to_dir:
         os.makedirs(write_to_dir, exist_ok=True)
@@ -177,7 +194,7 @@ def parse(patterns: Union[str, List[str]], write_to_dir=None) -> FullLogParseRes
     if not logfiles:
         raise FileNotFoundError(f"No logfiles found in patterns: {patterns}")
     for logfile in logfiles:
-        result.parse(logfile)
+        result.parse(logfile, warnings_action)
     return result
 
 

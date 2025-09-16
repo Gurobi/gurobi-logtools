@@ -4,6 +4,7 @@
 ### Changed
 ### Removed
 ### Added
+- Added the `warnings_action` parameter to `gurobi_logtools.parse` (#GH88)
 
 ## 4.0.1 - 2025-08-14
 ### Fixed

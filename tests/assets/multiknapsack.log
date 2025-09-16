@@ -11,6 +11,8 @@ Read MPS format model from file multiknapsack.mps.bz2
 Reading time = 2.31 seconds
 : 1000 rows, 1000 columns, 1000000 nonzeros
 
+Version 120003 of attribute file unsupported
+
 CPU model: Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz
 Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
 

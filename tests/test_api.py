@@ -36,16 +36,24 @@ def k16x240_progress():
 
 @pytest.fixture(scope="module")
 def testlog_summary():
-    return glt.parse("tests/assets/*.log").summary()
+    return glt.parse("tests/assets/*.log", warnings_action="ignore").summary()
 
 
 @pytest.fixture(scope="module")
 def testlog_progress():
     return {
-        "norel": glt.parse("tests/assets/*.log").progress("norel"),
-        "rootlp": glt.parse("tests/assets/*.log").progress("rootlp"),
-        "nodelog": glt.parse("tests/assets/*.log").progress("nodelog"),
-        "pretreesols": glt.parse("tests/assets/*.log").progress("pretreesols"),
+        "norel": glt.parse("tests/assets/*.log", warnings_action="ignore").progress(
+            "norel"
+        ),
+        "rootlp": glt.parse("tests/assets/*.log", warnings_action="ignore").progress(
+            "rootlp"
+        ),
+        "nodelog": glt.parse("tests/assets/*.log", warnings_action="ignore").progress(
+            "nodelog"
+        ),
+        "pretreesols": glt.parse(
+            "tests/assets/*.log", warnings_action="ignore"
+        ).progress("pretreesols"),
     }
 
 
@@ -205,7 +213,7 @@ def test_gurobipy_logs():
 
 def test_work():
     """Check if work is correctly parsed for different log files."""
-    result = glt.parse("tests/assets/*.log")
+    result = glt.parse("tests/assets/*.log", warnings_action="ignore")
     summary = result.summary()
 
     # Check if work column present
@@ -216,7 +224,7 @@ def test_work():
 
 
 def test_changed_params():
-    result = glt.parse("tests/assets/*.log")
+    result = glt.parse("tests/assets/*.log", warnings_action="ignore")
     summary = result.summary()
     assert set(summary.columns).issuperset({"ChangedParams"})
     assert summary["ChangedParams"].apply(lambda d: isinstance(d, dict)).all()
@@ -238,7 +246,7 @@ def test_create_label():
         return f"{version}-{paramstr}"
 
     summary = (
-        glt.parse("tests/assets/*.log")
+        glt.parse("tests/assets/*.log", warnings_action="ignore")
         .summary()
         .assign(Label=lambda df: df.apply(label, axis="columns"))
     )
@@ -313,7 +321,7 @@ def test_changed_params_v2():
         "tests/assets/qp.log",
     ]
 
-    summary = glt.parse(logpaths).summary()
+    summary = glt.parse(logpaths, warnings_action="ignore").summary()
 
     modeltype = summary.set_index("LogFilePath")["ChangedParams"][logpaths].values
     expected = [
@@ -341,9 +349,21 @@ def test_model_type():
         "tests/assets/qp.log",
     ]
 
-    summary = glt.parse(logpaths).summary()
+    summary = glt.parse(logpaths, warnings_action="ignore").summary()
 
     modeltype = summary.set_index("LogFilePath")["ModelType"][logpaths].values
     np.testing.assert_array_equal(
         modeltype, ["LP", "LP", "LP", "MIP", "MIP", "MIP", "QCP", "QCP"]
     )
+
+
+def test_raise_warning():
+    logpath = ("tests/assets/multiknapsack.log",)
+    with pytest.raises(RuntimeError):
+        glt.parse(logpath, warnings_action="raise")
+
+
+def test_warn_warning():
+    logpath = ("tests/assets/multiknapsack.log",)
+    with pytest.warns(RuntimeWarning):
+        glt.parse(logpath, warnings_action="warn")
