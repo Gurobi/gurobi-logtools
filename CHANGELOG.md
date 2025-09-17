@@ -1,10 +1,13 @@
 # CHANGELOG
 ## Unreleased
 ### Fixed
+- PresolvedNumConVars, PresolvedNumIntVars and PresolvedNumBinVars data is populated from presolved model stats (#GH89)
+
 ### Changed
 ### Removed
 ### Added
 - Added the `warnings_action` parameter to `gurobi_logtools.parse` (#GH88)
+- NumConVars, NumIntVars and NumBinVars are added to capture variable types in original model (#GH89)
 
 ## 4.0.1 - 2025-08-14
 ### Fixed

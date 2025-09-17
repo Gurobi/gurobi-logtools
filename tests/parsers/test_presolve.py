@@ -25,9 +25,9 @@ expected_summary_0 = {
     "NumVars": 322,
     "NumNZs": 1815,
     "Fingerprint": "0x18b19fdf",
-    "PresolvedNumConVars": 19,
-    "PresolvedNumIntVars": 297,
-    "PresolvedNumBinVars": 297,
+    "NumConVars": 20,
+    "NumIntVars": 302,
+    "NumBinVars": 0,
     "MinCoeff": 1.0,
     "MaxCoeff": 8000000.0,
     "MinObjCoeff": 1.0,
@@ -40,6 +40,9 @@ expected_summary_0 = {
     "PresolvedNumConstrs": 390,
     "PresolvedNumVars": 316,
     "PresolvedNumNZs": 1803,
+    "PresolvedNumConVars": 19,
+    "PresolvedNumIntVars": 297,
+    "PresolvedNumBinVars": 297,
     "ModelType": "MIP",
 }
 
@@ -88,7 +91,7 @@ example_log_2 = """
 Optimize a model with 1 rows, 4 columns and 2 nonzeros
 Model fingerprint: 0x741a3617
 Model has 2 general constraints
-Variable types: 4 continuous, 0 integer (0 binary)
+Variable types: 4 continuous, 0 integer (1 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 4e+00]
   Objective range  [1e+00, 2e+00]
@@ -110,9 +113,9 @@ expected_summary_2 = {
     "NumNZs": 2,
     "Fingerprint": "0x741a3617",
     "NumGenConstrs": 2,
-    "PresolvedNumConVars": 7267,
-    "PresolvedNumIntVars": 0,
-    "PresolvedNumBinVars": 0,
+    "NumConVars": 4,
+    "NumIntVars": 0,
+    "NumBinVars": 1,
     "MinCoeff": 1.0,
     "MaxCoeff": 4.0,
     "MinObjCoeff": 1.0,
@@ -126,7 +129,10 @@ expected_summary_2 = {
     "PresolvedNumConstrs": 7,
     "PresolvedNumVars": 7267,
     "PresolvedNumNZs": 21791,
-    "ModelType": "LP",
+    "PresolvedNumConVars": 7267,
+    "PresolvedNumIntVars": 0,
+    "PresolvedNumBinVars": 0,
+    "ModelType": "MIP",
 }
 
 

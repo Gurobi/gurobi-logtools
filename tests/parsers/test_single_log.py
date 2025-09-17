@@ -143,9 +143,9 @@ def test_multiknapsack_iter():
         {"NumConstrs": 1000, "NumNZs": 1000000, "NumVars": 1000},
         {"Fingerprint": "0x1dcb478a"},
         {
-            "PresolvedNumBinVars": 0,
-            "PresolvedNumConVars": 0,
-            "PresolvedNumIntVars": 1000,
+            "NumBinVars": 0,
+            "NumConVars": 0,
+            "NumIntVars": 1000,
         },
         None,
         {"MaxCoeff": 1.0, "MinCoeff": 8e-07},
