@@ -17,7 +17,7 @@ class PresolveParser(Parser):
     )
 
     # Possible intermediate patterns to be parsed
-    presolve_intermediate_patterns = [
+    model_stat_patterns = [
         re.compile(r"Model fingerprint: (?P<Fingerprint>.*)$"),
         re.compile(  # dev log
             r"Variable types: (?P<PresolvedNumBinVars>\d+) bin/(?P<PresolvedNumIntVars>\d+) gen[^/]*/(?P<PresolvedNumConVars>\d+) continuous",
@@ -57,6 +57,9 @@ class PresolveParser(Parser):
         re.compile(
             r"Concurrent MIP optimizer: (?P<ConcurrentJobs>\d+) concurrent instances \(\d+ threads per instance\)",
         ),
+    ]
+
+    presolve_intermediate_patterns = [
         re.compile(
             r"Presolved: (?P<PresolvedNumConstrs>\d+) (R|r)ows, (?P<PresolvedNumVars>\d+) (C|c)olumns, (?P<PresolvedNumNZs>\d+) (N|n)on(Z|z)ero(e?)s",
         ),
@@ -72,8 +75,6 @@ class PresolveParser(Parser):
         r"Variable types: (?P<NumConVars>\d+) continuous, (?P<NumIntVars>\d+) integer \((?P<NumBinVars>\d+) binary\)$",
     )
 
-    coefficient_stats = re.compile("Coefficient statistics:")
-
     # Special case: model solved by presolve
     presolve_all_removed = re.compile(r"Presolve: All rows and columns removed")
 
@@ -86,7 +87,8 @@ class PresolveParser(Parser):
         """
         self._summary: Dict[str, Any] = {}
         self._started = False
-        self._post_coefficient_stats = False
+        self._post_presolve = False
+        self._original_variable_types_matched = False
         self._pretree_solution_parser = pretree_solution_parser
 
     def parse(self, line: str) -> ParseResult:
@@ -113,27 +115,33 @@ class PresolveParser(Parser):
         if parse_result := self._pretree_solution_parser.parse(line):
             return parse_result
 
-        if self.coefficient_stats.match(line):
-            self._post_coefficient_stats = True
-            return ParseResult(matched=True)
-
-        if match := self.variable_types.match(line):
-            parse_result = typeconvert_groupdict(match)
-            if self._post_coefficient_stats:
-                parse_result = {
-                    "PresolvedNumConVars": parse_result["NumConVars"],
-                    "PresolvedNumIntVars": parse_result["NumIntVars"],
-                    "PresolvedNumBinVars": parse_result["NumBinVars"],
-                }
-            self._summary.update(parse_result)
-            return ParseResult(parse_result)
-
-        for pattern in PresolveParser.presolve_intermediate_patterns:
+        for pattern in PresolveParser.model_stat_patterns:
             match = pattern.match(line)
             if match:
                 parse_result = typeconvert_groupdict(match)
                 self._summary.update(parse_result)
                 return ParseResult(parse_result)
+
+        for pattern in PresolveParser.presolve_intermediate_patterns:
+            match = pattern.match(line)
+            if match:
+                self._post_presolve = True
+                parse_result = typeconvert_groupdict(match)
+                self._summary.update(parse_result)
+                return ParseResult(parse_result)
+
+        if match := self.variable_types.match(line):
+            parse_result = typeconvert_groupdict(match)
+            if self._post_presolve:
+                parse_result = {
+                    "PresolvedNumConVars": parse_result["NumConVars"],
+                    "PresolvedNumIntVars": parse_result["NumIntVars"],
+                    "PresolvedNumBinVars": parse_result["NumBinVars"],
+                }
+            else:
+                self._original_variable_types_matched = True
+            self._summary.update(parse_result)
+            return ParseResult(parse_result)
 
         match = PresolveParser.presolve_all_removed.match(line)
         if match:
