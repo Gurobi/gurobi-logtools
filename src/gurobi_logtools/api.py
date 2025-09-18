@@ -1,22 +1,9 @@
-"""Top level API for parsing log files.
-
-Usage example:
-    import gurobi_logtools.api as glt
-    result = glt.parse("data/*.log")
-    result.summary()
-    result.progress(section="nodelog")
-
-OR, use
-    summary = glt.get_dataframe("data/*.log", timeline=False)
-    summary, timeline = glt.get_dataframe("data/*.log", timeline=True)
-"""
-
 import functools
 import glob
 import itertools
 import os
 from pathlib import Path
-from typing import List, Union
+from typing import List, Tuple, Union
 
 import pandas as pd
 
@@ -29,10 +16,10 @@ from gurobi_logtools.parsers.single_log import SingleLogParser
 from gurobi_logtools.parsers.warnings import Warnings, WarningAction
 
 
-class FullLogParseResult:
+class ParsedData:
     def __init__(self, write_to_dir):
         self.write_to_dir = write_to_dir
-        self.parsers = []
+        self.parsers: List[Tuple[str, int, SingleLogParser]] = []
         self._common = None
 
     def progress(self, section="nodelog") -> pd.DataFrame:
@@ -49,17 +36,7 @@ class FullLogParseResult:
         """
         progress = []
         for logfile, lognumber, parser in self.parsers:
-            if section == "nodelog":
-                log = parser.nodelog_parser.get_progress()
-            elif section == "rootlp":
-                log = parser.continuous_parser.get_progress()
-            elif section == "norel":
-                log = parser.norel_parser.get_progress()
-            elif section == "pretreesols":
-                log = parser.pretree_solution_parser.get_progress()
-            else:
-                raise ValueError(f"Unknown section '{section}'")
-
+            log = parser.get_progress(section)
             progress.append(
                 pd.DataFrame(log).assign(LogFilePath=logfile, LogNumber=lognumber),
             )
@@ -105,6 +82,12 @@ class FullLogParseResult:
 
     def summary(self, prettyparams=False):
         """Construct and return a summary dataframe for all parsed logs."""
+        # summary = pd.DataFrame(
+        #     [
+        #         dict(parser.get_summary(), LogFilePath=logfile, LogNumber=lognumber)
+        #         for logfile, lognumber, parser in self.parsers
+        #     ],
+        # )
         summary = pd.DataFrame(
             [
                 dict(parser.get_summary(), LogFilePath=logfile, LogNumber=lognumber)
@@ -131,6 +114,15 @@ class FullLogParseResult:
             on=["LogFilePath", "LogNumber"],
         )
         return summary
+
+    def multiobj_summary(self):
+        return pd.DataFrame(
+            [
+                dict(summary, LogFilePath=logfile, LogNumber=lognumber)
+                for logfile, lognumber, parser in self.parsers
+                for summary in parser.get_multiobj_summary()
+            ],
+        )
 
     def parse(self, logfile: str, warnings_action: str) -> None:
         """Parse a single file. The log file may contain multiple run logs.
@@ -172,7 +164,7 @@ class FullLogParseResult:
 
 def parse(
     patterns: Union[str, List[str]], write_to_dir=None, warnings_action="warn"
-) -> FullLogParseResult:
+) -> ParsedData:
     """Main entry point function.
 
     Args:
@@ -185,7 +177,7 @@ def parse(
     """
     if write_to_dir:
         os.makedirs(write_to_dir, exist_ok=True)
-    result = FullLogParseResult(write_to_dir=write_to_dir)
+    result = ParsedData(write_to_dir=write_to_dir)
     if type(patterns) is str:
         patterns = [patterns]
     logfiles = sorted(

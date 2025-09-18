@@ -2,6 +2,7 @@ import re
 from typing import Any, Dict
 
 from gurobi_logtools.parsers.util import (
+    float_pattern,
     ParseResult,
     Parser,
     convert_data_types,
@@ -26,6 +27,7 @@ class HeaderParser(Parser):
         re.compile(r"Compute Server job ID: (?P<JobID>.*)$"),
         re.compile(r"Gurobi Optimizer version (?P<Version>\d{1,2}\.[^\s]+)"),
         re.compile(r"Solving model (?P<ModelName>.*)$"),
+        re.compile(r"Multi-objectives: optimize objective (?P<ObjCnt>\d+) .*"),
     ]
 
     header_other_patterns = [
@@ -36,6 +38,9 @@ class HeaderParser(Parser):
         ),
         re.compile(
             r"(?P<ModelName>.*): (?P<Rows>\d+) rows, (?P<Columns>\d+) columns, (?P<Nonzeros>\d+) nonzeros",
+        ),
+        re.compile(
+            rf"Loaded user MIP start with objective (?P<MIPStartObj>{float_pattern})",
         ),
     ]
 

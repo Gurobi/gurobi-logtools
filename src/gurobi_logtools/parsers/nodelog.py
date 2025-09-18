@@ -104,7 +104,8 @@ class NodeLogParser(Parser):
             match = regex.match(line)
             if match:
                 parse_result = typeconvert_groupdict(match)
-                self._progress.append(parse_result)
+                if parse_result:
+                    self._progress.append(parse_result)
                 return ParseResult(parse_result)
 
         return ParseResult(matched=False)
