@@ -12,6 +12,11 @@ Read MPS format model from file /nfs/models/mip/glass4.mps.bz2
 Reading time = 0.00 seconds
 glass4: 396 rows, 322 columns, 1815 nonzeros
 Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+Presolve 1
+LogFile 912-Presolve1-glass4-0.log"
+
 Optimize a model with 396 rows, 322 columns and 1815 nonzeros
 Model fingerprint: 0x0a9d9037
 Variable types: 20 continuous, 302 integer (0 binary)
