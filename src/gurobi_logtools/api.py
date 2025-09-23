@@ -60,12 +60,16 @@ class FullLogParseResult:
             else:
                 raise ValueError(f"Unknown section '{section}'")
 
-            progress.append(
-                pd.DataFrame(log).assign(LogFilePath=logfile, LogNumber=lognumber),
-            )
+            if log:
+                progress.append(
+                    pd.DataFrame(log).assign(LogFilePath=logfile, LogNumber=lognumber),
+                )
+
+        if not progress:
+            return pd.DataFrame()
 
         return pd.merge(
-            left=pd.concat(progress),
+            left=pd.concat([df.dropna(axis=1, how="all") for df in progress]),
             right=self.common_log_data(),
             how="left",
             on=["LogFilePath", "LogNumber"],
