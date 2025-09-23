@@ -51,6 +51,7 @@ class CoefficientRangeParser:
         for pattern in CoefficientRangeParser.patterns:
             match = pattern.match(line)
             if match:
+                self._state = CoefficientRangeParser.State.active
                 parse_result = typeconvert_groupdict(match)
                 self._summary.update(parse_result)
                 return ParseResult(parse_result)
