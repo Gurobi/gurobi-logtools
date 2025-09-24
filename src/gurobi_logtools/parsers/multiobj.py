@@ -46,7 +46,7 @@ class InitialPresolveParser(PresolveParser):
 
 class MultiObjParser(Parser):
     start_pattern = re.compile(
-        r"Multi-objectives: starting optimization with (?P<ObjCount>\d+) objective.*$",
+        r"Multi-objectives: starting optimization with (?P<MultiObjCount>\d+) objective.*$",
     )
 
     termination_pattern = re.compile(

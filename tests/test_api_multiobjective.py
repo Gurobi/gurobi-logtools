@@ -27,7 +27,7 @@ def _get_summary_values(column):
 
 
 def test_numbobj():
-    np.testing.assert_array_equal(_get_summary_values("ObjCount"), [4, 2])
+    np.testing.assert_array_equal(_get_summary_values("MultiObjCount"), [4, 2])
 
 
 def test_runtime():
