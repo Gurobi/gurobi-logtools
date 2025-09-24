@@ -1,4 +1,5 @@
 import re
+from enum import Enum
 from typing import Any, Dict
 
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
@@ -11,21 +12,8 @@ from gurobi_logtools.parsers.util import (
 )
 
 
-class PresolveParser(Parser):
-    # The pattern indicating the initialization of the parser
-    presolve_start_pattern = re.compile(
-        r"Optimize a model with (?P<NumConstrs>\d+) (R|r)ows, (?P<NumVars>\d+) (C|c)olumns and (?P<NumNZs>\d+) (N|n)on(Z|z)ero(e?)s",
-    )
-
-    # Possible intermediate patterns to be parsed
-    model_stat_patterns = [
-        re.compile(r"Model fingerprint: (?P<Fingerprint>.*)$"),
-        re.compile(  # dev log
-            r"Variable types: (?P<PresolvedNumBinVars>\d+) bin/(?P<PresolvedNumIntVars>\d+) gen[^/]*/(?P<PresolvedNumConVars>\d+) continuous",
-        ),
-        re.compile(
-            r"Semi-Variable types: (?P<NumSemiContVars>\d+) continuous, (?P<NumSemiIntVars>\d+) integer$",
-        ),
+class CoefficientRangeParser:
+    patterns = [
         re.compile(
             r"\s*QMatrix range\s*\[(?P<MinQCCoeff>[^,]+),\s*(?P<MaxQCCoeff>[^\]]+)\]",
         ),
@@ -46,6 +34,50 @@ class PresolveParser(Parser):
         ),
         re.compile(r"\s*RHS range\s*\[(?P<MinRHS>[^,]+),\s*(?P<MaxRHS>[^\]]+)\]"),
         re.compile(r"\s*QRHS range\s*\[(?P<MinQCRHS>[^,]+),\s*(?P<MaxQCRHS>[^\]]+)\]"),
+    ]
+
+    class State(Enum):
+        unused = 1
+        active = 2
+        used = 3
+
+    def __init__(self):
+        self._state = CoefficientRangeParser.State.unused
+        self._summary = {}
+
+    def parse(self, line) -> ParseResult:
+        if self._state == CoefficientRangeParser.State.used:
+            return ParseResult(matched=False)
+
+        for pattern in CoefficientRangeParser.patterns:
+            match = pattern.match(line)
+            if match:
+                self._state = CoefficientRangeParser.State.active
+                parse_result = typeconvert_groupdict(match)
+                self._summary.update(parse_result)
+                return ParseResult(parse_result)
+
+        if self._state == CoefficientRangeParser.State.active:
+            self._state = CoefficientRangeParser.State.used
+
+        return ParseResult(matched=False)
+
+
+class PresolveParser(Parser):
+    # The pattern indicating the initialization of the parser
+    presolve_start_pattern = re.compile(
+        r"Optimize a model with (?P<NumConstrs>\d+) (R|r)ows, (?P<NumVars>\d+) (C|c)olumns and (?P<NumNZs>\d+) (N|n)on(Z|z)ero(e?)s",
+    )
+
+    # Possible intermediate patterns to be parsed
+    model_stat_patterns = [
+        re.compile(r"Model fingerprint: (?P<Fingerprint>.*)$"),
+        re.compile(  # dev log
+            r"Variable types: (?P<PresolvedNumBinVars>\d+) bin/(?P<PresolvedNumIntVars>\d+) gen[^/]*/(?P<PresolvedNumConVars>\d+) continuous",
+        ),
+        re.compile(
+            r"Semi-Variable types: (?P<NumSemiContVars>\d+) continuous, (?P<NumSemiIntVars>\d+) integer$",
+        ),
         re.compile(r"Model has (?P<NumQNZs>\d+) quadratic objective terms?"),
         re.compile(r"Model has (?P<NumQConstrs>\d+) quadratic constraints?"),
         re.compile(r"Model has (?P<NumSOS>\d+) SOS constraints?"),
@@ -95,6 +127,7 @@ class PresolveParser(Parser):
         self._pretree_solution_parser: PreTreeSolutionParser | DummyParser = (
             pretree_solution_parser
         )
+        self._coefficient_range_parser = CoefficientRangeParser()
 
     def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate summary data.
@@ -120,6 +153,10 @@ class PresolveParser(Parser):
                 parse_result_dict = typeconvert_groupdict(match)
                 self._summary.update(parse_result_dict)
                 return ParseResult(parse_result_dict)
+
+        parse_result = self._coefficient_range_parser.parse(line)
+        if parse_result:
+            return parse_result
 
         for pattern in PresolveParser.presolve_intermediate_patterns:
             match = pattern.match(line)
@@ -155,7 +192,7 @@ class PresolveParser(Parser):
 
     def get_summary(self, add_model_type=True) -> Dict:
         """Return the current parsed summary."""
-        summary = self._summary.copy()
+        summary = {**self._summary, **self._coefficient_range_parser._summary}
         if add_model_type:
             # we don't want to add ModelType if this parsing presolve data from one
             # of the solves in a multiobjective model.  It is too complicated to get

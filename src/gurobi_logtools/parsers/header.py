@@ -10,6 +10,35 @@ from gurobi_logtools.parsers.util import (
 )
 
 
+class NonDefaultParamsParser:
+    start_pattern = re.compile("Non-default parameters:")
+    param_change_pattern = re.compile(r"^(?P<ParamName>\w+)\s+(?P<ParamValue>.+)$")
+    blank_line = re.compile("^$")
+
+    def __init__(self):
+        self._summary: Dict[str, Any] = {}
+        self._parameters = {}
+        self._active = False
+
+    def parse(self, line: str):
+        if not self._active:
+            if self.start_pattern.match(line):
+                self._active = True
+                return ParseResult(matched=True)
+            return ParseResult(matched=False)
+        elif self.blank_line.match(line):
+            self._active = False
+            return ParseResult(matched=True)
+        else:
+            match = self.param_change_pattern.match(line)
+            if match:
+                self._parameters[match.group("ParamName")] = convert_data_types(
+                    match.group("ParamValue"),
+                )
+                return ParseResult(self._parameters)
+            return ParseResult(matched=False)
+
+
 class HeaderParser(Parser):
     header_start_patterns = [
         re.compile(
@@ -58,6 +87,7 @@ class HeaderParser(Parser):
         self._summary: Dict[str, Any] = {}
         self._parameters = {}
         self._started = False
+        self.nondefault_params_parser = NonDefaultParamsParser()
 
     def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate summary data.
@@ -86,6 +116,9 @@ class HeaderParser(Parser):
                 return ParseResult(parse_result)
 
         if self._started:
+            parse_result_ = self.nondefault_params_parser.parse(line)
+            if parse_result_:
+                return parse_result_
             for pattern in self.header_other_patterns:
                 match = pattern.match(line)
                 if match:
@@ -103,15 +136,15 @@ class HeaderParser(Parser):
 
     def get_parameters(self) -> Dict:
         """Return all changed parameters detected in the header."""
-        return self._parameters
+        return {**self._parameters, **self.nondefault_params_parser._parameters}
 
     def changed_params(self) -> Dict:
         omit_params = {"Seed", "LogFile"}
-        return {k: v for k, v in self._parameters.items() if k not in omit_params}
+        return {k: v for k, v in self.get_parameters().items() if k not in omit_params}
 
     def _make_file_name(self) -> str:
         paramstr = "".join(f"{k}{v}-" for k, v in sorted(self.changed_params().items()))
         version = self._summary.get("Version", "unknown").replace(".", "") + "-"
         model_name = self._summary.get("ModelName", "unknown")
-        seed = self._parameters.get("Seed", 0)
+        seed = self.get_parameters().get("Seed", 0)
         return f"{version}{paramstr}{model_name}-{seed}.log"

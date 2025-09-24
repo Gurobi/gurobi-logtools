@@ -1,9 +1,6 @@
 
 Gurobi 9.5.0 (mac64[arm], gurobi_cl) logging started Tue Jan 25 17:11:14 2022
 
-Set parameter TimeLimit to value 900
-Set parameter Method to value 2
-Set parameter LogFile to value "mip.log"
 Using license file /Users/x/gurobi.lic
 
 Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[arm])
@@ -14,6 +11,12 @@ Read MPS format model from file momentum3.mps.gz
 Reading time = 0.17 seconds
 momentum3.mps: 56822 rows, 13532 columns, 588073 nonzeros
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  900
+Method  2
+LogFile "mip.log"
+
 Optimize a model with 56822 rows, 13532 columns and 588073 nonzeros
 Model fingerprint: 0xcf3efdd8
 Variable types: 6933 continuous, 6599 integer (0 binary)

@@ -37,12 +37,15 @@ class ParsedData:
         progress = []
         for logfile, lognumber, parser in self.parsers:
             log = parser.get_progress(section)
-            progress.append(
-                pd.DataFrame(log).assign(LogFilePath=logfile, LogNumber=lognumber),
-            )
+            if log:
+                progress.append(
+                    pd.DataFrame(log).assign(LogFilePath=logfile, LogNumber=lognumber),
+                )
+        if not progress:
+            return pd.DataFrame()
 
         return pd.merge(
-            left=pd.concat(progress),
+            left=pd.concat([df.dropna(axis=1, how="all") for df in progress]),
             right=self.common_log_data(),
             how="left",
             on=["LogFilePath", "LogNumber"],
