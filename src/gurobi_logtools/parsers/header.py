@@ -69,7 +69,7 @@ class HeaderParser(Parser):
             r"(?P<ModelName>.*): (?P<Rows>\d+) rows, (?P<Columns>\d+) columns, (?P<Nonzeros>\d+) nonzeros",
         ),
         re.compile(
-            rf"Loaded user MIP start with objective (?P<MIPStartObj>{float_pattern})",
+            rf"Loaded user MIP start with objective (?P<MIPStartObjVal>{float_pattern})",
         ),
     ]
 

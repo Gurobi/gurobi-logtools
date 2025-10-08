@@ -106,18 +106,18 @@ Time Limit reached
 
 def test_pretree_progress(test_data_parser):
     expected = [
-        {"Incumbent": 152294.0, "MultiObj": 1},
-        {"Incumbent": 151751.0, "MultiObj": 1},
-        {"Incumbent": 10802140.0, "MultiObj": 2},
+        {"Incumbent": 152294.0, "ObjNPass": 1},
+        {"Incumbent": 151751.0, "ObjNPass": 1},
+        {"Incumbent": 10802140.0, "ObjNPass": 2},
     ]
     assert test_data_parser.get_objn_progress("pretreesols") == expected
 
 
 def test_norel_progress(test_data_parser):
     expected = [
-        {"Time": 1, "BestBd": 16002.5, "Incumbent": 98039.0, "MultiObj": 1},
-        {"Time": 2, "BestBd": 16173.9, "Incumbent": 17957.0, "MultiObj": 1},
-        {"Time": 1, "BestBd": 3012119.8, "Incumbent": 10353540.0, "MultiObj": 2},
+        {"Time": 1, "BestBd": 16002.5, "Incumbent": 98039.0, "ObjNPass": 1},
+        {"Time": 2, "BestBd": 16173.9, "Incumbent": 17957.0, "ObjNPass": 1},
+        {"Time": 1, "BestBd": 3012119.8, "Incumbent": 10353540.0, "ObjNPass": 2},
     ]
     assert test_data_parser.get_objn_progress("norel") == expected
 
@@ -135,7 +135,7 @@ def test_nodelog_progress(test_data_parser):
             "Gap": 0.0391,
             "ItPerNode": None,
             "Time": 2,
-            "MultiObj": 1,
+            "ObjNPass": 1,
         },
         {
             "CurrentNode": 0,
@@ -148,7 +148,7 @@ def test_nodelog_progress(test_data_parser):
             "Gap": 0.0007000000000000001,
             "ItPerNode": None,
             "Time": 2,
-            "MultiObj": 1,
+            "ObjNPass": 1,
         },
         {
             "CurrentNode": 0,
@@ -160,7 +160,7 @@ def test_nodelog_progress(test_data_parser):
             "Gap": 0.0,
             "ItPerNode": None,
             "Time": 2,
-            "MultiObj": 1,
+            "ObjNPass": 1,
         },
         {
             "Incumbent": 16831.99971851,
@@ -168,7 +168,7 @@ def test_nodelog_progress(test_data_parser):
             "Gap": 0.0,
             "CurrentNode": 1,
             "Time": 2.54,
-            "MultiObj": 1,
+            "ObjNPass": 1,
         },
         {
             "CurrentNode": 0,
@@ -181,7 +181,7 @@ def test_nodelog_progress(test_data_parser):
             "Gap": 0.276,
             "ItPerNode": None,
             "Time": 4,
-            "MultiObj": 2,
+            "ObjNPass": 2,
         },
         {
             "NewSolution": "H",
@@ -192,7 +192,7 @@ def test_nodelog_progress(test_data_parser):
             "Gap": 0.222,
             "ItPerNode": None,
             "Time": 5,
-            "MultiObj": 2,
+            "ObjNPass": 2,
         },
         {
             "NewSolution": "H",
@@ -203,7 +203,7 @@ def test_nodelog_progress(test_data_parser):
             "Gap": 0.18100000000000002,
             "ItPerNode": 129,
             "Time": 6,
-            "MultiObj": 2,
+            "ObjNPass": 2,
         },
         {
             "NewSolution": "H",
@@ -214,7 +214,7 @@ def test_nodelog_progress(test_data_parser):
             "Gap": 0.0507,
             "ItPerNode": 53.8,
             "Time": 9,
-            "MultiObj": 2,
+            "ObjNPass": 2,
         },
         {
             "Incumbent": 5989536.0,
@@ -222,7 +222,7 @@ def test_nodelog_progress(test_data_parser):
             "Gap": 0.049764,
             "CurrentNode": 1845,
             "Time": 10.0,
-            "MultiObj": 2,
+            "ObjNPass": 2,
         },
     ]
 
@@ -232,7 +232,7 @@ def test_nodelog_progress(test_data_parser):
 def test_summary(test_data_parser):
     expected = [
         {
-            "MultiObj": 1,
+            "ObjNPass": 1,
             "ChangedParams": {},
             "PresolveTime": 0.04,
             "PresolvedNumConstrs": 4149,
@@ -263,8 +263,8 @@ def test_summary(test_data_parser):
             "Status": "OPTIMAL",
         },
         {
-            "MultiObj": 2,
-            "MIPStartObj": 517390000.0,
+            "ObjNPass": 2,
+            "MIPStartObjVal": 517390000.0,
             "ChangedParams": {},
             "PresolveTime": 0.04,
             "PresolvedNumConstrs": 8134,
