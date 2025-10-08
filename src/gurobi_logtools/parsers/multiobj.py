@@ -20,9 +20,9 @@ class ObjNLogParser(SingleLogBase):
 
     def get_progress(self, section):
         progress = super().get_progress(section).copy()
-        objn = self.header_parser._summary.get("MultiObj", 0)
+        objn = self.header_parser._summary.get("ObjNPass", 0)
         for update in progress:
-            update["MultiObj"] = objn
+            update["ObjNPass"] = objn
         return progress
 
 
@@ -46,7 +46,7 @@ class InitialPresolveParser(PresolveParser):
 
 class MultiObjParser(Parser):
     start_pattern = re.compile(
-        r"Multi-objectives: starting optimization with (?P<MultiObjCount>\d+) objective.*$",
+        r"Multi-objectives: starting optimization with (?P<NumObjPasses>\d+) objective.*$",
     )
 
     termination_pattern = re.compile(

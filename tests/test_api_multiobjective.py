@@ -27,7 +27,7 @@ def _get_summary_values(column):
 
 
 def test_numbobj():
-    np.testing.assert_array_equal(_get_summary_values("MultiObjCount"), [4, 2])
+    np.testing.assert_array_equal(_get_summary_values("NumObjPasses"), [4, 2])
 
 
 def test_runtime():
@@ -64,7 +64,7 @@ def test_1201_mobj1_multiobjsummary_row1(_1201_mobj1_multiobjsummary):
     values = _1201_mobj1_multiobjsummary.iloc[0]
     expected = pd.Series(
         {
-            "MultiObj": 1,
+            "ObjNPass": 1,
             "ChangedParams": {},
             "PreTreeSolutions": 1,
             "NodeCount": 0,
@@ -94,7 +94,7 @@ def test_1201_mobj1_multiobjsummary_row2(_1201_mobj1_multiobjsummary):
     values = _1201_mobj1_multiobjsummary.iloc[1]
     expected = pd.Series(
         {
-            "MultiObj": 2,
+            "ObjNPass": 2,
             "ChangedParams": {},
             "PreTreeSolutions": 0,
             "NodeCount": 0,
@@ -124,7 +124,7 @@ def test_1201_mobj1_multiobjsummary_row3(_1201_mobj1_multiobjsummary):
     values = _1201_mobj1_multiobjsummary.iloc[2]
     expected = pd.Series(
         {
-            "MultiObj": 3,
+            "ObjNPass": 3,
             "ChangedParams": {},
             "PreTreeSolutions": 0,
             "NodeCount": 0,
@@ -154,7 +154,7 @@ def test_1203_mobj2_multiobjsummary_row1(_1203_mobj2_multiobjsummary):
     values = _1203_mobj2_multiobjsummary.iloc[0]
     expected = pd.Series(
         {
-            "MultiObj": 1,
+            "ObjNPass": 1,
             "ChangedParams": {},
             "PresolveTime": 1.1,
             "PresolvedNumConstrs": 323,
@@ -201,7 +201,7 @@ def test_1203_mobj2_multiobjsummary_row2(_1203_mobj2_multiobjsummary):
     values = _1203_mobj2_multiobjsummary.iloc[1]
     expected = pd.Series(
         {
-            "MultiObj": 2,
+            "ObjNPass": 2,
             "ChangedParams": {},
             "PresolveTime": 0.76,
             "PresolvedNumConstrs": 27617,

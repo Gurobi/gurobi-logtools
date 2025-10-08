@@ -56,7 +56,7 @@ class HeaderParser(Parser):
         re.compile(r"Compute Server job ID: (?P<JobID>.*)$"),
         re.compile(r"Gurobi Optimizer version (?P<Version>\d{1,2}\.[^\s]+)"),
         re.compile(r"Solving model (?P<ModelName>.*)$"),
-        re.compile(r"Multi-objectives: optimize objective (?P<MultiObj>\d+) .*"),
+        re.compile(r"Multi-objectives: optimize objective (?P<ObjNPass>\d+) .*"),
     ]
 
     header_other_patterns = [
