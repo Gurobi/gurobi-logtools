@@ -1,5 +1,6 @@
 import re
-from warnings import warn
+
+import warnings
 
 from gurobi_logtools.constants import StrEnum
 
@@ -15,6 +16,10 @@ class Warnings:
         re.compile(
             r"Version .* of attribute file unsupported$",
         ),
+        re.compile(r"Error 10003: Unable to .*$"),
+        re.compile(r"Unable to open file .*$"),
+        re.compile(r"Unrecognized SECTION .*$"),
+        re.compile(r"Expected format .*$"),
     ]
 
     def __init__(self, logfile: str, action: WarningAction = WarningAction.WARN):
@@ -23,7 +28,7 @@ class Warnings:
 
     def handle_warning(self, line):
         if self.action == WarningAction.WARN:
-            warn(f"\n    {self.logfile}:\n        {line}", RuntimeWarning)
+            warnings.warn(f"{line}", RuntimeWarning)
         elif self.action == WarningAction.RAISE:
             raise RuntimeError(f"{self.logfile}:\n    {line}")
 
