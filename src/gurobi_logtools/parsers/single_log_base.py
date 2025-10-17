@@ -18,6 +18,7 @@ class SingleLogBase(Parser):
     """
 
     _HeaderParser = HeaderParser
+    _PresolveParser = PresolveParser
     _MultiObjParser: Type = DummyParser
     _NoRelParser = NoRelParser
     _NodeLogParser = NodeLogParser
@@ -30,7 +31,7 @@ class SingleLogBase(Parser):
 
         # Parsers in sequence
         self.header_parser = self._HeaderParser()
-        self.presolve_parser = PresolveParser(self.pretree_solution_parser)
+        self.presolve_parser = self._PresolveParser(self.pretree_solution_parser)
         self.multiobj_parser = self._MultiObjParser()
         self.norel_parser = self._NoRelParser()
         self.continuous_parser = ContinuousParser(self.pretree_solution_parser)

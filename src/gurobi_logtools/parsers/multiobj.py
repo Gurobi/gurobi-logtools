@@ -45,6 +45,9 @@ class InitialPresolveParser(PresolveParser):
 
 
 class MultiObjParser(Parser):
+    _InitialPresolveParser = InitialPresolveParser
+    _ObjNLogParser = ObjNLogParser
+
     start_pattern = re.compile(
         r"Multi-objectives: starting optimization with (?P<NumObjPasses>\d+) objective.*$",
     )
@@ -55,18 +58,18 @@ class MultiObjParser(Parser):
 
     def __init__(self):
         # Parsers in sequence
-        self.initial_presolve_parser = InitialPresolveParser()
+        self.initial_presolve_parser = self._InitialPresolveParser()
 
         # State
         self._started = False
         self._summary = {}
         self.parser: Parser = self.initial_presolve_parser
-        self.subsequent: ObjNLogParser = ObjNLogParser()
+        self.subsequent: ObjNLogParser = self._ObjNLogParser()
         self.objn_parsers = []
 
     def parse(self, line: str) -> ParseResult:
         if not self._started:
-            match = MultiObjParser.start_pattern.match(line)
+            match = self.start_pattern.match(line)
             if match:
                 # The start line encodes information that should be stored
                 self._started = True
@@ -75,7 +78,7 @@ class MultiObjParser(Parser):
                 return ParseResult(parse_result)
             return ParseResult(matched=False)
 
-        match = MultiObjParser.termination_pattern.match(line)
+        match = self.termination_pattern.match(line)
         if match:
             parse_result = typeconvert_groupdict(match)
             self._summary.update(parse_result)
@@ -88,7 +91,7 @@ class MultiObjParser(Parser):
                 # matched a header line.
                 self.objn_parsers.append(self.subsequent)
                 self.parser = self.subsequent
-                self.subsequent = ObjNLogParser()
+                self.subsequent = self._ObjNLogParser()
 
         return parse_result
 
