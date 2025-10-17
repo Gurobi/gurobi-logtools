@@ -29,7 +29,9 @@ from gurobi_logtools.parsers.single_log import SingleLogParser
 from gurobi_logtools.parsers.warnings import Warnings, WarningAction
 
 
-class FullLogParseResult:
+class ParsedData:
+    _SingleLogParser = SingleLogParser
+
     def __init__(self, write_to_dir):
         self.write_to_dir = write_to_dir
         self.parsers = []
@@ -136,7 +138,7 @@ class FullLogParseResult:
         )
         return summary
 
-    def parse(self, logfile: str, warnings_action: str) -> None:
+    def parse_single_file(self, logfile: str, warnings_action: str) -> None:
         """Parse a single file. The log file may contain multiple run logs.
 
         Parameters
@@ -147,7 +149,9 @@ class FullLogParseResult:
             Determines the action to take if certain warnings are found in the log.  The "warn" and "raise""
             options will issue a RuntimeWarning and RuntimeError respectively.
         """
-        new_parser = functools.partial(SingleLogParser, write_to_dir=self.write_to_dir)
+        new_parser = functools.partial(
+            self._SingleLogParser, write_to_dir=self.write_to_dir
+        )
 
         parser = new_parser()
         subsequent = new_parser()
@@ -173,10 +177,43 @@ class FullLogParseResult:
 
         assert all(parser.closed for _, _, parser in self.parsers)
 
+    @classmethod
+    def parse(
+        cls, patterns: Union[str, List[str]], write_to_dir=None, warnings_action="warn"
+    ) -> "ParsedData":
+        if write_to_dir:
+            os.makedirs(write_to_dir, exist_ok=True)
+        result = cls(write_to_dir=write_to_dir)
+        if type(patterns) is str:
+            patterns = [patterns]
+        logfiles = sorted(
+            set(itertools.chain(*(glob.glob(pattern) for pattern in patterns))),
+        )
+        if not logfiles:
+            raise FileNotFoundError(f"No logfiles found in patterns: {patterns}")
+        for logfile in logfiles:
+            result.parse_single_file(logfile, warnings_action)
+        return result
+
+    @classmethod
+    def get_dataframe(cls, logfiles: List[str], timelines=False, prettyparams=False):
+        result = cls.parse(logfiles)
+        summary = result.summary(prettyparams=prettyparams)
+
+        if not timelines:
+            return summary
+
+        return summary, dict(
+            norel=result.progress("norel"),
+            rootlp=result.progress("rootlp"),
+            nodelog=result.progress("nodelog"),
+            pretreesols=result.progress("pretreesols"),
+        )
+
 
 def parse(
     patterns: Union[str, List[str]], write_to_dir=None, warnings_action="warn"
-) -> FullLogParseResult:
+) -> ParsedData:
     """Main entry point function.
 
     Args:
@@ -187,19 +224,7 @@ def parse(
             Determines the action to take if certain warnings are found in the log.  The "warn" and "raise""
             options will issue a RuntimeWarning and RuntimeError respectively.
     """
-    if write_to_dir:
-        os.makedirs(write_to_dir, exist_ok=True)
-    result = FullLogParseResult(write_to_dir=write_to_dir)
-    if type(patterns) is str:
-        patterns = [patterns]
-    logfiles = sorted(
-        set(itertools.chain(*(glob.glob(pattern) for pattern in patterns))),
-    )
-    if not logfiles:
-        raise FileNotFoundError(f"No logfiles found in patterns: {patterns}")
-    for logfile in logfiles:
-        result.parse(logfile, warnings_action)
-    return result
+    return ParsedData.parse(patterns, write_to_dir, warnings_action)
 
 
 def get_dataframe(logfiles: List[str], timelines=False, prettyparams=False):
@@ -216,15 +241,6 @@ def get_dataframe(logfiles: List[str], timelines=False, prettyparams=False):
             categorical labels.
 
     """
-    result = parse(logfiles)
-    summary = result.summary(prettyparams=prettyparams)
-
-    if not timelines:
-        return summary
-
-    return summary, dict(
-        norel=result.progress("norel"),
-        rootlp=result.progress("rootlp"),
-        nodelog=result.progress("nodelog"),
-        pretreesols=result.progress("pretreesols"),
+    return ParsedData.get_dataframe(
+        logfiles, timelines=timelines, prettyparams=prettyparams
     )
