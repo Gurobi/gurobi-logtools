@@ -29,7 +29,7 @@ from gurobi_logtools.parsers.single_log import SingleLogParser
 from gurobi_logtools.parsers.warnings import Warnings, WarningAction
 
 
-class FullLogParseResult:
+class ParsedData:
     _SingleLogParser = SingleLogParser
 
     def __init__(self, write_to_dir):
@@ -180,7 +180,7 @@ class FullLogParseResult:
     @classmethod
     def parse(
         cls, patterns: Union[str, List[str]], write_to_dir=None, warnings_action="warn"
-    ) -> "FullLogParseResult":
+    ) -> "ParsedData":
         if write_to_dir:
             os.makedirs(write_to_dir, exist_ok=True)
         result = cls(write_to_dir=write_to_dir)
@@ -213,7 +213,7 @@ class FullLogParseResult:
 
 def parse(
     patterns: Union[str, List[str]], write_to_dir=None, warnings_action="warn"
-) -> FullLogParseResult:
+) -> ParsedData:
     """Main entry point function.
 
     Args:
@@ -224,7 +224,7 @@ def parse(
             Determines the action to take if certain warnings are found in the log.  The "warn" and "raise""
             options will issue a RuntimeWarning and RuntimeError respectively.
     """
-    return FullLogParseResult.parse(patterns, write_to_dir, warnings_action)
+    return ParsedData.parse(patterns, write_to_dir, warnings_action)
 
 
 def get_dataframe(logfiles: List[str], timelines=False, prettyparams=False):
@@ -241,6 +241,6 @@ def get_dataframe(logfiles: List[str], timelines=False, prettyparams=False):
             categorical labels.
 
     """
-    return FullLogParseResult.get_dataframe(
+    return ParsedData.get_dataframe(
         logfiles, timelines=timelines, prettyparams=prettyparams
     )
