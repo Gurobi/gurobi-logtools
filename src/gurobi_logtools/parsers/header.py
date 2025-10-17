@@ -2,7 +2,6 @@ import re
 from typing import Any, Dict
 
 from gurobi_logtools.parsers.util import (
-    float_pattern,
     ParseResult,
     Parser,
     convert_data_types,
@@ -67,9 +66,6 @@ class HeaderParser(Parser):
         ),
         re.compile(
             r"(?P<ModelName>.*): (?P<Rows>\d+) rows, (?P<Columns>\d+) columns, (?P<Nonzeros>\d+) nonzeros",
-        ),
-        re.compile(
-            rf"Loaded user MIP start with objective (?P<MIPStartObjVal>{float_pattern})",
         ),
     ]
 

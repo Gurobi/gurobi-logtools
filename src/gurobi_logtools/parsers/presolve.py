@@ -4,6 +4,7 @@ from typing import Any, Dict
 
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.util import (
+    float_pattern,
     Parser,
     model_type,
     typeconvert_groupdict,
@@ -92,6 +93,10 @@ class PresolveParser(Parser):
         ),
     ]
 
+    mipstart_pattern = re.compile(
+        rf"Loaded user MIP start with objective (?P<MIPStartObjVal>{float_pattern})"
+    )
+
     presolve_intermediate_patterns = [
         re.compile(
             r"Presolved: (?P<PresolvedNumConstrs>\d+) (R|r)ows, (?P<PresolvedNumVars>\d+) (C|c)olumns, (?P<PresolvedNumNZs>\d+) (N|n)on(Z|z)ero(e?)s",
@@ -147,6 +152,7 @@ class PresolveParser(Parser):
         for pattern in [
             self.presolve_start_pattern,
             *PresolveParser.model_stat_patterns,
+            PresolveParser.mipstart_pattern,
         ]:
             match = pattern.match(line)
             if match:
