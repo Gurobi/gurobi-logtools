@@ -53,7 +53,7 @@ class MultiObjParser(Parser):
             r"Multi-objectives: starting optimization with (?P<NumObjPasses>\d+) objectives...$",
         ),
         re.compile(
-            r"Multi-objectives: starting optimization with \d+ objectives \((?P<NumObjPasses>\d+) combined\)...$"
+            r"Multi-objectives: starting optimization with (?P<NumObj>\d+) objectives \((?P<NumObjPasses>\d+) combined\)...$"
         ),
     ]
 
@@ -84,6 +84,8 @@ class MultiObjParser(Parser):
                     # The start line encodes information that should be stored
                     self._started = True
                     parse_result = typeconvert_groupdict(match)
+                    if "NumObj" not in parse_result:  # pure hierarchical model
+                        parse_result["NumObj"] = parse_result["NumObjPasses"]
                     self._summary.update(parse_result)
                     return ParseResult(parse_result)
             return ParseResult(matched=False)

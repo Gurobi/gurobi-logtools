@@ -26,8 +26,12 @@ def _get_summary_values(column):
     return summary.set_index("LogFilePath")[column][logpaths].values
 
 
-def test_numbobj():
+def test_numbobjpasses():
     np.testing.assert_array_equal(_get_summary_values("NumObjPasses"), [3, 2])
+
+
+def test_numbobj():
+    np.testing.assert_array_equal(_get_summary_values("NumObj"), [4, 2])
 
 
 def test_runtime():
