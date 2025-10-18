@@ -27,7 +27,7 @@ def _get_summary_values(column):
 
 
 def test_numbobj():
-    np.testing.assert_array_equal(_get_summary_values("NumObjPasses"), [4, 2])
+    np.testing.assert_array_equal(_get_summary_values("NumObjPasses"), [3, 2])
 
 
 def test_runtime():

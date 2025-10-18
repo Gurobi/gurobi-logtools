@@ -48,9 +48,14 @@ class MultiObjParser(Parser):
     _InitialPresolveParser = InitialPresolveParser
     _ObjNLogParser = ObjNLogParser
 
-    start_pattern = re.compile(
-        r"Multi-objectives: starting optimization with (?P<NumObjPasses>\d+) objective.*$",
-    )
+    start_patterns = [
+        re.compile(
+            r"Multi-objectives: starting optimization with (?P<NumObjPasses>\d+) objectives...$",
+        ),
+        re.compile(
+            r"Multi-objectives: starting optimization with \d+ objectives \((?P<NumObjPasses>\d+) combined\)...$"
+        ),
+    ]
 
     termination_pattern = re.compile(
         rf"Multi-objectives: (solved|stopped) in (?P<Runtime>{float_pattern}) seconds \((?P<Work>{float_pattern}) work units\), solution count (?P<SolCount>\d+)",
@@ -73,13 +78,14 @@ class MultiObjParser(Parser):
             return ParseResult(matched=False)
 
         if not self._started:
-            match = self.start_pattern.match(line)
-            if match:
-                # The start line encodes information that should be stored
-                self._started = True
-                parse_result = typeconvert_groupdict(match)
-                self._summary.update(parse_result)
-                return ParseResult(parse_result)
+            for pattern in self.start_patterns:
+                match = pattern.match(line)
+                if match:
+                    # The start line encodes information that should be stored
+                    self._started = True
+                    parse_result = typeconvert_groupdict(match)
+                    self._summary.update(parse_result)
+                    return ParseResult(parse_result)
             return ParseResult(matched=False)
 
         match = self.termination_pattern.match(line)
