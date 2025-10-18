@@ -53,7 +53,7 @@ class MultiObjParser(Parser):
     )
 
     termination_pattern = re.compile(
-        rf"Multi-objectives: solved in (?P<Runtime>{float_pattern}) seconds \((?P<Work>{float_pattern}) work units\), solution count (?P<SolCount>\d+)",
+        rf"Multi-objectives: (solved|stopped) in (?P<Runtime>{float_pattern}) seconds \((?P<Work>{float_pattern}) work units\), solution count (?P<SolCount>\d+)",
     )
 
     def __init__(self):
@@ -62,12 +62,16 @@ class MultiObjParser(Parser):
 
         # State
         self._started = False
+        self._terminated = False
         self._summary = {}
         self.parser: Parser = self.initial_presolve_parser
         self.subsequent: ObjNLogParser = self._ObjNLogParser()
         self.objn_parsers = []
 
     def parse(self, line: str) -> ParseResult:
+        if self._terminated:
+            return ParseResult(matched=False)
+
         if not self._started:
             match = self.start_pattern.match(line)
             if match:
@@ -82,6 +86,7 @@ class MultiObjParser(Parser):
         if match:
             parse_result = typeconvert_groupdict(match)
             self._summary.update(parse_result)
+            self._terminated = True
             return ParseResult(parse_result)
 
         if not (parse_result := self.parser.parse(line)):
