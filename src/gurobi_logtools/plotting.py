@@ -440,7 +440,7 @@ def _make_plot_function(df: pd.DataFrame, **kwargs):
 
         if color_categorical:
             # convert color column to a categorical type
-            data[color] = pd.Categorical(
+            data.loc[:, color] = pd.Categorical(
                 data[color],
                 categories=sorted(data[color].unique().tolist()),
                 ordered=True,
