@@ -106,6 +106,11 @@ class MultiObjParser(Parser):
                 self.parser = self.subsequent
                 self.subsequent = self._ObjNLogParser()
 
+        if self._started and not self._terminated:
+            # We haven't matched the line, but if we return matched=False then
+            # the other parsers may match it
+            return ParseResult(matched=True)
+
         return parse_result
 
     def get_summary(self) -> Dict:
