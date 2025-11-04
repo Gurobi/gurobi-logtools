@@ -59,7 +59,7 @@ class SingleLogBase(Parser):
             file_name = self.header_parser._make_file_name()
             with self.write_to_dir.joinpath(file_name).open("w") as outfile:
                 if self.lines:
-                    outfile.writelines(self.lines)
+                    outfile.writelines(f"{line}\n" for line in self.lines)
 
         self.write_to_dir = None
         self.lines = None

@@ -149,7 +149,7 @@ class ParsedData:
         warnings = Warnings(logfile, action=WarningAction(warnings_action))
         lognumber = 1
         with open(logfile) as infile:
-            lines = iter(infile)
+            lines = (line.rstrip() for line in iter(infile))
             for line in lines:
                 warnings.check(line)
                 if not parser.parse(line):
