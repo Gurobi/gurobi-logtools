@@ -11,9 +11,14 @@ from gurobi_logtools.parsers.util import (
 
 class CrossoverParser(Parser):
     # The pattern indicating the initialization of the parser
-    crossover_start_pattern = re.compile(
-        r"Crossover log...",
-    )
+    crossover_start_patterns = [
+        re.compile(
+            r"Crossover log...",
+        ),
+        re.compile(
+            r"Root crossover log...",
+        ),
+    ]
 
     # The pattern indicating the crossover progress
     crossover_progress_patterns = [
@@ -59,10 +64,11 @@ class CrossoverParser(Parser):
         """
 
         if not self._started:
-            match = CrossoverParser.crossover_start_pattern.match(line)
-            if match:
-                self._started = True
-                return ParseResult(matched=True)
+            for crossover_start_pattern in CrossoverParser.crossover_start_patterns:
+                start_match = crossover_start_pattern.match(line)
+                if start_match:
+                    self._started = True
+                    return ParseResult(matched=True)
         else:
             for (
                 crossover_progress_pattern
@@ -87,7 +93,10 @@ class CrossoverParser(Parser):
         ) in CrossoverParser.crossover_termination_patterns:
             crossover_termination_match = crossover_termination_pattern.match(line)
             if crossover_termination_match:
-                # In MIP logs, the crossover part is less detailed, consisting only of the termination line
+                # New addition in version 13
+                # In MIP logs, the crossover part is sometimes less detailed
+                # if the crossover step is finished without hitting any log points.
+                # In this case only the termination line may be printed!
                 self._started = True
                 parse_result = typeconvert_groupdict(crossover_termination_match)
                 self._summary.update(parse_result)

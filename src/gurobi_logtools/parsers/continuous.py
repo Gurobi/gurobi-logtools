@@ -141,9 +141,9 @@ class ContinuousParser(Parser):
 
     def get_progress(self) -> list:
         """Return the detailed progress in the continuous method."""
-        return (
-            self._barrier_parser.get_progress()
-            + self._pdhg_parser.get_progress()
-            + self._crossover_parser.get_progress()
-            + self._simplex_parser.get_progress()
-        )
+        return [
+            *self._barrier_parser.get_progress(),
+            *self._pdhg_parser.get_progress(),
+            *self._crossover_parser.get_progress(),
+            *self._simplex_parser.get_progress(),
+        ]
