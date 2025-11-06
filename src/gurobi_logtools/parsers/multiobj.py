@@ -18,6 +18,11 @@ class ObjNLogParser(SingleLogBase):
 
     _add_model_type = False
 
+    def get_summary(self):
+        summary = super().get_summary()
+        summary["CompletionTime"] = summary.pop("Runtime")
+        return summary
+
     def get_progress(self, section):
         progress = super().get_progress(section).copy()
         objn = self.header_parser._summary.get("ObjNPass", 0)

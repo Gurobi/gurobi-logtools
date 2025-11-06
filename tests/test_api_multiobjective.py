@@ -73,7 +73,7 @@ def test_1201_mobj1_multiobjsummary_row1(_1201_mobj1_multiobjsummary):
             "PreTreeSolutions": 1,
             "NodeCount": 0,
             "IterCount": 0,
-            "Runtime": 0.01,
+            "CompletionTime": 0.01,
             "Work": 0.0,
             "ObjVal": 10.0,
             "ObjBound": 10.0,
@@ -91,7 +91,9 @@ def test_1201_mobj1_multiobjsummary_row1(_1201_mobj1_multiobjsummary):
             "PresolvedNumNZs": np.nan,
         }
     )
-    pd.testing.assert_series_equal(values, expected, check_names=False)
+    pd.testing.assert_series_equal(
+        values.sort_index(), expected.sort_index(), check_names=False
+    )
 
 
 def test_1201_mobj1_multiobjsummary_row2(_1201_mobj1_multiobjsummary):
@@ -103,7 +105,7 @@ def test_1201_mobj1_multiobjsummary_row2(_1201_mobj1_multiobjsummary):
             "PreTreeSolutions": 0,
             "NodeCount": 0,
             "IterCount": 0,
-            "Runtime": 0.02,
+            "CompletionTime": 0.02,
             "Work": 0.0,
             "ObjVal": 10.5,
             "ObjBound": 10.5,
@@ -121,7 +123,9 @@ def test_1201_mobj1_multiobjsummary_row2(_1201_mobj1_multiobjsummary):
             "PresolvedNumNZs": 0.0,
         }
     )
-    pd.testing.assert_series_equal(values, expected, check_names=False)
+    pd.testing.assert_series_equal(
+        values.sort_index(), expected.sort_index(), check_names=False
+    )
 
 
 def test_1201_mobj1_multiobjsummary_row3(_1201_mobj1_multiobjsummary):
@@ -133,7 +137,7 @@ def test_1201_mobj1_multiobjsummary_row3(_1201_mobj1_multiobjsummary):
             "PreTreeSolutions": 0,
             "NodeCount": 0,
             "IterCount": 0,
-            "Runtime": 0.02,
+            "CompletionTime": 0.02,
             "Work": 0.0,
             "ObjVal": 7.0,
             "ObjBound": 7.0,
@@ -151,7 +155,9 @@ def test_1201_mobj1_multiobjsummary_row3(_1201_mobj1_multiobjsummary):
             "PresolvedNumNZs": 0.0,
         }
     )
-    pd.testing.assert_series_equal(values, expected, check_names=False)
+    pd.testing.assert_series_equal(
+        values.sort_index(), expected.sort_index(), check_names=False
+    )
 
 
 def test_1203_mobj2_multiobjsummary_row1(_1203_mobj2_multiobjsummary):
@@ -173,7 +179,7 @@ def test_1203_mobj2_multiobjsummary_row1(_1203_mobj2_multiobjsummary):
             "PreTreeSolutions": 0,
             "NodeCount": 1,
             "IterCount": 12,
-            "Runtime": 1.5,
+            "CompletionTime": 1.5,
             "Work": 3.3,
             "ObjVal": 0.0,
             "ObjBound": 0.0,
@@ -198,7 +204,9 @@ def test_1203_mobj2_multiobjsummary_row1(_1203_mobj2_multiobjsummary):
             "Cuts: Relax-and-lift": np.nan,
         }
     )
-    pd.testing.assert_series_equal(values, expected, check_names=False)
+    pd.testing.assert_series_equal(
+        values.sort_index(), expected.sort_index(), check_names=False
+    )
 
 
 def test_1203_mobj2_multiobjsummary_row2(_1203_mobj2_multiobjsummary):
@@ -220,7 +228,7 @@ def test_1203_mobj2_multiobjsummary_row2(_1203_mobj2_multiobjsummary):
             "PreTreeSolutions": 0,
             "NodeCount": 4829,
             "IterCount": 236448,
-            "Runtime": 35.65,
+            "CompletionTime": 35.65,
             "Work": 59.56,
             "ObjVal": 0.01015799677704,
             "ObjBound": 0.01015799677704,
@@ -245,4 +253,6 @@ def test_1203_mobj2_multiobjsummary_row2(_1203_mobj2_multiobjsummary):
             "Cuts: Relax-and-lift": 8.0,
         }
     )
-    pd.testing.assert_series_equal(values, expected, check_names=False)
+    pd.testing.assert_series_equal(
+        values.sort_index(), expected.sort_index(), check_names=False
+    )
