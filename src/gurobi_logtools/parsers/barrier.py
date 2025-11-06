@@ -22,11 +22,6 @@ class BarrierParser(Parser):
         r"\s*(?P<Iteration>\d+)(?P<Indicator>\s|\*)\s+(?P<PObj>[^\s]+)\s+(?P<DObj>[^\s]+)\s+(?P<PRes>[^\s]+)\s+(?P<DRes>[^\s]+)\s+(?P<Compl>[^\s]+)\s+(?P<Time>\d+)s",
     )
 
-    # The pattern indicating the crossover
-    barrier_crossover_pattern = re.compile(
-        r"\s*Push phase complete: Pinf (?P<PushPhasePInf>[^\s]+), Dinf (?P<PushPhaseDInf>[^\s]+)\s+(?P<PushPhaseEndTime>\d+)s",
-    )
-
     # The pattern indicating the termination of the barrier algorithm
     barrier_termination_patterns = [
         re.compile(
@@ -86,12 +81,6 @@ class BarrierParser(Parser):
                 parse_result = typeconvert_groupdict(barrier_termination_match)
                 self._summary.update(parse_result)
                 return ParseResult(parse_result)
-
-        crossover_match = BarrierParser.barrier_crossover_pattern.match(line)
-        if crossover_match:
-            parse_result = typeconvert_groupdict(crossover_match)
-            self._summary.update(parse_result)
-            return ParseResult(parse_result)
 
         return ParseResult(matched=False)
 

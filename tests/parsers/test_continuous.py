@@ -127,6 +127,99 @@ expected_progress_mip = [
 ]
 
 
+example_log_pdhg = """
+Start PDHG using 1 threads
+
+                       Objective                Residual
+     Iter       Primal          Dual         Primal    Dual     Compl    Time
+        0   0.00000000e+00 -5.22205640e+02  0.00e+00 0.00e+00  3.73e+01    0s
+     1228  -4.64753114e+02 -4.64753116e+02  1.29e-05 1.23e-07  1.55e-07    0s
+
+PDHG solved model in 1228 iterations and 0.00 seconds (0.00 work units)
+Optimal objective -4.64753114e+02
+
+Crossover log...
+
+       0 DPushes remaining with DInf 0.0000000e+00                 0s
+
+       1 PPushes remaining with PInf 0.0000000e+00                 0s
+       0 PPushes remaining with PInf 0.0000000e+00                 0s
+
+  Push phase complete: Pinf 0.0000000e+00, Dinf 0.0000000e+00      0s
+
+Crossover time: 0.00 seconds (0.00 work units)
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       4   -4.6475314e+02   0.000000e+00   0.000000e+00      0s
+
+Solved in 4 iterations and 0.00 seconds (0.00 work units)
+Optimal objective -4.647531429e+02
+"""
+expected_summary_pdhg = {
+    "Status": "OPTIMAL",
+    "IterCount": 4,
+    "ObjVal": -464.7531429,
+    "PdhgThreads": 1,
+    "PdhgIterCount": 1228,
+    "Runtime": 0.0,
+    "Work": 0.0,
+    "PushPhasePInf": 0.0,
+    "PushPhaseDInf": 0.0,
+    "PushPhaseEndTime": 0,
+    "CrossoverRuntime": 0.0,
+    "CrossoverWork": 0.0,
+}
+expected_progress_pdhg = [
+    {
+        "Type": "pdhg",
+        "Iteration": 0,
+        "Indicator": " ",
+        "PObj": 0.0,
+        "DObj": -522.205640,
+        "PRes": 0.0,
+        "DRes": 0.0,
+        "Compl": 37.3,
+        "Time": 0,
+    },
+    {
+        "Type": "pdhg",
+        "Iteration": 1228,
+        "Indicator": " ",
+        "PObj": -464.753114,
+        "DObj": -464.753116,
+        "PRes": 1.29e-05,
+        "DRes": 1.23e-07,
+        "Compl": 1.55e-07,
+        "Time": 0,
+    },
+    {
+        "Type": "crossover",
+        "RemainingDPushes": 0,
+        "PushPhaseDInf": 0.0,
+        "Time": 0,
+    },
+    {
+        "Type": "crossover",
+        "RemainingPPushes": 1,
+        "PushPhasePInf": 0.0,
+        "Time": 0,
+    },
+    {
+        "Type": "crossover",
+        "RemainingPPushes": 0,
+        "PushPhasePInf": 0.0,
+        "Time": 0,
+    },
+    {
+        "Type": "simplex",
+        "Iteration": 4,
+        "Objective": -464.75314,
+        "PInf": 0.0,
+        "DInf": 0.0,
+        "Time": 0,
+    },
+]
+
+
 class TestContinuous(TestCase):
     def test_last_progress_entry_barrier_with_simplex(self):
         continuous_parser = ContinuousParser(PreTreeSolutionParser())
@@ -142,16 +235,19 @@ class TestContinuous(TestCase):
                 example_log_concurrent,
                 example_log_relaxation,
                 example_log_mip,
+                example_log_pdhg,
             ],
             [
                 expected_summary_concurrent,
                 expected_summary_relaxation,
                 expected_summary_mip,
+                expected_summary_pdhg,
             ],
             [
                 expected_progress_concurrent,
                 expected_progress_relaxation,
                 expected_progress_mip,
+                expected_progress_pdhg,
             ],
         ):
             with self.subTest(example_log=example_log):

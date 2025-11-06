@@ -1,15 +1,18 @@
 from unittest import TestCase, main
 
-from gurobi_logtools.parsers.barrier import BarrierParser
+from gurobi_logtools.parsers.pdhg import PdhgParser
 from gurobi_logtools.parsers.util import parse_block
 
-example_log_barrier = """
-Iter       Primal          Dual         Primal    Dual     Compl     Time
-    0   4.56435085e+07  1.53061018e+04  1.69e+05 8.58e+00  1.59e+03     2s
-    1   3.76722276e+07 -5.41297282e+05  8.07e+04 9.12e+00  8.17e+02     2s
-   17   2.17403572e+02  2.17403571e+02  3.93e-14 7.11e-15  7.71e-13     5s
+example_log_pdhg = """
+Start PDHG using 1 threads
 
-Barrier solved model in 17 iterations and 4.83 seconds (6.45 work units)
+                       Objective                Residual
+     Iter       Primal          Dual         Primal    Dual     Compl     Time
+        0   4.56435085e+07  1.53061018e+04  1.69e+05 8.58e+00  1.59e+03     2s
+        1   3.76722276e+07 -5.41297282e+05  8.07e+04 9.12e+00  8.17e+02     2s
+       17   2.17403572e+02  2.17403571e+02  3.93e-14 7.11e-15  7.71e-13     5s
+
+PDHG solved model in 17 iterations and 4.83 seconds (6.45 work units)
 Optimal objective 2.17403572e+02
 
 Crossover log...
@@ -22,14 +25,15 @@ Crossover log...
 
    Push phase complete: Pinf 0.0000000e+00, Dinf 1.8540725e-14      9s
 """
-expected_summary_barrier = {
-    "BarIterCount": 17,
+expected_summary_pdhg = {
+    "PdhgThreads": 1,
+    "PdhgIterCount": 17,
     "Runtime": 4.83,
     "Work": 6.45,
 }
-expected_progress_barrier = [
+expected_progress_pdhg = [
     {
-        "Type": "barrier",
+        "Type": "pdhg",
         "Iteration": 0,
         "Indicator": " ",
         "PObj": 45643508.5,
@@ -40,7 +44,7 @@ expected_progress_barrier = [
         "Time": 2,
     },
     {
-        "Type": "barrier",
+        "Type": "pdhg",
         "Iteration": 1,
         "Indicator": " ",
         "PObj": 37672227.6,
@@ -51,7 +55,7 @@ expected_progress_barrier = [
         "Time": 2,
     },
     {
-        "Type": "barrier",
+        "Type": "pdhg",
         "Iteration": 17,
         "Indicator": " ",
         "PObj": 217.403572,
@@ -64,14 +68,14 @@ expected_progress_barrier = [
 ]
 
 
-class TestBarrier(TestCase):
+class TestPdhg(TestCase):
     def setUp(self):
-        self.barrier_parser = BarrierParser()
+        self.pdhg_parser = PdhgParser()
 
     def test_get_summary_progress(self):
-        parse_block(self.barrier_parser, example_log_barrier)
-        self.assertEqual(self.barrier_parser.get_summary(), expected_summary_barrier)
-        self.assertEqual(self.barrier_parser.get_progress(), expected_progress_barrier)
+        parse_block(self.pdhg_parser, example_log_pdhg)
+        self.assertEqual(self.pdhg_parser.get_summary(), expected_summary_pdhg)
+        self.assertEqual(self.pdhg_parser.get_progress(), expected_progress_pdhg)
 
 
 if __name__ == "__main__":

@@ -60,7 +60,7 @@ def test_lp_barrier():
     assert summary["ModelType"] == "LP"
 
     rootlp_progress = parser.continuous_parser.get_progress()
-    assert len(rootlp_progress) == 19
+    assert len(rootlp_progress) == 23
 
 
 def test_lp_simplex():

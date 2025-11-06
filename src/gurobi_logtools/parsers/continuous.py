@@ -2,6 +2,8 @@ import re
 from typing import Any, Dict, Union
 
 from gurobi_logtools.parsers.barrier import BarrierParser
+from gurobi_logtools.parsers.crossover import CrossoverParser
+from gurobi_logtools.parsers.pdhg import PdhgParser
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.simplex import SimplexParser
 from gurobi_logtools.parsers.util import ParseResult, Parser, typeconvert_groupdict
@@ -29,7 +31,9 @@ class ContinuousParser(Parser):
     def __init__(self, pretree_solution_parser: PreTreeSolutionParser):
         """Initialize the Continuous parser."""
         self._barrier_parser = BarrierParser()
+        self._pdhg_parser = PdhgParser()
         self._simplex_parser = SimplexParser()
+        self._crossover_parser = CrossoverParser()
 
         self._summary: Dict[str, Any] = {}
 
@@ -75,6 +79,9 @@ class ContinuousParser(Parser):
             if parse_result := self._barrier_parser.parse(line):
                 self._current_pattern = "barrier"
                 return parse_result
+            if parse_result := self._pdhg_parser.parse(line):
+                self._current_pattern = "pdhg"
+                return parse_result
             if parse_result := self._simplex_parser.parse(line):
                 self._current_pattern = "simplex"
                 return parse_result
@@ -92,7 +99,31 @@ class ContinuousParser(Parser):
                 line
             ) or self._simplex_parser.parse(line):
                 self._current_pattern = "simplex"
-            return ParseResult({"Init": "simplex"})
+                return ParseResult({"Init": "simplex"})
+            if self._crossover_parser.parse(line):
+                self._current_pattern = "crossover"
+
+        if self._current_pattern == "pdhg":
+            parse_result = self._pdhg_parser.parse(line)
+            # For now PDHG does not run concurrently with other methods so
+            # no interruptions have to be dealt with
+            if parse_result:
+                return parse_result
+            if self._crossover_parser.parse(line):
+                self._current_pattern = "crossover"
+
+        if self._current_pattern == "crossover":
+            parse_result = self._crossover_parser.parse(line)
+            if parse_result:
+                return parse_result
+
+            # If the crossover gets interrupted during the concurrent or there are
+            # extra simplex iterations, switch to simplex
+            if ContinuousParser.barrier_interruption_pattern.match(
+                line
+            ) or self._simplex_parser.parse(line):
+                self._current_pattern = "simplex"
+                return ParseResult({"Init": "simplex"})
 
         if self._current_pattern == "simplex":
             parse_result = self._simplex_parser.parse(line)
@@ -103,9 +134,16 @@ class ContinuousParser(Parser):
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""
         self._summary.update(self._barrier_parser.get_summary())
+        self._summary.update(self._pdhg_parser.get_summary())
+        self._summary.update(self._crossover_parser.get_summary())
         self._summary.update(self._simplex_parser.get_summary())
         return self._summary
 
     def get_progress(self) -> list:
         """Return the detailed progress in the continuous method."""
-        return self._barrier_parser.get_progress() + self._simplex_parser.get_progress()
+        return [
+            *self._barrier_parser.get_progress(),
+            *self._pdhg_parser.get_progress(),
+            *self._crossover_parser.get_progress(),
+            *self._simplex_parser.get_progress(),
+        ]

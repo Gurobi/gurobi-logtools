@@ -10,6 +10,8 @@
 - Added the `warnings_action` parameter to `gurobi_logtools.parse` (#GH88)
 - NumConVars, NumIntVars and NumBinVars are added to capture variable types in original model (#GH89)
 - Added parsing for parameters under "Non-default parameters" section in logs (#GH92)
+- Added parsing for PDHG (#GH60)
+- Added detailed parsing for crossover steps (#GH106)
 
 ## 4.0.1 - 2025-08-14
 ### Fixed
