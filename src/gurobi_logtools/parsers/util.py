@@ -1,7 +1,7 @@
 import datetime
 import re
 import copy
-from typing import Dict, Iterable, Optional, Protocol
+from typing import Dict, Iterable, List, Optional, Protocol
 
 float_pattern = r"[-+]?((\d*\.\d+)|(\d+\.?))([Ee][+-]?\d+)?"
 
@@ -83,3 +83,17 @@ def model_type(discrete_vars=0, quad_nonzeros=0, quad_constrs=0):
 
 class Parser(Protocol):
     def parse(self, line: str) -> ParseResult: ...
+
+
+class DummyParser(Parser):
+    def parse(self, line: str) -> ParseResult:
+        return ParseResult(matched=False)
+
+    def get_summary(self) -> Dict:
+        return {}
+
+    def get_objn_summaries(self) -> List[Dict]:
+        return []
+
+    def get_objn_progress(self, section) -> List[Dict]:
+        return []

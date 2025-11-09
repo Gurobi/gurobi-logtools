@@ -16,11 +16,15 @@ jobs:
           - macos-latest
           - windows-latest
         python-version:
-          - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
           - "3.13"
+          - "3.14"
+        exclude:
+          - os: windows-latest
+            python-version: '3.14'
+
     env:
       UV_PYTHON: ${{ matrix.python-version }}
     steps:
