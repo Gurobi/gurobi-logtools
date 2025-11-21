@@ -13,7 +13,7 @@
 - Added parsing for parameters under "Non-default parameters" section in logs (#GH92)
 - Added parsing for PDHG (#GH60)
 - Added detailed parsing for crossover steps (#GH106)
-- Dropped support for Python 3.9, added support for Python 3.14
+- Added support for Python 3.14
 
 ## 4.0.1 - 2025-08-14
 ### Fixed
