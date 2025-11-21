@@ -5,6 +5,7 @@
 
 ### Changed
 ### Removed
+- Dropped support for Python 3.9
 ### Added
 - Added support for parsing finer details in multi-objective logs (#GH36)
 - Added the `warnings_action` parameter to `gurobi_logtools.parse` (#GH88)
