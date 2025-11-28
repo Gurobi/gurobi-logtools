@@ -55,10 +55,10 @@ class MultiObjParser(Parser):
 
     start_patterns = [
         re.compile(
-            r"Multi-objectives: starting optimization with (?P<NumObjPasses>\d+) objectives...$",
+            r"Multi-objectives: starting optimization.*with (?P<NumObjPasses>\d+) objectives...$",
         ),
         re.compile(
-            r"Multi-objectives: starting optimization with (?P<NumObj>\d+) objectives \((?P<NumObjPasses>\d+) combined\)...$"
+            r"Multi-objectives: starting optimization.*with (?P<NumObj>\d+) objectives \((?P<NumObjPasses>\d+) combined\)...$"
         ),
     ]
 
