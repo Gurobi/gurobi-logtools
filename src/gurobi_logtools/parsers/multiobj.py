@@ -63,7 +63,7 @@ class MultiObjParser(Parser):
     ]
 
     termination_pattern = re.compile(
-        rf"Multi-objectives: (solved|stopped) in (?P<Runtime>{float_pattern}) seconds \((?P<Work>{float_pattern}) work units\), solution count (?P<SolCount>\d+)",
+        rf"Multi-objectives: (solved|stopped) in (?P<Runtime>{float_pattern}) seconds \((?P<Work>{float_pattern}) work units\)(, solution count (?P<SolCount>\d+))?",
     )
 
     def __init__(self):
