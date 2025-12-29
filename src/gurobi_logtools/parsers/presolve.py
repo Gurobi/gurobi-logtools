@@ -4,10 +4,12 @@ from typing import Any, Dict
 
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.util import (
+    float_pattern,
     Parser,
-    ParseResult,
     model_type,
     typeconvert_groupdict,
+    DummyParser,
+    ParseResult,
 )
 
 
@@ -91,6 +93,10 @@ class PresolveParser(Parser):
         ),
     ]
 
+    mipstart_pattern = re.compile(
+        rf"Loaded user MIP start with objective (?P<MIPStartObjVal>{float_pattern})"
+    )
+
     presolve_intermediate_patterns = [
         re.compile(
             r"Presolved: (?P<PresolvedNumConstrs>\d+) (R|r)ows, (?P<PresolvedNumVars>\d+) (C|c)olumns, (?P<PresolvedNumNZs>\d+) (N|n)on(Z|z)ero(e?)s",
@@ -110,7 +116,10 @@ class PresolveParser(Parser):
     # Special case: model solved by presolve
     presolve_all_removed = re.compile(r"Presolve: All rows and columns removed")
 
-    def __init__(self, pretree_solution_parser: PreTreeSolutionParser):
+    def __init__(
+        self,
+        pretree_solution_parser: PreTreeSolutionParser | DummyParser = DummyParser(),
+    ):
         """Initialize the Presolve parser.
 
         The PresolveParser extends beyond the lines associated with the presolved
@@ -120,8 +129,9 @@ class PresolveParser(Parser):
         self._summary: Dict[str, Any] = {}
         self._started = False
         self._post_presolve = False
-        self._original_variable_types_matched = False
-        self._pretree_solution_parser = pretree_solution_parser
+        self._pretree_solution_parser: PreTreeSolutionParser | DummyParser = (
+            pretree_solution_parser
+        )
         self._coefficient_range_parser = CoefficientRangeParser()
 
     def parse(self, line: str) -> ParseResult:
@@ -135,25 +145,20 @@ class PresolveParser(Parser):
             match any pattern.
 
         """
-        if not self._started:
-            match = PresolveParser.presolve_start_pattern.match(line)
-            if match:
-                # The start line encodes information that should be stored
-                self._started = True
-                parse_result = typeconvert_groupdict(match)
-                self._summary.update(parse_result)
-                return ParseResult(parse_result)
-            return ParseResult(matched=False)
 
         if parse_result := self._pretree_solution_parser.parse(line):
             return parse_result
 
-        for pattern in PresolveParser.model_stat_patterns:
+        for pattern in [
+            self.presolve_start_pattern,
+            *PresolveParser.model_stat_patterns,
+            PresolveParser.mipstart_pattern,
+        ]:
             match = pattern.match(line)
             if match:
-                parse_result = typeconvert_groupdict(match)
-                self._summary.update(parse_result)
-                return ParseResult(parse_result)
+                parse_result_dict = typeconvert_groupdict(match)
+                self._summary.update(parse_result_dict)
+                return ParseResult(parse_result_dict)
 
         parse_result = self._coefficient_range_parser.parse(line)
         if parse_result:
@@ -163,22 +168,20 @@ class PresolveParser(Parser):
             match = pattern.match(line)
             if match:
                 self._post_presolve = True
-                parse_result = typeconvert_groupdict(match)
-                self._summary.update(parse_result)
-                return ParseResult(parse_result)
+                parse_result_dict = typeconvert_groupdict(match)
+                self._summary.update(parse_result_dict)
+                return ParseResult(parse_result_dict)
 
         if match := self.variable_types.match(line):
-            parse_result = typeconvert_groupdict(match)
+            parse_result_dict = typeconvert_groupdict(match)
             if self._post_presolve:
-                parse_result = {
-                    "PresolvedNumConVars": parse_result["NumConVars"],
-                    "PresolvedNumIntVars": parse_result["NumIntVars"],
-                    "PresolvedNumBinVars": parse_result["NumBinVars"],
+                parse_result_dict = {
+                    "PresolvedNumConVars": parse_result_dict["NumConVars"],
+                    "PresolvedNumIntVars": parse_result_dict["NumIntVars"],
+                    "PresolvedNumBinVars": parse_result_dict["NumBinVars"],
                 }
-            else:
-                self._original_variable_types_matched = True
-            self._summary.update(parse_result)
-            return ParseResult(parse_result)
+            self._summary.update(parse_result_dict)
+            return ParseResult(parse_result_dict)
 
         match = PresolveParser.presolve_all_removed.match(line)
         if match:
@@ -193,20 +196,25 @@ class PresolveParser(Parser):
 
         return ParseResult(matched=False)
 
-    def get_summary(self) -> Dict:
+    def get_summary(self, add_model_type=True) -> Dict:
         """Return the current parsed summary."""
         summary = {**self._summary, **self._coefficient_range_parser._summary}
-        summary["ModelType"] = model_type(
-            discrete_vars=sum(
-                summary.get(k, 0)
-                for k in (
-                    "NumBinVars",
-                    "NumIntVars",
-                    "NumSemiContVars",
-                    "NumSemiIntVars",
-                )
-            ),
-            quad_nonzeros=summary.get("NumQNZs", 0),
-            quad_constrs=summary.get("NumQConstrs", 0),
-        )
+        if add_model_type:
+            # we don't want to add ModelType if this parsing presolve data from one
+            # of the solves in a multiobjective model.  It is too complicated to get
+            # it right and also not necessary since the ModelType will be recorded
+            # in the "main summary".
+            summary["ModelType"] = model_type(
+                discrete_vars=sum(
+                    summary.get(k, 0)
+                    for k in (
+                        "NumBinVars",
+                        "NumIntVars",
+                        "NumSemiContVars",
+                        "NumSemiIntVars",
+                    )
+                ),
+                quad_nonzeros=summary.get("NumQNZs", 0),
+                quad_constrs=summary.get("NumQConstrs", 0),
+            )
         return summary

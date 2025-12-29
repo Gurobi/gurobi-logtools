@@ -16,7 +16,7 @@ import glob
 import itertools
 import os
 from pathlib import Path
-from typing import List, Union
+from typing import List, Tuple, Union
 
 import pandas as pd
 
@@ -34,7 +34,7 @@ class ParsedData:
 
     def __init__(self, write_to_dir):
         self.write_to_dir = write_to_dir
-        self.parsers = []
+        self.parsers: List[Tuple[str, int, SingleLogParser]] = []
         self._common = None
 
     def progress(self, section="nodelog") -> pd.DataFrame:
@@ -51,22 +51,11 @@ class ParsedData:
         """
         progress = []
         for logfile, lognumber, parser in self.parsers:
-            if section == "nodelog":
-                log = parser.nodelog_parser.get_progress()
-            elif section == "rootlp":
-                log = parser.continuous_parser.get_progress()
-            elif section == "norel":
-                log = parser.norel_parser.get_progress()
-            elif section == "pretreesols":
-                log = parser.pretree_solution_parser.get_progress()
-            else:
-                raise ValueError(f"Unknown section '{section}'")
-
+            log = parser.get_progress(section)
             if log:
                 progress.append(
                     pd.DataFrame(log).assign(LogFilePath=logfile, LogNumber=lognumber),
                 )
-
         if not progress:
             return pd.DataFrame()
 
@@ -111,6 +100,12 @@ class ParsedData:
 
     def summary(self, prettyparams=False):
         """Construct and return a summary dataframe for all parsed logs."""
+        # summary = pd.DataFrame(
+        #     [
+        #         dict(parser.get_summary(), LogFilePath=logfile, LogNumber=lognumber)
+        #         for logfile, lognumber, parser in self.parsers
+        #     ],
+        # )
         summary = pd.DataFrame(
             [
                 dict(parser.get_summary(), LogFilePath=logfile, LogNumber=lognumber)
@@ -138,6 +133,15 @@ class ParsedData:
         )
         return summary
 
+    def multiobj_summary(self):
+        return pd.DataFrame(
+            [
+                dict(summary, LogFilePath=logfile, LogNumber=lognumber)
+                for logfile, lognumber, parser in self.parsers
+                for summary in parser.get_multiobj_summary()
+            ],
+        )
+
     def parse_single_file(self, logfile: str, warnings_action: str) -> None:
         """Parse a single file. The log file may contain multiple run logs.
 
@@ -158,7 +162,7 @@ class ParsedData:
         warnings = Warnings(logfile, action=WarningAction(warnings_action))
         lognumber = 1
         with open(logfile) as infile:
-            lines = iter(infile)
+            lines = (line.rstrip() for line in iter(infile))
             for line in lines:
                 warnings.check(line)
                 if not parser.parse(line):
