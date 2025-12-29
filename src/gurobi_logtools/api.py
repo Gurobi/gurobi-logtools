@@ -1,3 +1,16 @@
+"""Top level API for parsing log files.
+
+Usage example:
+    import gurobi_logtools.api as glt
+    result = glt.parse("data/*.log")
+    result.summary()
+    result.progress(section="nodelog")
+
+OR, use
+    summary = glt.get_dataframe("data/*.log", timeline=False)
+    summary, timeline = glt.get_dataframe("data/*.log", timeline=True)
+"""
+
 import functools
 import glob
 import itertools
