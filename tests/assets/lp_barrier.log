@@ -73,3 +73,9 @@ Iteration    Objective       Primal Inf.    Dual Inf.      Time
 
 Solved in 51765 iterations and 9.18 seconds (13.22 work units)
 Optimal objective  2.174035714e+02
+Solution quality statistics for model 'savsched1' :
+  Maximum violation (unscaled/scaled):
+    Bound           : 1.00000000e-05 / 5.00000000e-05
+    Constraint      : 2.00000000e-05 / 6.00000000e-05
+    Dual            : 3.00000000e-05 / 6.00000000e-05
+    Complementarity : 4.00000000e-05
