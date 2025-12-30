@@ -14,6 +14,7 @@
 - Added parsing for PDHG (#GH60)
 - Added detailed parsing for crossover steps (#GH106)
 - Added support for Python 3.14
+- Added parsing for solution quality statistics (#GH112)
 
 ## 4.0.1 - 2025-08-14
 ### Fixed
