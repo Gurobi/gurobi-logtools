@@ -95,3 +95,8 @@ Solution count 10: 1.20001e+09 1.40001e+09 1.45001e+09 ... 1.60001e+09
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 1.200012600000e+09, best bound 1.200006450000e+09, gap 0.0005%
+Solution quality statistics for unnamed model:
+  Maximum violation:
+    Bound       : 2.00000000e-05
+    Constraint  : 1.02140518e-14 (c34964)
+    Integrality : 3.00000000e-05

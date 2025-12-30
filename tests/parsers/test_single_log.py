@@ -30,6 +30,9 @@ def test_mip_norel_log():
     assert summary["ObjVal"] == 1.2000126e09
     assert summary["Runtime"] == 93.70
     assert summary["ModelType"] == "MIP"
+    assert summary["BoundVio"] == 2e-05
+    assert summary["ConstrVio"] == 1.02140518e-14
+    assert summary["IntVio"] == 3e-05
 
     norel_progress = parser.norel_parser.get_progress()
     assert len(norel_progress) == 15
@@ -58,6 +61,10 @@ def test_lp_barrier():
     assert summary["Runtime"] == 9.18
     assert summary["Status"] == "OPTIMAL"
     assert summary["ModelType"] == "LP"
+    assert summary["BoundVio"] == 1e-05
+    assert summary["ConstrVio"] == 2e-05
+    assert summary["DualVio"] == 3e-05
+    assert summary["ComplVio"] == 4e-05
 
     rootlp_progress = parser.continuous_parser.get_progress()
     assert len(rootlp_progress) == 23

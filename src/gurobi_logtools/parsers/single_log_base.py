@@ -7,6 +7,7 @@ from gurobi_logtools.parsers.nodelog import NodeLogParser
 from gurobi_logtools.parsers.norel import NoRelParser
 from gurobi_logtools.parsers.presolve import PresolveParser
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
+from gurobi_logtools.parsers.quality import QualityParser
 from gurobi_logtools.parsers.termination import TerminationParser
 from gurobi_logtools.parsers.util import ParseResult, Parser, DummyParser
 
@@ -37,6 +38,7 @@ class SingleLogBase(Parser):
         self.continuous_parser = ContinuousParser(self.pretree_solution_parser)
         self.nodelog_parser = self._NodeLogParser()
         self.termination_parser = self._TerminationParser()
+        self.quality_parser = QualityParser()
 
         # State
         self.started = False
@@ -48,6 +50,7 @@ class SingleLogBase(Parser):
             self.norel_parser,
             self.continuous_parser,
             self.nodelog_parser,
+            self.quality_parser,
         ]
 
         # Capture lines *if* we plan to write them elsewhere
@@ -92,6 +95,7 @@ class SingleLogBase(Parser):
         summary.update(self.pretree_solution_parser.get_summary())
         summary.update(self.nodelog_parser.get_summary())
         summary.update(self.termination_parser.get_summary())
+        summary.update(self.quality_parser.get_summary())
         return summary
 
     def parse(self, line: str) -> ParseResult:
