@@ -44,6 +44,13 @@ class BarrierParser(Parser):
         self._progress = []
         self._started = False
 
+    def _handle_repeat_barrier_solve(self, parse_result: dict):
+        # GH43 (dev)
+        key = "BarIterCount"
+        if key in self._summary.keys():
+            self._summary[key] += float(parse_result.pop(key, 0))
+        return parse_result
+
     def parse(self, line: str) -> ParseResult:
         """Parse the given log line to populate summary and progress data.
 
@@ -79,6 +86,7 @@ class BarrierParser(Parser):
             barrier_termination_match = barrier_termination_pattern.match(line)
             if barrier_termination_match:
                 parse_result = typeconvert_groupdict(barrier_termination_match)
+                self._handle_repeat_barrier_solve(parse_result)  # modifies parse_result
                 self._summary.update(parse_result)
                 return ParseResult(parse_result)
 
