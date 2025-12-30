@@ -20,6 +20,7 @@ class Warnings:
         re.compile(r"Unable to open file .*$"),
         re.compile(r"Unrecognized SECTION .*$"),
         re.compile(r"Expected format .*$"),
+        re.compile(r"Unknown parameter.*$"),
     ]
 
     def __init__(self, logfile: str, action: WarningAction = WarningAction.WARN):

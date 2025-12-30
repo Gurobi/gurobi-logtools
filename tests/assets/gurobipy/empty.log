@@ -1,4 +1,5 @@
 Restricted license - for non-production use only - expires 2023-10-25
+Unknown parameter: 'mipfocs' (ignored)
 Set parameter TimeLimit to value 10
 Gurobi Optimizer version 9.5.0 build v9.5.0rc5 (mac64[x86])
 Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
