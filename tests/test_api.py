@@ -206,9 +206,9 @@ def test_gurobipy_logs():
     parameter settings may appear before the header. At the moment this test
     just asserts no errors.
     """
-    glt.parse("tests/assets/gurobipy/empty.log").summary()
+    glt.parse("tests/assets/gurobipy/empty.log", warnings_action="ignore").summary()
     glt.parse("tests/assets/gurobipy/read.log").summary()
-    glt.parse("tests/assets/gurobipy/*.log").summary()
+    glt.parse("tests/assets/gurobipy/*.log", warnings_action="ignore").summary()
 
 
 def test_work():
@@ -367,3 +367,9 @@ def test_warn_warning():
     logpath = ("tests/assets/multiknapsack.log",)
     with pytest.warns(RuntimeWarning):
         glt.parse(logpath, warnings_action="warn")
+
+
+def test_unknown_parameter_warning():
+    logpath = ("tests/assets/gurobipy/empty.log",)
+    with pytest.raises(RuntimeError):
+        glt.parse(logpath, warnings_action="raise")
