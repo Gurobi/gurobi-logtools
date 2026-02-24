@@ -20,7 +20,8 @@ class ObjNLogParser(SingleLogBase):
 
     def get_summary(self):
         summary = super().get_summary()
-        summary["CumulativeRuntime"] = summary.pop("Runtime")
+        if "Runtime" in summary:
+            summary["CumulativeRuntime"] = summary.pop("Runtime")
         return summary
 
     def get_progress(self, section):
