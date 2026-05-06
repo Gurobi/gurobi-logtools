@@ -25,6 +25,9 @@ class TerminationParser(Parser):
         re.compile(r"(?P<CUTOFF>Model objective exceeds cutoff)"),
         re.compile(r"(?P<CUTOFF>Objective cutoff exceeded)"),
         re.compile(r"(?P<USER_OBJ_LIMIT>Optimization achieved user objective limit)"),
+        re.compile(r"(?P<SUBOPTIMAL>Sub-optimal termination)"),
+        re.compile(r"(?P<LOCALLY_OPTIMAL>First-order optimal solution)"),
+        re.compile(r"(?P<LOCALLY_INFEASIBLE>First-order infeasible model)"),
         re.compile(
             r"(?P<INTERRUPTED>(Interrupt request received|Solve interrupted))(?: \\(error code (?P<ErrorCode>[^\\)]+)\\))?",
         ),
@@ -51,6 +54,9 @@ class TerminationParser(Parser):
         "INTERRUPTED",
         "MEM_LIMIT",
         "WORK_LIMIT",
+        "SUBOPTIMAL",
+        "LOCALLY_OPTIMAL",
+        "LOCALLY_INFEASIBLE",
     ]
 
     def __init__(self):

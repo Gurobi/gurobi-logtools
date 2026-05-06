@@ -78,6 +78,26 @@ worklimit_summary = {
     "Cores": 8,
 }
 
+locally_optimal_log = """
+NL barrier solved model in 52 iterations and 0.00 seconds (0.00 work units)
+First-order optimal solution
+Solution objective -1.250000000000e+00
+"""
+
+locally_optimal_summary = {"Status": "LOCALLY_OPTIMAL"}
+
+suboptimal_log = """
+Sub-optimal termination
+"""
+
+suboptimal_summary = {"Status": "SUBOPTIMAL"}
+
+locally_infeasible_log = """
+First-order infeasible model
+"""
+
+locally_infeasible_summary = {"Status": "LOCALLY_INFEASIBLE"}
+
 
 class TestTermination(TestCase):
     def setUp(self):
@@ -104,6 +124,21 @@ class TestTermination(TestCase):
         parser = TerminationParser()
         parse_block(parser, worklimit_log)
         self.assertEqual(parser.get_summary(), worklimit_summary)
+
+    def test_suboptimal(self):
+        parser = TerminationParser()
+        parse_block(parser, suboptimal_log)
+        self.assertEqual(parser.get_summary(), suboptimal_summary)
+
+    def test_locally_optimal(self):
+        parser = TerminationParser()
+        parse_block(parser, locally_optimal_log)
+        self.assertEqual(parser.get_summary(), locally_optimal_summary)
+
+    def test_locally_infeasible(self):
+        parser = TerminationParser()
+        parse_block(parser, locally_infeasible_log)
+        self.assertEqual(parser.get_summary(), locally_infeasible_summary)
 
 
 if __name__ == "__main__":
