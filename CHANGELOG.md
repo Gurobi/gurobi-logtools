@@ -7,6 +7,7 @@
 ### Removed
 - Dropped support for Python 3.9
 ### Added
+- Bugfix for NODE_LIMIT column appearing in summary dataframe (#GH122)
 - Added support for parsing finer details in multi-objective logs (#GH36)
 - Added the `warnings_action` parameter to `gurobi_logtools.parse` (#GH88)
 - NumConVars, NumIntVars and NumBinVars are added to capture variable types in original model (#GH89)
