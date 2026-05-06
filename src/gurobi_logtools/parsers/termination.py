@@ -39,6 +39,7 @@ class TerminationParser(Parser):
     status = [
         "OPTIMAL",
         "TIME_LIMIT",
+        "NODE_LIMIT",
         "ITERATION_LIMIT",
         "INF_OR_UNBD",
         "UNBOUNDED",
