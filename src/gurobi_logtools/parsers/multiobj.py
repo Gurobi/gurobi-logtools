@@ -1,5 +1,6 @@
 from typing import Dict
 from gurobi_logtools.parsers.presolve import PresolveParser
+from gurobi_logtools.parsers.quality import QualityParser
 from gurobi_logtools.parsers.single_log_base import SingleLogBase
 from gurobi_logtools.parsers.util import (
     float_pattern,
@@ -78,10 +79,11 @@ class MultiObjParser(Parser):
         self.parser: Parser = self.initial_presolve_parser
         self.subsequent: ObjNLogParser = self._ObjNLogParser()
         self.objn_parsers = []
+        self.quality_parser = QualityParser()
 
     def parse(self, line: str) -> ParseResult:
-        if self._terminated:
-            return ParseResult(matched=False)
+        # if self._terminated:
+        # return ParseResult(matched=False)
 
         if not self._started:
             for pattern in self.start_patterns:
@@ -102,6 +104,9 @@ class MultiObjParser(Parser):
             self._summary.update(parse_result)
             self._terminated = True
             return ParseResult(parse_result)
+
+        if parse_result := self.quality_parser.parse(line):
+            return parse_result
 
         if not (parse_result := self.parser.parse(line)):
             assert not self.subsequent.started
@@ -125,6 +130,7 @@ class MultiObjParser(Parser):
         return {
             **self._summary,
             **self.initial_presolve_parser.get_summary(add_model_type=False),
+            **self.quality_parser.get_summary(),
         }
 
     def get_objn_summaries(self):

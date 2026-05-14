@@ -7,6 +7,7 @@
 ### Removed
 - Dropped support for Python 3.9
 ### Added
+- Added parsing for quality stats that may appear at end of multiobjective log (#GH126)
 - Added recognition for SUBOPTIMAL, LOCALLY_OPTIMAL and LOCALLY_INFEASIBLE statuses (#GH124)
 - Bugfix for NODE_LIMIT column appearing in summary dataframe (#GH122)
 - Added support for parsing finer details in multi-objective logs (#GH36)
