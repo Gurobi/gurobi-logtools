@@ -97,6 +97,12 @@ Best objective 5.989536000000e+06, best bound 5.691475302964e+06, gap 4.9764%
 ---------------------------------------------------------------------------
 Multi-objectives: stopped in 10.01 seconds (15.70 work units), solution count 10
 Time Limit reached
+
+Solution quality statistics for unnamed model:
+  Maximum violation:
+    Bound       : 0.00000000e+00
+    Constraint  : 5.00000000e-09 (demand_fraction_met_419238_----_CS_2)
+    Integrality : 7.13275204e-07 (y_407382_----_6_1)
 """
 
     parser = MultiObjParser()
@@ -296,3 +302,11 @@ def test_summary(test_data_parser):
         },
     ]
     assert test_data_parser.get_objn_summaries() == expected
+
+
+def test_multiobj_quality_stats(test_data_parser):
+    # GH126
+    summary = test_data_parser.get_summary()
+    assert summary["BoundVio"] == 0
+    assert summary["ConstrVio"] == 5.00000000e-09
+    assert summary["IntVio"] == 7.13275204e-07
