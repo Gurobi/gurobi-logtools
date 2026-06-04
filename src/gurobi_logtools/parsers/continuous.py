@@ -3,10 +3,32 @@ from typing import Any, Dict, Union
 
 from gurobi_logtools.parsers.barrier import BarrierParser
 from gurobi_logtools.parsers.crossover import CrossoverParser
+from gurobi_logtools.parsers.nlbarrier import NonLinearBarrierParser
 from gurobi_logtools.parsers.pdhg import PdhgParser
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.simplex import SimplexParser
 from gurobi_logtools.parsers.util import ParseResult, Parser, typeconvert_groupdict
+
+
+class OrderingParser(Parser):
+    ordering_pattern = re.compile(r"Ordering time: (?P<OrderingTime>[\d\.]+)s")
+
+    def __init__(self):
+        self._summary: Dict[str, Any] = {}
+
+    def parse(self, line) -> ParseResult:
+        match = OrderingParser.ordering_pattern.match(line)
+        if match:
+            parse_result = typeconvert_groupdict(match)
+            self._summary.update(parse_result)
+            return ParseResult(parse_result)
+
+        return ParseResult(matched=False)
+
+    def get_summary(self) -> Dict:
+        """Return the current parsed summary."""
+        summary = self._summary.copy()
+        return summary
 
 
 class ContinuousParser(Parser):
@@ -30,7 +52,9 @@ class ContinuousParser(Parser):
 
     def __init__(self, pretree_solution_parser: PreTreeSolutionParser):
         """Initialize the Continuous parser."""
+        self._ordering_parser = OrderingParser()
         self._barrier_parser = BarrierParser()
+        self._nonlinear_barrier_parser = NonLinearBarrierParser()
         self._pdhg_parser = PdhgParser()
         self._simplex_parser = SimplexParser()
         self._crossover_parser = CrossoverParser()
@@ -57,6 +81,9 @@ class ContinuousParser(Parser):
         if parse_result := self._pretree_solution_parser.parse(line):
             return parse_result
 
+        if parse_result := self._ordering_parser.parse(line):
+            return parse_result
+
         mip_relaxation_match = ContinuousParser.mip_relaxation_pattern.match(line)
         if mip_relaxation_match:
             self._current_pattern = "relaxation"
@@ -79,6 +106,9 @@ class ContinuousParser(Parser):
             if parse_result := self._barrier_parser.parse(line):
                 self._current_pattern = "barrier"
                 return parse_result
+            if parse_result := self._nonlinear_barrier_parser.parse(line):
+                self._current_pattern = "nlbarrier"
+                return parse_result
             if parse_result := self._pdhg_parser.parse(line):
                 self._current_pattern = "pdhg"
                 return parse_result
@@ -100,6 +130,13 @@ class ContinuousParser(Parser):
             ) or self._simplex_parser.parse(line):
                 self._current_pattern = "simplex"
                 return ParseResult({"Init": "simplex"})
+            if self._crossover_parser.parse(line):
+                self._current_pattern = "crossover"
+
+        if self._current_pattern == "nlbarrier":
+            parse_result = self._nonlinear_barrier_parser.parse(line)
+            if parse_result:
+                return parse_result
             if self._crossover_parser.parse(line):
                 self._current_pattern = "crossover"
 
@@ -133,7 +170,9 @@ class ContinuousParser(Parser):
 
     def get_summary(self) -> Dict:
         """Return the current parsed summary."""
+        self._summary.update(self._ordering_parser.get_summary())
         self._summary.update(self._barrier_parser.get_summary())
+        self._summary.update(self._nonlinear_barrier_parser.get_summary())
         self._summary.update(self._pdhg_parser.get_summary())
         self._summary.update(self._crossover_parser.get_summary())
         self._summary.update(self._simplex_parser.get_summary())
@@ -143,6 +182,7 @@ class ContinuousParser(Parser):
         """Return the detailed progress in the continuous method."""
         return [
             *self._barrier_parser.get_progress(),
+            *self._nonlinear_barrier_parser.get_progress(),
             *self._pdhg_parser.get_progress(),
             *self._crossover_parser.get_progress(),
             *self._simplex_parser.get_progress(),
