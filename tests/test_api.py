@@ -82,7 +82,7 @@ def test_merged_log(merged_log):
 
 
 def test_summary(testlog_summary):
-    assert len(testlog_summary) == 8
+    assert len(testlog_summary) == 9
     assert set(testlog_summary.columns).issuperset(
         {"Status", "ObjVal", "ReadingTime", "RelaxObj"},
     )
@@ -94,7 +94,7 @@ def test_progress(testlog_progress):
     assert set(testlog_progress["norel"].columns).issuperset(
         {"Time", "BestBd", "Incumbent"},
     )
-    assert len(testlog_progress["rootlp"]) == 418
+    assert len(testlog_progress["rootlp"]) == 467
     assert set(testlog_progress["rootlp"].columns).issuperset(
         {"Iteration", "PInf", "DInf", "PObj", "DObj"},
     )
@@ -220,7 +220,7 @@ def test_work():
     assert set(summary.columns).issuperset({"Work"})
 
     # Check if Runtime and Work found
-    assert summary["Work"].count() == 7
+    assert summary["Work"].count() == 8
 
 
 def test_changed_params():
@@ -228,7 +228,7 @@ def test_changed_params():
     summary = result.summary()
     assert set(summary.columns).issuperset({"ChangedParams"})
     assert summary["ChangedParams"].apply(lambda d: isinstance(d, dict)).all()
-    assert summary["ChangedParams"].count() == 8
+    assert summary["ChangedParams"].count() == 9
 
 
 def test_create_label():
@@ -252,12 +252,14 @@ def test_create_label():
     )
     assert set(summary["Label"]) == {
         "950-CrossoverBasis=1-Method=2",
-        "950-Default",
+        "950-Method=3",
         "950-Method=0",
         "950-Method=2",
-        "950-Method=3",
-        "950-NonConvex=2",
         "912-NoRelHeurWork=60",
+        "950-Default",
+        "1302-OptimalityTarget=1",
+        "950-NonConvex=2",
+        "950-Default",
     }
 
 
