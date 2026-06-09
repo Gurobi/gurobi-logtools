@@ -47,7 +47,7 @@ class ContinuousParser(Parser):
         re.compile(
             r"(?P<SUBOPTIMAL>Sub-optimal termination)(?: - objective (?P<ObjVal>.*))$",
         ),
-        re.compile(r"(?P<OPTIMAL>Optimal objective\s+(?P<ObjVal>.*))$"),
+        re.compile(r"(?P<OPTIMAL>(Optimal|Solution) objective\s+(?P<ObjVal>.*))$"),
     ]
 
     def __init__(self, pretree_solution_parser: PreTreeSolutionParser):
