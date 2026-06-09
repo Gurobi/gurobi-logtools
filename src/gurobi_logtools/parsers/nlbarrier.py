@@ -11,14 +11,18 @@ from gurobi_logtools.parsers.util import (
 
 class NonLinearBarrierParser(Parser):
     # The pattern indicating the initialization of the parser
-    nlbarrier_start_pattern = re.compile(
-        r"Iter(\s+)Objective(\s+)Primal(\s+)Dual(\s+)Compl(\s+)Step(\s+)Time",
-    )
+    nlbarrier_start_patterns = [
+        re.compile(
+            r"Iter(\s+)Objective(\s+)Primal(\s+)Dual(\s+)Compl(\s+)Step(\s+)Time",
+        )
+    ]
 
     # The pattern indicating the barrier progress
-    nlbarrier_progress_pattern = re.compile(
-        r"\s*(?P<Iteration>\d+)(?P<Indicator>\s|\*)\s+(?P<Objective>[^\s]+)\s+(?P<PRes>[^\s]+)\s+(?P<DRes>[^\s]+)\s+(?P<Compl>[^\s]+)\s+(?P<Step>[^\s]+)\s+(?P<Time>\d+)s",
-    )
+    nlbarrier_progress_patterns = [
+        re.compile(
+            r"\s*(?P<Iteration>\d+)(?P<Indicator>\s|\*)\s+(?P<Objective>[^\s]+)\s+(?P<PRes>[^\s]+)\s+(?P<DRes>[^\s]+)\s+(?P<Compl>[^\s]+)\s+(?P<Step>[^\s]+)\s+(?P<Time>\d+)s",
+        )
+    ]
 
     # The pattern indicating the termination of the barrier algorithm
     nlbarrier_termination_patterns = [
@@ -56,18 +60,20 @@ class NonLinearBarrierParser(Parser):
         """
 
         if not self._started:
-            match = NonLinearBarrierParser.nlbarrier_start_pattern.match(line)
-            if match:
-                self._started = True
-                return ParseResult(matched=True)
+            for pattern in self.nlbarrier_start_patterns:
+                match = pattern.match(line)
+                if match:
+                    self._started = True
+                    return ParseResult(matched=True)
             return ParseResult(matched=False)
 
-        progress_match = NonLinearBarrierParser.nlbarrier_progress_pattern.match(line)
-        if progress_match:
-            entry = {"Type": "nlbarrier"}
-            entry.update(typeconvert_groupdict(progress_match))
-            self._progress.append(entry)
-            return ParseResult(entry)
+        for pattern in self.nlbarrier_progress_patterns:
+            progress_match = pattern.match(line)
+            if progress_match:
+                entry = {"Type": "nlbarrier"}
+                entry.update(typeconvert_groupdict(progress_match))
+                self._progress.append(entry)
+                return ParseResult(entry)
 
         for (
             nlbarrier_termination_pattern
