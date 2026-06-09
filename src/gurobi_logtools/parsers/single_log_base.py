@@ -23,6 +23,7 @@ class SingleLogBase(Parser):
     _MultiObjParser: Type = DummyParser
     _NoRelParser = NoRelParser
     _NodeLogParser = NodeLogParser
+    _ContinuousParser = ContinuousParser
     _TerminationParser = TerminationParser
     _PreTreeSolutionParser = PreTreeSolutionParser
     _add_model_type = True
@@ -35,7 +36,7 @@ class SingleLogBase(Parser):
         self.presolve_parser = self._PresolveParser(self.pretree_solution_parser)
         self.multiobj_parser = self._MultiObjParser()
         self.norel_parser = self._NoRelParser()
-        self.continuous_parser = ContinuousParser(self.pretree_solution_parser)
+        self.continuous_parser = self._ContinuousParser(self.pretree_solution_parser)
         self.nodelog_parser = self._NodeLogParser()
         self.termination_parser = self._TerminationParser()
         self.quality_parser = QualityParser()

@@ -32,6 +32,7 @@ class OrderingParser(Parser):
 
 
 class ContinuousParser(Parser):
+    _NonLinearBarrierParser = NonLinearBarrierParser
     # The pattern indicating the start or the termination of the barrier/simplex
     # in case of solving a MIP. In some cases, the log might only include this one
     # line
@@ -54,7 +55,7 @@ class ContinuousParser(Parser):
         """Initialize the Continuous parser."""
         self._ordering_parser = OrderingParser()
         self._barrier_parser = BarrierParser()
-        self._nonlinear_barrier_parser = NonLinearBarrierParser()
+        self._nonlinear_barrier_parser = self._NonLinearBarrierParser()
         self._pdhg_parser = PdhgParser()
         self._simplex_parser = SimplexParser()
         self._crossover_parser = CrossoverParser()
