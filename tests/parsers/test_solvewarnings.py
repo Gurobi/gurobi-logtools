@@ -1,6 +1,6 @@
 import pytest
 
-from gurobi_logtools.parsers.logwarnings import LogWarningsParser
+from gurobi_logtools.parsers.solvewarnings import SolveWarningsParser
 
 
 @pytest.mark.parametrize(
@@ -16,7 +16,7 @@ from gurobi_logtools.parsers.logwarnings import LogWarningsParser
     ],
 )
 def test_parse_single_warning(line: str, expected_warning: str) -> None:
-    parser = LogWarningsParser()
+    parser = SolveWarningsParser()
     result = parser.parse(line)
 
     assert result.matched is True
@@ -27,7 +27,7 @@ def test_parse_single_warning(line: str, expected_warning: str) -> None:
 
 
 def test_parse_multiple_warnings() -> None:
-    parser = LogWarningsParser()
+    parser = SolveWarningsParser()
     lines = [
         "Warning: mps file contains small (< 1e-13) coefficients, ignored",
         "Warning: some other warning message",
@@ -50,7 +50,7 @@ def test_parse_multiple_warnings() -> None:
 
 
 def test_parse_duplicate_warnings() -> None:
-    parser = LogWarningsParser()
+    parser = SolveWarningsParser()
     lines = [
         "Warning: duplicate warning",
         "Some other line",
@@ -80,7 +80,7 @@ def test_parse_duplicate_warnings() -> None:
     ],
 )
 def test_parse_non_warning_line(line: str) -> None:
-    parser = LogWarningsParser()
+    parser = SolveWarningsParser()
     result = parser.parse(line)
 
     assert result.matched is False
@@ -89,7 +89,7 @@ def test_parse_non_warning_line(line: str) -> None:
 
 
 def test_empty_summary_when_no_warnings() -> None:
-    parser = LogWarningsParser()
+    parser = SolveWarningsParser()
     lines = [
         "Normal log line 1",
         "Normal log line 2",
@@ -104,7 +104,7 @@ def test_empty_summary_when_no_warnings() -> None:
 
 
 def test_warning_with_extra_whitespace() -> None:
-    parser = LogWarningsParser()
+    parser = SolveWarningsParser()
     line = "Warning:   text with extra spaces   "
     result = parser.parse(line)
 

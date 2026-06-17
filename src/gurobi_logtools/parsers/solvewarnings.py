@@ -1,15 +1,15 @@
 import re
-from typing import Any, Dict
+from typing import Any
 
 from gurobi_logtools.parsers.util import Parser, ParseResult
 
 
-class LogWarningsParser(Parser):
+class SolveWarningsParser(Parser):
     warning_pattern: re.Pattern[str] = re.compile(r"^Warning:\s+(.*)$")
 
     def __init__(self) -> None:
-        """Initialize the LogWarnings parser."""
-        self._warnings: Dict[str, None] = {}
+        """Initialize the SolveWarnings parser."""
+        self._warnings: dict[str, None] = {}
 
     def parse(self, line: str) -> ParseResult:
         """Parse the given log line to capture warnings.
@@ -28,7 +28,7 @@ class LogWarningsParser(Parser):
 
         return ParseResult(matched=False)
 
-    def get_summary(self) -> Dict[str, Any]:
+    def get_summary(self) -> dict[str, Any]:
         """Return the collected warnings in the summary.
 
         Returns:
