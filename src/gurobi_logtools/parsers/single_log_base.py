@@ -48,6 +48,7 @@ class SingleLogBase(Parser):
         self.future_parsers = [
             self.presolve_parser,
             self.multiobj_parser,
+            self.pretree_solution_parser,
             self.norel_parser,
             self.continuous_parser,
             self.nodelog_parser,
