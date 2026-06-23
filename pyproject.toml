@@ -33,6 +33,7 @@ dependencies = [
     "numpy",
     "numpy>=2.3.2; python_version >= '3.14'",
     "pandas<3",
+    "pandas>=2.3.3; python_version >= '3.14'",
     "plotly",
     "xlsxwriter",
     "nbformat>=4.2.0",
