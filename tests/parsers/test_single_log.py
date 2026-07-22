@@ -42,6 +42,41 @@ def test_mip_norel_log():
     assert len(nodelog_progress) == 7
 
 
+def test_incomplete_mip_does_not_report_root_relaxation_as_optimal():
+    parser = SingleLogParser()
+    with open("tests/assets/mip.log") as infile:
+        for line in infile:
+            if line.startswith("    Nodes"):
+                break
+            parser.parse(line)
+
+    summary = parser.get_summary()
+    assert summary["ModelType"] == "MIP"
+    assert summary["RelaxObj"] == 9.352922e04
+    assert "Status" not in summary
+    assert "Runtime" not in summary
+
+
+def test_incomplete_continuous_model_solved_as_mip_has_no_final_status():
+    parser = SingleLogParser()
+    parse_lines(
+        parser,
+        [
+            "Gurobi Optimizer version 13.0.0 build v13.0.0rc1",
+            "Optimize a model with 1 rows, 3 columns and 3 nonzeros",
+            "Model has 2 quadratic constraints",
+            "Continuous model is non-convex -- solving as a MIP",
+            "Solved in 5 iterations and 0.10 seconds (0.01 work units)",
+            "Optimal objective 1.00000000e+00",
+        ],
+    )
+
+    summary = parser.get_summary()
+    assert summary["ModelType"] == "QCP"
+    assert "Status" not in summary
+    assert "Runtime" not in summary
+
+
 def test_lp_barrier():
     parser = SingleLogParser()
     with open("tests/assets/lp_barrier.log") as infile:
