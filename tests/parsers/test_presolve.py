@@ -170,6 +170,24 @@ class TestPresolve(TestCase):
                 parse_lines(presolve_parser, lines)
                 self.assertEqual(presolve_parser.get_summary(), expected_summaries[i])
 
+    def test_nonlinear_constraint_coefficient_range(self):
+        example_log = """
+Optimize a model with 0 rows, 16 columns and 0 nonzeros (Min)
+Coefficient statistics:
+  Matrix range     [0e+00, 0e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e-01, 3e+00]
+  RHS range        [0e+00, 0e+00]
+  NLCon coe range  [1e+00, 1e+05]
+"""
+        presolve_parser = PresolveParser(PreTreeSolutionParser())
+
+        parse_lines(presolve_parser, example_log.strip().split("\n"))
+
+        summary = presolve_parser.get_summary()
+        self.assertEqual(summary["MinNLConCoeff"], 1.0)
+        self.assertEqual(summary["MaxNLConCoeff"], 100000.0)
+
 
 if __name__ == "__main__":
     main()
