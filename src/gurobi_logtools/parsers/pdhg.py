@@ -73,6 +73,7 @@ class PdhgParser(Parser):
             pdhg_termination_match = pdhg_termination_pattern.match(line)
             if pdhg_termination_match:
                 parse_result = typeconvert_groupdict(pdhg_termination_match)
+                parse_result["PDHGRuntime"] = parse_result["Runtime"]
                 self._summary.update(parse_result)
                 return ParseResult(parse_result)
 
