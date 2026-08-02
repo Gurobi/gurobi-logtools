@@ -35,6 +35,9 @@ class TerminationParser(Parser):
         re.compile(
             r"Thread count was (?P<Threads>\d+) \(of (?P<Cores>\d+) available processors\)",
         ),
+        re.compile(
+            r"User-callback calls (?P<CallbackCalls>\d+), time in user-callback (?P<CallbackTime>[\d\.]+) sec",
+        ),
         re.compile(r"(?P<WORK_LIMIT>Work limit reached)"),
         re.compile(r"(?P<MEM_LIMIT>Memory limit reached)"),
     ]
