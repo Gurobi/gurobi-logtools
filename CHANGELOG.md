@@ -7,6 +7,7 @@
 ### Removed
 - Dropped support for Python 3.9
 ### Added
+- Added parsing for warnings fron log (#GH132)
 - Added parsing for quality stats that may appear at end of multiobjective log (#GH126)
 - Added support for parsing nonlinear barrier logging (#GH101)
 - Added recognition for SUBOPTIMAL, LOCALLY_OPTIMAL and LOCALLY_INFEASIBLE statuses (#GH124)

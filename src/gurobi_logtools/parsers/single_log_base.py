@@ -3,13 +3,14 @@ from typing import List, Optional, Type
 
 from gurobi_logtools.parsers.continuous import ContinuousParser
 from gurobi_logtools.parsers.header import HeaderParser
+from gurobi_logtools.parsers.solvewarnings import SolveWarningsParser
 from gurobi_logtools.parsers.nodelog import NodeLogParser
 from gurobi_logtools.parsers.norel import NoRelParser
 from gurobi_logtools.parsers.presolve import PresolveParser
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.quality import QualityParser
 from gurobi_logtools.parsers.termination import TerminationParser
-from gurobi_logtools.parsers.util import ParseResult, Parser, DummyParser
+from gurobi_logtools.parsers.util import DummyParser, Parser, ParseResult
 
 
 class SingleLogBase(Parser):
@@ -40,6 +41,7 @@ class SingleLogBase(Parser):
         self.nodelog_parser = self._NodeLogParser()
         self.termination_parser = self._TerminationParser()
         self.quality_parser = QualityParser()
+        self.logwarnings_parser = SolveWarningsParser()
 
         # State
         self.started = False
@@ -98,6 +100,7 @@ class SingleLogBase(Parser):
         summary.update(self.nodelog_parser.get_summary())
         summary.update(self.termination_parser.get_summary())
         summary.update(self.quality_parser.get_summary())
+        summary.update(self.logwarnings_parser.get_summary())
         return summary
 
     def parse(self, line: str) -> ParseResult:
@@ -123,6 +126,8 @@ class SingleLogBase(Parser):
 
         if self.lines is not None:  # i.e. write_to_dir = True
             self.lines.append(line)
+
+        self.logwarnings_parser.parse(line)
 
         # First try the current parser
         assert self.current_parser not in self.future_parsers
