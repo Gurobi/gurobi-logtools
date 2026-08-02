@@ -86,6 +86,9 @@ class PresolveParser(Parser):
             r"Model has (?P<NumPWLObjVars>\d+) piecewise-linear objective terms?",
         ),
         re.compile(r"Model has (?P<NumGenConstrs>\d+) general constraints?"),
+        re.compile(
+            r"Model has (?P<NumNLConstrs>\d+) general nonlinear constraints? \(\d+ nonlinear terms?\)",
+        ),
         re.compile(r"Distributed MIP job count: (?P<DistributedMIPJobs>\d+)"),
         re.compile(r"Concurrent MIP job count: (?P<ConcurrentJobs>\d+)"),
         re.compile(
@@ -104,6 +107,9 @@ class PresolveParser(Parser):
         re.compile(r"Presolved model has (?P<PresolvedNumSOS>\d+) SOS constraint(s)\n"),
         re.compile(
             r"Presolved model has (?P<PresolvedNumQNZs>\d+) quadratic objective terms",
+        ),
+        re.compile(
+            r"Presolved model has (?P<PresolvedNumNLConstrs>\d+) nonlinear constraint(?:s|\(s\))?",
         ),
         re.compile(r"Presolve time: (?P<PresolveTime>[\d\.]+)s"),
     ]
