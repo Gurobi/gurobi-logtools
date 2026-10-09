@@ -44,12 +44,15 @@ def test_mip_norel_log():
 
 def test_incomplete_mip_does_not_report_root_relaxation_as_optimal():
     parser = SingleLogParser()
+    incomplete = False
     with open("tests/assets/mip.log") as infile:
         for line in infile:
             if line.startswith("    Nodes"):
+                incomplete = True
                 break
             parser.parse(line)
 
+    assert incomplete
     summary = parser.get_summary()
     assert summary["ModelType"] == "MIP"
     assert summary["RelaxObj"] == 9.352922e04
