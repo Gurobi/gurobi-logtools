@@ -56,6 +56,7 @@ expected_summary_concurrent = {
     "Status": "OPTIMAL",
     "ObjVal": 217.4035714,
     "BarIterCount": 7,
+    "BarrierRuntime": 4.02,
     "IterCount": 69986,
     "Runtime": 4.03,
     "Work": 3.91,
@@ -160,6 +161,7 @@ expected_summary_pdhg = {
     "ObjVal": -464.7531429,
     "PdhgThreads": 1,
     "PdhgIterCount": 1228,
+    "PDHGRuntime": 0.0,
     "Runtime": 0.0,
     "Work": 0.0,
     "PushPhasePInf": 0.0,
@@ -311,6 +313,15 @@ expected_progress_nlbarrier = [
 
 
 class TestContinuous(TestCase):
+    def test_barrier_runtime_preserved_after_crossover(self):
+        continuous_parser = ContinuousParser(PreTreeSolutionParser())
+
+        parse_block(continuous_parser, example_log_barrier_with_simplex)
+
+        summary = continuous_parser.get_summary()
+        self.assertEqual(summary["BarrierRuntime"], 4.83)
+        self.assertEqual(summary["Runtime"], 9.18)
+
     def test_last_progress_entry_barrier_with_simplex(self):
         continuous_parser = ContinuousParser(PreTreeSolutionParser())
         parse_block(continuous_parser, example_log_barrier_with_simplex)
