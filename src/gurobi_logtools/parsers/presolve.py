@@ -35,6 +35,9 @@ class CoefficientRangeParser:
         ),
         re.compile(r"\s*RHS range\s*\[(?P<MinRHS>[^,]+),\s*(?P<MaxRHS>[^\]]+)\]"),
         re.compile(r"\s*QRHS range\s*\[(?P<MinQCRHS>[^,]+),\s*(?P<MaxQCRHS>[^\]]+)\]"),
+        re.compile(
+            r"\s*NLCon coe range\s*\[(?P<MinNLConCoeff>[^,]+),\s*(?P<MaxNLConCoeff>[^\]]+)\]",
+        ),
     ]
 
     class State(Enum):

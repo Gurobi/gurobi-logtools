@@ -178,11 +178,11 @@ Model has 2 linear objective coefficients
 Model has 8 general nonlinear constraints (104 nonlinear terms)
 Variable types: 16 continuous, 0 integer (0 binary)
 Coefficient statistics:
-  Matrix range     [0e+00, 0e+00]
-  Objective range  [1e+00, 1e+00]
-  Bounds range     [1e-01, 3e+00]
-  RHS range        [0e+00, 0e+00]
-  NLCon coe range  [0e+00, 1e+01]
+Matrix range     [0e+00, 0e+00]
+Objective range  [1e+00, 1e+00]
+Bounds range     [1e-01, 3e+00]
+RHS range        [0e+00, 0e+00]
+NLCon coe range  [1e+00, 1e+05]
 Presolve removed 0 rows and 3 columns
 Presolve time: 0.00s
 Presolved: 0 rows, 13 columns, 0 nonzeros
@@ -195,6 +195,28 @@ Presolved model has 8 nonlinear constraint(s)
         summary = presolve_parser.get_summary()
         self.assertEqual(summary["NumNLConstrs"], 8)
         self.assertEqual(summary["PresolvedNumNLConstrs"], 8)
+
+    def test_nonlinear_constraint_coefficient_range(self):
+        example_log = """
+Optimize a model with 0 rows, 16 columns and 0 nonzeros (Min)
+Model fingerprint: 0x1dcaa5ec
+Variable types: 16 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [0e+00, 0e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e-01, 3e+00]
+  RHS range        [0e+00, 0e+00]
+  NLCon coe range  [1e+00, 1e+05]
+Presolve removed 0 rows and 3 columns
+Presolve time: 0.00s
+"""
+        presolve_parser = PresolveParser(PreTreeSolutionParser())
+
+        parse_lines(presolve_parser, example_log.strip().split("\n"))
+
+        summary = presolve_parser.get_summary()
+        self.assertEqual(summary["MinNLConCoeff"], 1.0)
+        self.assertEqual(summary["MaxNLConCoeff"], 100000.0)
 
 
 if __name__ == "__main__":
