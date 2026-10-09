@@ -25,6 +25,7 @@ Crossover log...
 expected_summary_barrier = {
     "BarIterCount": 17,
     "Runtime": 4.83,
+    "BarrierRuntime": 4.83,
     "Work": 6.45,
 }
 expected_progress_barrier = [

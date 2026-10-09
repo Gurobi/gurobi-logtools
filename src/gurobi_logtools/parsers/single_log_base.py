@@ -3,13 +3,14 @@ from typing import List, Optional, Type
 
 from gurobi_logtools.parsers.continuous import ContinuousParser
 from gurobi_logtools.parsers.header import HeaderParser
+from gurobi_logtools.parsers.solvewarnings import SolveWarningsParser
 from gurobi_logtools.parsers.nodelog import NodeLogParser
 from gurobi_logtools.parsers.norel import NoRelParser
 from gurobi_logtools.parsers.presolve import PresolveParser
 from gurobi_logtools.parsers.pretree_solutions import PreTreeSolutionParser
 from gurobi_logtools.parsers.quality import QualityParser
 from gurobi_logtools.parsers.termination import TerminationParser
-from gurobi_logtools.parsers.util import ParseResult, Parser, DummyParser
+from gurobi_logtools.parsers.util import DummyParser, Parser, ParseResult
 
 
 class SingleLogBase(Parser):
@@ -40,6 +41,7 @@ class SingleLogBase(Parser):
         self.nodelog_parser = self._NodeLogParser()
         self.termination_parser = self._TerminationParser()
         self.quality_parser = QualityParser()
+        self.logwarnings_parser = SolveWarningsParser()
 
         # State
         self.started = False
@@ -88,16 +90,41 @@ class SingleLogBase(Parser):
         """Return a summary dict, a merged result of the sub-parser results."""
         summary = {}
         summary.update(self.header_parser.get_summary())
-        summary.update(
-            self.presolve_parser.get_summary(add_model_type=self._add_model_type)
+        presolve_summary = self.presolve_parser.get_summary(
+            add_model_type=self._add_model_type
         )
+        summary.update(presolve_summary)
         summary.update(self.multiobj_parser.get_summary())
         summary.update(self.norel_parser.get_summary())
-        summary.update(self.continuous_parser.get_summary())
+        continuous_summary = self.continuous_parser.get_summary().copy()
+        model_type = presolve_summary.get("ModelType", "")
+        has_discrete_variables = any(
+            presolve_summary.get(key, 0) > 0
+            for key in (
+                "NumBinVars",
+                "NumIntVars",
+                "NumSemiContVars",
+                "NumSemiIntVars",
+            )
+        )
+        solved_as_mip = (
+            model_type.startswith("MI")
+            or has_discrete_variables
+            or self.presolve_parser._solving_as_mip
+            or "RelaxObj" in continuous_summary
+        )
+        if solved_as_mip:
+            # A root relaxation can itself finish optimally, but that does not
+            # mean the surrounding MIP solve is complete. Only the node-log or
+            # termination parsers may supply the final Status and Runtime.
+            continuous_summary.pop("Status", None)
+            continuous_summary.pop("Runtime", None)
+        summary.update(continuous_summary)
         summary.update(self.pretree_solution_parser.get_summary())
         summary.update(self.nodelog_parser.get_summary())
         summary.update(self.termination_parser.get_summary())
         summary.update(self.quality_parser.get_summary())
+        summary.update(self.logwarnings_parser.get_summary())
         return summary
 
     def parse(self, line: str) -> ParseResult:
@@ -123,6 +150,8 @@ class SingleLogBase(Parser):
 
         if self.lines is not None:  # i.e. write_to_dir = True
             self.lines.append(line)
+
+        self.logwarnings_parser.parse(line)
 
         # First try the current parser
         assert self.current_parser not in self.future_parsers

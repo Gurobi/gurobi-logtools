@@ -125,6 +125,19 @@ class TestTermination(TestCase):
         parse_block(parser, worklimit_log)
         self.assertEqual(parser.get_summary(), worklimit_summary)
 
+    def test_user_callback_data(self):
+        parser = TerminationParser()
+
+        parse_block(
+            parser,
+            "User-callback calls 155594, time in user-callback 0.06 sec",
+        )
+
+        self.assertEqual(
+            parser.get_summary(),
+            {"CallbackCalls": 155594, "CallbackTime": 0.06},
+        )
+
     def test_suboptimal(self):
         parser = TerminationParser()
         parse_block(parser, suboptimal_log)

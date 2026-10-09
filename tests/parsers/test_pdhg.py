@@ -29,6 +29,7 @@ expected_summary_pdhg = {
     "PdhgThreads": 1,
     "PdhgIterCount": 17,
     "Runtime": 4.83,
+    "PDHGRuntime": 4.83,
     "Work": 6.45,
 }
 expected_progress_pdhg = [

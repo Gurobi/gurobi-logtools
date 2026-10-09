@@ -79,6 +79,7 @@ class BarrierParser(Parser):
             barrier_termination_match = barrier_termination_pattern.match(line)
             if barrier_termination_match:
                 parse_result = typeconvert_groupdict(barrier_termination_match)
+                parse_result["BarrierRuntime"] = parse_result["Runtime"]
                 self._handle_repeat_barrier_solve(parse_result)  # modifies parse_result
                 self._summary.update(parse_result)
                 return ParseResult(parse_result)

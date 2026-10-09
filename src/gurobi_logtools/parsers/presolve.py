@@ -89,6 +89,9 @@ class PresolveParser(Parser):
             r"Model has (?P<NumPWLObjVars>\d+) piecewise-linear objective terms?",
         ),
         re.compile(r"Model has (?P<NumGenConstrs>\d+) general constraints?"),
+        re.compile(
+            r"Model has (?P<NumNLConstrs>\d+) general nonlinear constraints? \(\d+ nonlinear terms?\)",
+        ),
         re.compile(r"Distributed MIP job count: (?P<DistributedMIPJobs>\d+)"),
         re.compile(r"Concurrent MIP job count: (?P<ConcurrentJobs>\d+)"),
         re.compile(
@@ -108,6 +111,9 @@ class PresolveParser(Parser):
         re.compile(
             r"Presolved model has (?P<PresolvedNumQNZs>\d+) quadratic objective terms",
         ),
+        re.compile(
+            r"Presolved model has (?P<PresolvedNumNLConstrs>\d+) nonlinear constraint(?:s|\(s\))?",
+        ),
         re.compile(r"Presolve time: (?P<PresolveTime>[\d\.]+)s"),
     ]
 
@@ -118,6 +124,10 @@ class PresolveParser(Parser):
 
     # Special case: model solved by presolve
     presolve_all_removed = re.compile(r"Presolve: All rows and columns removed")
+
+    # Continuous non-convex models may be solved with the MIP machinery even
+    # though their structural model type does not include integer variables.
+    solving_as_mip = re.compile(r"solving as (?:a )?MIP", re.IGNORECASE)
 
     def __init__(
         self,
@@ -132,6 +142,7 @@ class PresolveParser(Parser):
         self._summary: Dict[str, Any] = {}
         self._started = False
         self._post_presolve = False
+        self._solving_as_mip = False
         self._pretree_solution_parser: PreTreeSolutionParser | DummyParser = (
             pretree_solution_parser
         )
@@ -151,6 +162,10 @@ class PresolveParser(Parser):
 
         if parse_result := self._pretree_solution_parser.parse(line):
             return parse_result
+
+        if PresolveParser.solving_as_mip.search(line):
+            self._solving_as_mip = True
+            return ParseResult(matched=True)
 
         for pattern in [
             self.presolve_start_pattern,
