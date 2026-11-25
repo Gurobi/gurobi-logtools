@@ -36,7 +36,7 @@ class ObjNLogParser(SingleLogBase):
 class InitialPresolveParser(PresolveParser):
     # The pattern indicating the initialization of the parser
     presolve_start_pattern = re.compile(
-        r"Multi-objectives: applying initial presolve...",
+        r"Multi-objectives: applying initial presolve\s?...",
     )
 
     # Possible intermediate patterns to be parsed
@@ -57,10 +57,10 @@ class MultiObjParser(Parser):
 
     start_patterns = [
         re.compile(
-            r"Multi-objectives: starting optimization.*with (?P<NumObjPasses>\d+) objectives...$",
+            r"Multi-objectives: starting optimization.*with (?P<NumObjPasses>\d+) objectives\s?...$",
         ),
         re.compile(
-            r"Multi-objectives: starting optimization.*with (?P<NumObj>\d+) objectives \((?P<NumObjPasses>\d+) combined\)...$"
+            r"Multi-objectives: starting optimization.*with (?P<NumObj>\d+) objectives \((?P<NumObjPasses>\d+) combined\)\s?...$"
         ),
     ]
 
